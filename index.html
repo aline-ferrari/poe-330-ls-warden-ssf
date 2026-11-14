@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoE 3.30: Covens of Umbra — SSF LS Warden Companion</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Cinzel', 'serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            poe: {
+              bg: '#0b0d10',
+              panel: '#12151b',
+              card: '#171b23',
+              border: '#262c38',
+              gold: '#d4af37',
+              goldDim: '#9e8022',
+              claw: '#34d399',
+              armour: '#22d3ee',
+              jewelry: '#fbbf24',
+              covens: '#c084fc',
+              danger: '#f87171',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #0b0d10;
+      color: #e2e8f0;
+    }
+    /* Custom subtle scrollbars for dense second-monitor viewing */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b0d10;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262c38;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3a4354;
+    }
+    .gem-g {
+      background: rgba(16, 185, 129, 0.16);
+      border: 1px solid rgba(52, 211, 153, 0.55);
+      color: #6ee7b7;
+    }
+    .gem-b {
+      background: rgba(59, 130, 246, 0.18);
+      border: 1px solid rgba(96, 165, 250, 0.55);
+      color: #93c5fd;
+    }
+    .gem-r {
+      background: rgba(239, 68, 68, 0.18);
+      border: 1px solid rgba(248, 113, 113, 0.55);
+      color: #fca5a5;
+    }
+    .gem-w {
+      background: rgba(226, 232, 240, 0.14);
+      border: 1px solid rgba(226, 232, 240, 0.5);
+      color: #f8fafc;
+    }
+    .check-item:checked + span {
+      text-decoration: line-through;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-poe-gold/30 selection:text-poe-gold">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-200 pointer-events-none">
+    <div class="bg-poe-card border border-poe-gold text-poe-gold px-4 py-2.5 rounded-lg shadow-2xl flex items-center gap-2 text-sm font-medium">
+      <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+      <span id="toast-msg">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <!-- Sticky Top Utility & Regex Header -->
+  <header class="sticky top-0 z-40 bg-poe-panel/95 backdrop-blur border-b border-poe-border shadow-lg">
+    <div class="max-w-7xl mx-auto px-3 sm:px-5 py-2.5">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2.5">
+        <!-- Title & Progress -->
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider rounded bg-poe-gold/15 text-poe-gold border border-poe-gold/40">3.30 SSF</span>
+              <h1 class="font-display text-base sm:text-lg font-bold text-slate-100 tracking-wide">Lightning Strike Warden</h1>
+            </div>
+            <p class="text-xs text-slate-400 hidden sm:block">Covens of Umbra • Zero Uniques • 100% Suppression • 0-Res Barkskin</p>
+          </div>
+
+          <!-- Progress Counter -->
+          <div class="flex items-center gap-2.5 bg-poe-bg px-3 py-1.5 rounded-lg border border-poe-border">
+            <div class="text-right">
+              <div class="text-[11px] text-slate-400 leading-none">Progress</div>
+              <div id="progress-text" class="text-xs font-bold text-poe-gold font-mono mt-0.5">0 / 0 (0%)</div>
+            </div>
+            <div class="w-16 sm:w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div id="progress-bar" class="h-full bg-gradient-to-r from-poe-goldDim to-poe-gold transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <button onclick="resetProgress()" title="Reset all checkboxes" class="p-1 text-slate-400 hover:text-red-400 transition-colors rounded hover:bg-slate-800/70">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick One-Click Vendor Regex Bar -->
+        <div class="flex flex-wrap items-center gap-1.5">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 mr-1">Vendor Regex:</span>
+          <button onclick="copyRegex('g-g-r|g-r-g|r-g-g|g-g-b|g-b-g|b-g-g|nne|rint', 'Act 1–2 Regex')" class="px-2.5 py-1 text-xs font-mono font-medium rounded bg-emerald-950/70 hover:bg-emerald-900/80 text-emerald-300 border border-emerald-700/60 transition flex items-center gap-1.5">
+            <span>Act 1–2</span>
+            <svg class="w-3 h-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </button>
+          <button onclick="copyRegex('g-g-b-r|g-b-g-r|b-g-g-r|r-g-g-b|g-g-g-b|claw|nne|rint|strid', 'Act 3–5 Regex')" class="px-2.5 py-1 text-xs font-mono font-medium rounded bg-cyan-950/70 hover:bg-cyan-900/80 text-cyan-300 border border-cyan-700/60 transition flex items-center gap-1.5">
+            <span>Act 3–5</span>
+            <svg class="w-3 h-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </button>
+          <button onclick="copyRegex('g-g-g-b|g-g-b-r|imperial|gemini|prismatic|jade|granite', 'Act 6+ Regex')" class="px-2.5 py-1 text-xs font-mono font-medium rounded bg-amber-950/70 hover:bg-amber-900/80 text-amber-300 border border-amber-700/60 transition flex items-center gap-1.5">
+            <span>Act 6+</span>
+            <svg class="w-3 h-3 opacity-75" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center gap-1.5 overflow-x-auto pt-2.5 mt-2 border-t border-poe-border/70 no-scrollbar">
+        <button data-tab="campaign" onclick="switchTab('campaign')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          1. Campaign & Leveling
+        </button>
+        <button data-tab="passives" onclick="switchTab('passives')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          2. Passives & Tree Map
+        </button>
+        <button data-tab="endgame" onclick="switchTab('endgame')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          3. Endgame Gear, Gems & Flasks
+        </button>
+        <button data-tab="atlas" onclick="switchTab('atlas')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          4. 3.30 Atlas, Crafting & Gold
+        </button>
+        <button data-tab="bosses" onclick="switchTab('bosses')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          5. Covens, Wickerman & Bosses
+        </button>
+        <button data-tab="filter" onclick="switchTab('filter')" class="tab-btn px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold whitespace-nowrap transition-all">
+          6. Filter Visual Legend
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-5 space-y-5">
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: CAMPAIGN & LEVELING (ACTS 1–10)                                -->
+    <!-- ===================================================================== -->
+    <section id="tab-campaign" class="tab-panel space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left 7 Cols: Act-by-Act Progression & Gem Links -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h2 class="font-display text-base font-bold text-poe-gold">Act-by-Act Leveling & Gem Swaps</h2>
+              <span class="text-xs text-slate-400">Frost Blades → LS at Normal Lab</span>
+            </div>
+
+            <div class="space-y-3">
+              <!-- Act 1 -->
+              <div class="bg-poe-panel border border-poe-border rounded-lg p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <label class="flex items-center gap-2 cursor-pointer font-semibold text-sm text-emerald-300">
+                    <input type="checkbox" data-check="act1" class="check-item w-4 h-4 rounded accent-poe-gold" />
+                    <span>Act 1 (Lvl 1–12) • Target: ~18–22m</span>
+                  </label>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">G-G-R / G-G-B</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-2 text-xs">
+                  <span class="px-2 py-0.5 rounded gem-g font-medium">Frost Blades (1)</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Chance to Bleed (1)</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Ruthless (8)</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Added Cold (8)</span>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside">
+                  <li><strong>Utility:</strong> <span class="text-emerald-300">Dash</span> (4), <span class="text-blue-300">Frostblink</span> (4), <span class="text-emerald-300">Precision</span> (10 — keep Lvl 1–3), <span class="text-red-300">Blood and Sand</span> (4).</li>
+                  <li><strong>Merveil Prep:</strong> Buy <strong>2x Iron Rings</strong> from Nessa + vendor with Blue gems for <strong>2x Sapphire Rings</strong>.</li>
+                </ul>
+              </div>
+
+              <!-- Act 2 -->
+              <div class="bg-poe-panel border border-poe-border rounded-lg p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <label class="flex items-center gap-2 cursor-pointer font-semibold text-sm text-emerald-300">
+                    <input type="checkbox" data-check="act2" class="check-item w-4 h-4 rounded accent-poe-gold" />
+                    <span>Act 2 (Lvl 12–24) • Target: ~20–25m</span>
+                  </label>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-700/40">Help Alira</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-2 text-xs">
+                  <span class="px-2 py-0.5 rounded gem-g font-medium">Frost Blades</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Added Cold</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Ele Damage w/ Attacks (18)</span>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside">
+                  <li><strong>Auras & Move:</strong> <span class="text-emerald-300">Herald of Ice</span> (16), <span class="text-emerald-300">Blood Rage</span> (16), <span class="text-emerald-300">Whirling Blades</span> + <span class="text-emerald-300">Faster Attacks</span>.</li>
+                  <li><strong>Bandits:</strong> Help <strong>Alira</strong> (+15% All Ele Res + Crit Multi smooths SSF gearing).</li>
+                </ul>
+              </div>
+
+              <!-- Act 3 & Normal Lab -->
+              <div class="bg-poe-panel border border-poe-gold/40 rounded-lg p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <label class="flex items-center gap-2 cursor-pointer font-semibold text-sm text-poe-gold">
+                    <input type="checkbox" data-check="act3_lab1" class="check-item w-4 h-4 rounded accent-poe-gold" />
+                    <span>Act 3 & Normal Lab (Lvl 24–33) • Oath of Spring Swap</span>
+                  </label>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-poe-gold/15 text-poe-gold">G-G-B-R</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-2 text-xs">
+                  <span class="px-2 py-0.5 rounded gem-g font-semibold">Lightning Strike</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Trinity (18)</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Ele Damage w/ Attacks</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Added Cold / Lightning</span>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside">
+                  <li><strong>Normal Lab (Lvl 32–33):</strong> Allocate <strong>Oath of Spring</strong> (2% more damage per Shock, up to 50 stacks) and swap to <strong>Lightning Strike</strong>.</li>
+                  <li><strong>New Gems:</strong> <span class="text-emerald-300">Grace</span> (24), <span class="text-emerald-300">Sniper's Mark</span> (24), <span class="text-red-300">Automation</span> (24) + <span class="text-red-300">Steelskin</span> (4).</li>
+                </ul>
+              </div>
+
+              <!-- Act 4–5 -->
+              <div class="bg-poe-panel border border-poe-border rounded-lg p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <label class="flex items-center gap-2 cursor-pointer font-semibold text-sm text-cyan-300">
+                    <input type="checkbox" data-check="act4_5" class="check-item w-4 h-4 rounded accent-poe-gold" />
+                    <span>Act 4–5 (Lvl 34–45) • Lvl 38 Gem Spike</span>
+                  </label>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300">G-G-B-R</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-2 text-xs">
+                  <span class="px-2 py-0.5 rounded gem-g font-semibold">Lightning Strike</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Trinity</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Multistrike (38)</span>
+                  <span class="px-2 py-0.5 rounded gem-g font-medium">Nightblade (38 — Claw)</span>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside">
+                  <li><strong>Lvl 38 Utility:</strong> Link <span class="text-emerald-300">Mark on Hit</span> (38) + <span class="text-emerald-300">Sniper's Mark</span>. Equip a <strong>Prismatic/Rosethorn Tincture</strong> as soon as one drops.</li>
+                  <li><strong>Kitava Prep:</strong> Aim for ~50%+ Ele Res before killing Act 5 Kitava (-30% res penalty).</li>
+                </ul>
+              </div>
+
+              <!-- Act 6–10 & Labs 2–3 -->
+              <div class="bg-poe-panel border border-poe-border rounded-lg p-3">
+                <div class="flex items-center justify-between gap-2 mb-2">
+                  <label class="flex items-center gap-2 cursor-pointer font-semibold text-sm text-purple-300">
+                    <input type="checkbox" data-check="act6_10" class="check-item w-4 h-4 rounded accent-poe-gold" />
+                    <span>Act 6–10 & Cruel/Merc Lab (Lvl 46–68)</span>
+                  </label>
+                  <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-purple-950/70 text-purple-300 border border-purple-700/40">Tier-5 Loot Starts!</span>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mb-2 text-xs">
+                  <span class="px-2 py-0.5 rounded gem-g font-semibold">Lightning Strike</span>
+                  <span class="px-2 py-0.5 rounded gem-b font-medium">Trinity</span>
+                  <span class="px-2 py-0.5 rounded gem-r font-medium">Multistrike</span>
+                  <span class="px-2 py-0.5 rounded gem-g font-medium">Nightblade</span>
+                  <span class="px-2 py-0.5 rounded gem-g font-medium">Returning Projectiles (5L)</span>
+                </div>
+                <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside">
+                  <li><strong>Act 6+ Tier-5 Ground Drops:</strong> ID all Tier-5 Claws & Evasion gear for double/triple flat elemental rolls.</li>
+                  <li><strong>Cruel Lab (~Lvl 55):</strong> <strong>Oath of Winter</strong> (freezes Fate-empowered bosses).</li>
+                  <li><strong>Merc Lab (~Lvl 68, pre-Kitava):</strong> <strong>Unbound Avatar</strong> (15s burst) + cap 75% Ele Res for second -30% penalty.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Passive Tree Order & Vendor Recipes -->
+        <div class="lg:col-span-5 space-y-4">
+          <!-- Passive Tree Allocation Order -->
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-3">Passive Tree Allocation Order</h2>
+            <div class="space-y-2.5 text-xs">
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-slate-100">1. Ranger Start → Heart of Oak (Lvl 1–18):</strong> Right-side Projectile/Attack speed exit → <em>Finesse</em> → <em>Heart of Oak</em> → <em>Herbalism</em>.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-emerald-300">2. Claw Wheel & Nightblade (Lvl 19–35):</strong> Rush <em>Soul Raker</em>. Grab Claw Masteries: <strong>+150% Crit Chance w/ Elusive</strong> & <strong>10% Instant Leech</strong>.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree3" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-amber-300">3. +1 Additional Strike Target (Lvl 36–48):</strong> Grab <em>Tribal Fury</em> or Attack Mastery <strong>Non-Vaal Strikes target +1 enemy</strong> (lets melee + proj double-hit bosses).</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree4" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-cyan-300">4. 100% Spell Suppression (Lvl 49–65):</strong> Allocate <em>Inveterate</em> & <em>Entrench</em> + <strong>Suppression is Lucky</strong> mastery until gear caps 100%.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree5" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-emerald-300">5. Tincture & Penetration (Lvl 66–80):</strong> <em>Primeval Force</em>, <em>Forces of Nature</em>, Elemental Mastery (<strong>25% chance to invert Res</strong> & <strong>60% reduced Reflected Ele Damage</strong>), + Tincture Mastery.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="tree6" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-purple-300">6. Endgame Reservation & EHP (Lvl 80+):</strong> Path up toward Shadow for <em>Charisma</em> (fits Grace + Determination/Arctic Armour + Precision alongside 0-res Barkskin) & <em>Ghost Dance</em>.</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Essential SSF Vendor Recipes -->
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-2.5">Essential SSF Vendor Recipes</h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="text-[11px] uppercase text-slate-400 border-b border-poe-border">
+                  <tr>
+                    <th class="py-1.5 pr-2">Result</th>
+                    <th class="py-1.5">Inputs</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-poe-border/60 text-slate-300">
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-emerald-300">Flat Ele Claw</td>
+                    <td class="py-2">Magic Claw + <span class="text-amber-300">Topaz/Sapphire/Ruby Ring</span> + Alt Orb</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-emerald-300">Upgrade Ele Tier</td>
+                    <td class="py-2">Flat Ele Claw + <span class="text-cyan-300">Matching Res Flask</span> + Aug Orb</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-slate-200">Phys Claw (Act 1–2)</td>
+                    <td class="py-2">Claw + Magic/Rare <span class="text-amber-300">Rustic Sash</span> + Whetstone</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-cyan-300">+10% MS Boots</td>
+                    <td class="py-2">Normal Boots + <span class="text-emerald-300">Quicksilver Flask</span> + Aug (repeatable to 30%)</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-amber-300">Resist Rings</td>
+                    <td class="py-2">Iron Ring + <span class="text-emerald-300">Green</span> (Topaz) / <span class="text-blue-300">Blue</span> (Sapphire) / <span class="text-red-300">Red</span> (Ruby) Gem</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-amber-300">Onyx Amulet</td>
+                    <td class="py-2">Any Amulet + 1 Red + 1 Green + 1 Blue Gem</td>
+                  </tr>
+                  <tr>
+                    <td class="py-2 pr-2 font-semibold text-purple-300">Emergency Fusing</td>
+                    <td class="py-2">1x Life Flask + 1x Mana Flask</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: PASSIVES & VISUAL SKILL TREE ROUTING                           -->
+    <!-- ===================================================================== -->
+    <section id="tab-passives" class="tab-panel hidden space-y-5">
+      <!-- Top Interactive Visual Routing Map + Stage Inspector -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left 7 Cols: Interactive SVG Ranger -> Shadow/Duelist Skill Tree Diagram -->
+        <div class="lg:col-span-7 bg-poe-card border border-poe-border rounded-xl p-4 flex flex-col justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <div>
+              <h2 class="font-display text-base font-bold text-poe-gold">Interactive Right-Side Passive Tree Routing</h2>
+              <p class="text-xs text-slate-400">Click any stage button or tree node to inspect pathing, key notables & masteries</p>
+            </div>
+            <!-- Lucky Suppression Toggle -->
+            <button id="lucky-supp-btn" onclick="toggleLuckySuppression()" class="px-2.5 py-1 rounded-md text-xs font-semibold border transition flex items-center gap-1.5 bg-cyan-950/60 border-cyan-500/60 text-cyan-300">
+              <span id="lucky-supp-dot" class="w-2 h-2 rounded-full bg-cyan-400"></span>
+              <span id="lucky-supp-label">Lucky Suppression: ON (&lt;85% Gear)</span>
+            </button>
+          </div>
+
+          <!-- Stage Selector Pills -->
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            <button onclick="selectTreeStage(0)" data-stage-btn="0" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-gold/20 border-poe-gold text-poe-gold">All Stages</button>
+            <button onclick="selectTreeStage(1)" data-stage-btn="1" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-emerald-300 hover:border-emerald-500/60">1: Lvl 1–18</button>
+            <button onclick="selectTreeStage(2)" data-stage-btn="2" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-lime-300 hover:border-lime-500/60">2: Lvl 19–35</button>
+            <button onclick="selectTreeStage(3)" data-stage-btn="3" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-amber-300 hover:border-amber-500/60">3: Lvl 36–48</button>
+            <button onclick="selectTreeStage(4)" data-stage-btn="4" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-cyan-300 hover:border-cyan-500/60">4: Lvl 49–65</button>
+            <button onclick="selectTreeStage(5)" data-stage-btn="5" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-orange-300 hover:border-orange-500/60">5: Lvl 66–80</button>
+            <button onclick="selectTreeStage(6)" data-stage-btn="6" class="stage-pill px-2.5 py-1 rounded text-xs font-semibold border transition bg-poe-panel border-poe-border text-purple-300 hover:border-purple-500/60">6: Lvl 80+</button>
+          </div>
+
+          <!-- Responsive SVG Tree Schematic (Ranger Center-Right -> Shadow Top-Right & Duelist Bottom-Right) -->
+          <div class="relative w-full bg-[#090b0e] border border-poe-border rounded-lg overflow-hidden">
+            <svg id="passive-tree-svg" viewBox="0 0 680 430" class="w-full h-auto select-none">
+              <defs>
+                <radialGradient id="bgGlow" cx="62%" cy="52%" r="55%">
+                  <stop offset="0%" stop-color="#1e293b" stop-opacity="0.45" />
+                  <stop offset="100%" stop-color="#090b0e" stop-opacity="0" />
+                </radialGradient>
+                <filter id="nodeGlow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <!-- Background Grid & Regional Rings -->
+              <rect width="680" height="430" fill="url(#bgGlow)" />
+              <circle cx="140" cy="220" r="145" fill="none" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4" />
+              <circle cx="140" cy="220" r="285" fill="none" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4" />
+              <circle cx="140" cy="220" r="420" fill="none" stroke="#1e293b" stroke-width="1" stroke-dasharray="4 4" />
+
+              <!-- Region Watermark Labels -->
+              <text x="415" y="34" fill="#475569" font-size="11" font-family="Cinzel, serif" font-weight="700" letter-spacing="2">SHADOW (TOP-RIGHT)</text>
+              <text x="485" y="224" fill="#475569" font-size="11" font-family="Cinzel, serif" font-weight="700" letter-spacing="2">RANGER (RIGHT)</text>
+              <text x="385" y="412" fill="#475569" font-size="11" font-family="Cinzel, serif" font-weight="700" letter-spacing="2">DUELIST (BOTTOM-RIGHT)</text>
+
+              <!-- ================= PATH EDGES BY STAGE ================= -->
+              <!-- Stage 1: Lvl 1-18 (Emerald #34d399) -->
+              <g data-stage="1" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 435 220 L 490 195 L 545 185" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 490 195 L 515 245 L 470 280" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 515 245 L 575 260" stroke="#34d399" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              </g>
+
+              <!-- Stage 2: Lvl 19-35 Claw Wheel Soul Raker (Lime #a3e635) -->
+              <g data-stage="2" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 490 195 L 455 150 L 495 118 L 545 130 L 535 162" stroke="#a3e635" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+
+              <!-- Stage 3: Lvl 36-48 Strike Range & +1 Target / Tribal Fury (Amber #fbbf24) -->
+              <g data-stage="3" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 470 280 L 415 320 L 345 348 L 285 365" stroke="#fbbf24" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 345 348 L 365 385" stroke="#fbbf24" stroke-width="3" fill="none" stroke-dasharray="3 2" />
+              </g>
+
+              <!-- Stage 4: Lvl 49-65 Suppression Inveterate & Entrench (Cyan #22d3ee) -->
+              <g data-stage="4" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 575 260 L 615 295 L 580 335" stroke="#22d3ee" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 470 280 L 485 335 L 525 360" stroke="#22d3ee" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              </g>
+
+              <!-- Stage 5: Lvl 66-80 Primeval Force, Forces of Nature & Tincture (Orange #fb923c) -->
+              <g data-stage="5" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 435 220 L 375 235 L 325 220 L 295 250" stroke="#fb923c" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 375 235 L 365 280 L 325 295" stroke="#fb923c" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 545 185 L 605 205 L 630 175" stroke="#fb923c" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              </g>
+
+              <!-- Stage 6: Lvl 80+ Shadow Charisma, Blood Drinker & Ghost Dance (Purple #c084fc) -->
+              <g data-stage="6" class="tree-stage-group transition-opacity duration-200">
+                <path d="M 455 150 L 410 115 L 355 95 L 305 80" stroke="#c084fc" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 410 115 L 430 68 L 485 55" stroke="#c084fc" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 355 95 L 330 52" stroke="#c084fc" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              </g>
+
+              <!-- ================= INTERACTIVE NODES ================= -->
+              <!-- Ranger Start Hub -->
+              <g onclick="selectTreeStage(1)" class="cursor-pointer">
+                <circle cx="435" cy="220" r="14" fill="#064e3b" stroke="#34d399" stroke-width="3" filter="url(#nodeGlow)" />
+                <text x="435" y="224" text-anchor="middle" fill="#ecfdf5" font-size="9" font-weight="700">START</text>
+                <text x="435" y="200" text-anchor="middle" fill="#6ee7b7" font-size="10" font-weight="600">Ranger</text>
+              </g>
+
+              <!-- Stage 1 Nodes -->
+              <g onclick="selectTreeStage(1)" data-stage="1" class="tree-stage-group cursor-pointer">
+                <circle cx="545" cy="185" r="9" fill="#065f46" stroke="#34d399" stroke-width="2.5" />
+                <text x="558" y="182" fill="#a7f3d0" font-size="10" font-weight="600">Finesse</text>
+
+                <circle cx="470" cy="280" r="9" fill="#065f46" stroke="#34d399" stroke-width="2.5" />
+                <text x="412" y="276" fill="#a7f3d0" font-size="10" font-weight="600">Heart of Oak</text>
+
+                <circle cx="575" cy="260" r="9" fill="#065f46" stroke="#34d399" stroke-width="2.5" />
+                <text x="588" y="257" fill="#a7f3d0" font-size="10" font-weight="600">Herbalism</text>
+              </g>
+
+              <!-- Stage 2 Nodes: Soul Raker Claw Wheel + Masteries -->
+              <g onclick="selectTreeStage(2)" data-stage="2" class="tree-stage-group cursor-pointer">
+                <circle cx="495" cy="118" r="11" fill="#365314" stroke="#a3e635" stroke-width="2.5" filter="url(#nodeGlow)" />
+                <text x="495" y="102" text-anchor="middle" fill="#d9f99d" font-size="10.5" font-weight="700">Soul Raker</text>
+                <!-- Claw Mastery Badge -->
+                <rect x="513" y="132" width="112" height="28" rx="4" fill="#1a2e05" stroke="#84cc16" stroke-width="1" />
+                <text x="569" y="144" text-anchor="middle" fill="#bef264" font-size="8.5" font-weight="700">CLAW MASTERIES</text>
+                <text x="569" y="155" text-anchor="middle" fill="#ecfccb" font-size="8">+150% Elusive Crit &amp; Instant Leech</text>
+              </g>
+
+              <!-- Stage 3 Nodes: Tribal Fury / +1 Strike Target -->
+              <g onclick="selectTreeStage(3)" data-stage="3" class="tree-stage-group cursor-pointer">
+                <circle cx="285" cy="365" r="11" fill="#78350f" stroke="#fbbf24" stroke-width="2.5" filter="url(#nodeGlow)" />
+                <text x="275" y="348" text-anchor="middle" fill="#fde68a" font-size="10.5" font-weight="700">Tribal Fury / +1 Strike</text>
+                <rect x="298" y="374" width="128" height="24" rx="4" fill="#451a03" stroke="#f59e0b" stroke-width="1" />
+                <text x="362" y="389" text-anchor="middle" fill="#fef3c7" font-size="8.5" font-weight="600">Unspec once Exarch Gloves hit</text>
+              </g>
+
+              <!-- Stage 4 Nodes: Inveterate & Entrench Suppression -->
+              <g onclick="selectTreeStage(4)" data-stage="4" class="tree-stage-group cursor-pointer">
+                <circle cx="580" cy="335" r="10" fill="#164e63" stroke="#22d3ee" stroke-width="2.5" filter="url(#nodeGlow)" />
+                <text x="593" y="338" fill="#a5f3fc" font-size="10.5" font-weight="700">Inveterate</text>
+
+                <circle cx="525" cy="360" r="10" fill="#164e63" stroke="#22d3ee" stroke-width="2.5" />
+                <text x="525" y="378" text-anchor="middle" fill="#a5f3fc" font-size="10" font-weight="700">Entrench</text>
+
+                <!-- Dynamic Lucky Suppression Badge -->
+                <g id="svg-lucky-badge">
+                  <rect x="548" y="348" width="118" height="24" rx="4" fill="#083344" stroke="#22d3ee" stroke-width="1" />
+                  <text id="svg-lucky-text" x="607" y="363" text-anchor="middle" fill="#67e8f9" font-size="8.5" font-weight="700">Mastery: Lucky Suppress</text>
+                </g>
+              </g>
+
+              <!-- Stage 5 Nodes: Primeval Force, Forces of Nature & Tinctures -->
+              <g onclick="selectTreeStage(5)" data-stage="5" class="tree-stage-group cursor-pointer">
+                <circle cx="295" cy="250" r="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2.5" filter="url(#nodeGlow)" />
+                <text x="242" y="246" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">Primeval Force</text>
+
+                <circle cx="325" cy="295" r="10" fill="#7c2d12" stroke="#fb923c" stroke-width="2.5" />
+                <text x="268" y="302" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">Forces of Nature</text>
+
+                <circle cx="630" cy="175" r="9.5" fill="#7c2d12" stroke="#fb923c" stroke-width="2.5" />
+                <text x="615" y="160" text-anchor="middle" fill="#fed7aa" font-size="10" font-weight="700">Tincture Wheel</text>
+              </g>
+
+              <!-- Stage 6 Nodes: Shadow Charisma, Blood Drinker & Ghost Dance -->
+              <g onclick="selectTreeStage(6)" data-stage="6" class="tree-stage-group cursor-pointer">
+                <circle cx="305" cy="80" r="10.5" fill="#581c87" stroke="#c084fc" stroke-width="2.5" filter="url(#nodeGlow)" />
+                <text x="255" y="83" text-anchor="middle" fill="#f3e8ff" font-size="10.5" font-weight="700">Charisma (RMR)</text>
+
+                <circle cx="485" cy="55" r="9.5" fill="#581c87" stroke="#c084fc" stroke-width="2.5" />
+                <text x="532" y="58" text-anchor="middle" fill="#f3e8ff" font-size="10" font-weight="700">Blood Drinker</text>
+
+                <circle cx="330" cy="52" r="9.5" fill="#581c87" stroke="#c084fc" stroke-width="2.5" />
+                <text x="330" y="37" text-anchor="middle" fill="#f3e8ff" font-size="10" font-weight="700">Ghost Dance</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Active Stage Inspector Bar -->
+          <div id="stage-inspector" class="mt-3 p-3 rounded-lg bg-poe-panel border border-poe-gold/40 text-xs space-y-1">
+            <div class="flex items-center justify-between">
+              <span id="inspector-title" class="font-bold text-poe-gold">All Stages Overview (Lvl 1 → 90+)</span>
+              <span id="inspector-badge" class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[11px]">Right-Side Evasion/Claw Path</span>
+            </div>
+            <p id="inspector-desc" class="text-slate-300">Start out of Ranger's right-side Attack/Projectile exit → rush <strong>Soul Raker</strong> claw wheel by Act 3 → grab <strong>+1 Strike Target</strong> for double-hits → cap <strong>100% Spell Suppression</strong> via Inveterate/Entrench → scale <strong>Ele Pen &amp; Tinctures</strong> → finish in Shadow for <strong>Charisma</strong> reservation &amp; <strong>Ghost Dance</strong>.</p>
+          </div>
+        </div>
+
+        <!-- Right 5 Cols: Level-Range Milestones & Mandatory Masteries Checklist -->
+        <div class="lg:col-span-5 space-y-4">
+          
+          <!-- Level-by-Level Allocation Milestones -->
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <div class="flex items-center justify-between mb-2.5">
+              <h2 class="font-display text-base font-bold text-poe-gold">Level-by-Level Allocation Checklist</h2>
+              <span class="text-[11px] text-slate-400">Saved automatically</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <label onclick="selectTreeStage(1)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-emerald-800/40 cursor-pointer hover:border-emerald-500/60 transition">
+                <input type="checkbox" data-check="pass_s1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-emerald-300">Lvl 1–18 (Act 1–2):</strong> Right-side exit → <strong>Finesse</strong> (accuracy/AS) → <strong>Heart of Oak</strong> (life/stun avoid) → <strong>Herbalism</strong> (life/flask recovery).</span>
+              </label>
+
+              <label onclick="selectTreeStage(2)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-lime-800/40 cursor-pointer hover:border-lime-500/60 transition">
+                <input type="checkbox" data-check="pass_s2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-lime-300">Lvl 19–35 (Act 3 / Normal Lab):</strong> Rush <strong>Soul Raker</strong> claw wheel. Take <strong>+150% Crit w/ Elusive</strong> (pairs with Nightblade) &amp; <strong>10% Instant Leech</strong>.</span>
+              </label>
+
+              <label onclick="selectTreeStage(3)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-amber-800/40 cursor-pointer hover:border-amber-500/60 transition">
+                <input type="checkbox" data-check="pass_s3" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-amber-300">Lvl 36–48 (Act 4–6):</strong> Path down-left to <strong>Tribal Fury</strong> / Attack Mastery <strong>+1 Additional Strike Target</strong> (lets melee strike + proj hit bosses simultaneously).</span>
+              </label>
+
+              <label onclick="selectTreeStage(4)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-cyan-800/40 cursor-pointer hover:border-cyan-500/60 transition">
+                <input type="checkbox" data-check="pass_s4" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-cyan-300">Lvl 49–65 (Act 7–10):</strong> Allocate <strong>Inveterate</strong> &amp; <strong>Entrench</strong> + <strong>Suppression is Lucky</strong> mastery. Unspec Lucky mastery once gear reaches 85%+ suppression.</span>
+              </label>
+
+              <label onclick="selectTreeStage(5)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-orange-800/40 cursor-pointer hover:border-orange-500/60 transition">
+                <input type="checkbox" data-check="pass_s5" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-orange-300">Lvl 66–80 (White–Red Maps):</strong> Grab <strong>Primeval Force</strong>, <strong>Forces of Nature</strong>, and the <strong>Tincture Wheel</strong> (effect + reduced mana burn rate).</span>
+              </label>
+
+              <label onclick="selectTreeStage(6)" class="flex items-start gap-2.5 p-2 rounded-lg bg-poe-panel border border-purple-800/40 cursor-pointer hover:border-purple-500/60 transition">
+                <input type="checkbox" data-check="pass_s6" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-purple-300">Lvl 80–92+ (T14+ &amp; Pinnacles):</strong> Path into Shadow for <strong>Charisma</strong> (reservation efficiency), <strong>Blood Drinker</strong>, &amp; <strong>Ghost Dance</strong> (with Evasion/ES hybrid bases).</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Mandatory Masteries Checklist -->
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-2.5">Mandatory Tree Masteries Checklist</h2>
+            <div class="space-y-1.5 text-xs">
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_claw1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-lime-300">[Claw]</strong> +150% increased Critical Strike Chance with Elusive</span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_claw2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-lime-300">[Claw]</strong> 10% of Leech is Instant (pairs with Imperial Claw +46 LGoH)</span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_ele1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-orange-300">[Elemental]</strong> Hits have 25% chance to treat Enemy Ele Res as inverted</span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_ele2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-red-300">[Elemental]</strong> 60% reduced Reflected Ele Damage (110% w/ Yugul for Atziri!)</span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_tinc" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-emerald-300">[Tincture]</strong> 30% increased Tincture Effect + Reduced Mana Burn Rate</span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_atk" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-amber-300">[Attack]</strong> Non-Vaal Strike Skills target +1 nearby Enemy <em>(unspec after Exarch gloves)</em></span>
+              </label>
+              <label class="flex items-start gap-2 p-1.5 rounded hover:bg-poe-panel cursor-pointer">
+                <input type="checkbox" data-check="mast_supp" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong class="text-cyan-300">[Suppression]</strong> Chance to Suppress Spell Damage is Lucky <em>(unspec at 85%+ gear)</em></span>
+              </label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Quick-Reference Row: Ascendancy 8-Pt Order, Bandits, Pantheon & Anoints -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+        <div class="bg-poe-card border border-emerald-700/40 rounded-xl p-3.5 space-y-1.5">
+          <div class="font-display font-bold text-emerald-300 text-sm">Ascendancy (8 Points)</div>
+          <ol class="list-decimal list-inside text-slate-300 space-y-1">
+            <li><strong>Normal:</strong> Oath of Spring (50-stack Shock)</li>
+            <li><strong>Cruel:</strong> Oath of Winter (Freeze Fate bosses)</li>
+            <li><strong>Merc:</strong> Unbound Avatar (15s burst window)</li>
+            <li><strong>Uber:</strong> Mother's Teachings (<strong>0-Res Barkskin</strong>)</li>
+          </ol>
+        </div>
+
+        <div class="bg-poe-card border border-amber-700/40 rounded-xl p-3.5 space-y-1.5">
+          <div class="font-display font-bold text-amber-300 text-sm">Bandits (Act 2)</div>
+          <p class="text-slate-200 font-semibold">Help Alira</p>
+          <p class="text-slate-400">Grants +15% All Elemental Resistances &amp; +20% Critical Strike Multiplier—massive SSF gearing relief.</p>
+        </div>
+
+        <div class="bg-poe-card border border-cyan-700/40 rounded-xl p-3.5 space-y-1.5">
+          <div class="font-display font-bold text-cyan-300 text-sm">Pantheon Setup</div>
+          <p class="text-slate-300"><strong>Major:</strong> <em>Soul of the Brine King</em> (Freeze immunity) or <em>Soul of Lunaris</em>.</p>
+          <p class="text-slate-300"><strong>Minor:</strong> <em>Soul of Ralakesh</em> (maps) → swap to <strong>Soul of Yugul</strong> (50% reduced Reflected Damage for Atziri).</p>
+        </div>
+
+        <div class="bg-poe-card border border-purple-700/40 rounded-xl p-3.5 space-y-1.5">
+          <div class="font-display font-bold text-purple-300 text-sm">Amulet Anoints (Cassia)</div>
+          <ul class="list-disc list-inside text-slate-300 space-y-1">
+            <li><strong>Fangs of the Viper:</strong> Best pure DPS + MS</li>
+            <li><strong>Panopticon:</strong> Strong attack/totem utility</li>
+            <li><strong>Charisma:</strong> If you need extra aura reservation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: ENDGAME GEAR, GEMS & FLASKS                                    -->
+    <!-- ===================================================================== -->
+    <section id="tab-endgame" class="tab-panel hidden space-y-5">
+      <!-- Endgame Gear Table (Color-Coded to Filter) -->
+      <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="font-display text-base font-bold text-poe-gold">Endgame Gear & Eldritch Implicits (Color-Coded to Your Filter)</h2>
+          <div class="flex items-center gap-2 text-[11px]">
+            <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-700/60">Green = Claw/Tincture</span>
+            <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60">Cyan = Suppression Armour</span>
+            <span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-700/60">Gold = Jewelry/Belt</span>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="text-[11px] uppercase text-slate-400 border-b border-poe-border">
+              <tr>
+                <th class="py-2 pr-3">Slot</th>
+                <th class="py-2 pr-3">Target Base</th>
+                <th class="py-2 pr-3">Priority Explicit Mods</th>
+                <th class="py-2">Eldritch Implicits / Bench Craft</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-poe-border/60">
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-emerald-300">Weapon</td>
+                <td class="py-2.5 pr-3 font-mono text-emerald-200">Imperial Claw (+46 LGoH)</td>
+                <td class="py-2.5 pr-3"><strong>2x T1–T2 Flat Ele</strong> + <strong>T1–T2 Attack Speed</strong> + Crit Chance/Multi</td>
+                <td class="py-2.5 text-slate-300"><strong>Bench:</strong> 3rd Flat Ele Damage (or <em>Hits can't be Evaded</em>)</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-cyan-300">Shield</td>
+                <td class="py-2.5 pr-3 font-mono text-cyan-200">Colossal Tower / Cardinal Round</td>
+                <td class="py-2.5 pr-3">+100 Life, <strong>28–34% Spell Suppression</strong>, Chaos Res, Ele Res, Block</td>
+                <td class="py-2.5 text-slate-300"><strong>Bench:</strong> +% Max Life or % Phys Mitigation while Focused</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-cyan-300">Body Armour</td>
+                <td class="py-2.5 pr-3 font-mono text-cyan-200">Full Dragonscale / Zodiac Leather</td>
+                <td class="py-2.5 pr-3">+130 Life, <strong>18–22% Spell Suppression</strong>, Chaos Res, Ele Res</td>
+                <td class="py-2.5 text-slate-300"><span class="text-red-300">Exarch:</span> +% Max All Res • <span class="text-blue-300">Eater:</span> Grace/Determ Aura Effect</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-cyan-300">Helmet</td>
+                <td class="py-2.5 pr-3 font-mono text-cyan-200">Royal Burgonet / Lion Pelt</td>
+                <td class="py-2.5 pr-3">+90 Life, <strong>12–14% Spell Suppression</strong>, Chaos Res, Ele Res, Accuracy</td>
+                <td class="py-2.5 text-slate-300"><span class="text-red-300">Exarch:</span> Reduced Mana Cost • <span class="text-blue-300">Eater:</span> Phys Taken as Ele</td>
+              </tr>
+              <tr class="bg-cyan-950/15">
+                <td class="py-2.5 pr-3 font-bold text-cyan-300">Gloves ★</td>
+                <td class="py-2.5 pr-3 font-mono text-cyan-200">Dragonscale / Slink Gloves</td>
+                <td class="py-2.5 pr-3">+80 Life, <strong>12–14% Suppression</strong>, <strong>14–16% Attack Speed</strong>, Res</td>
+                <td class="py-2.5 text-slate-200"><span class="text-red-300 font-semibold">Exarch (Mandatory):</span> <strong>Non-Vaal Strikes target +1 (or +2) Enemy</strong> • <span class="text-blue-300">Eater:</span> Cold/Lightning Exposure on Hit</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-cyan-300">Boots</td>
+                <td class="py-2.5 pr-3 font-mono text-cyan-200">Dragonscale / Slink Boots</td>
+                <td class="py-2.5 pr-3"><strong>30–35% MS</strong>, +80 Life, <strong>12–14% Suppression</strong>, Chaos/Ele Res</td>
+                <td class="py-2.5 text-slate-300"><span class="text-red-300">Exarch:</span> Action Speed • <span class="text-blue-300">Eater:</span> % Avoid Ele Ailments</td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-amber-300">Amulet</td>
+                <td class="py-2.5 pr-3 font-mono text-amber-200">Simplex / Turquoise / Jade / Agate</td>
+                <td class="py-2.5 pr-3">+70 Life, <strong>Crit Multi</strong>, <strong>Ele Damage w/ Attacks</strong>, Attributes/Res</td>
+                <td class="py-2.5 text-slate-300"><strong>Anoint:</strong> <em>Fangs of the Viper</em>, <em>Panopticon</em>, or <em>Charisma</em></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-amber-300">Rings (x2)</td>
+                <td class="py-2.5 pr-3 font-mono text-amber-200">Amethyst / Two-Stone Ring</td>
+                <td class="py-2.5 pr-3">+70 Life, <strong>Ele Damage w/ Attacks</strong>, Flat Lightning/Cold, Chaos Res</td>
+                <td class="py-2.5 text-slate-300"><strong>Bench:</strong> <em>Non-Channelling Skills have -7 to Total Mana Cost</em></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 pr-3 font-bold text-amber-300">Belt</td>
+                <td class="py-2.5 pr-3 font-mono text-amber-200">Stygian Vise / Cord Belt</td>
+                <td class="py-2.5 pr-3">+90 Life, <strong>Ele Damage w/ Attacks</strong>, Chaos Res, Flask Duration/Charges</td>
+                <td class="py-2.5 text-slate-300"><strong>Abyss Jewel:</strong> Life + Flat Lightning/Cold to Claws + Crit Multi</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Gem Links & Flask/Ascendancy Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Gem Links (7 Cols) -->
+        <div class="lg:col-span-7 bg-poe-card border border-poe-border rounded-xl p-4 space-y-3">
+          <h2 class="font-display text-base font-bold text-poe-gold">Endgame Socket & Gem Links</h2>
+          
+          <div class="p-3 rounded-lg bg-poe-panel border border-poe-border">
+            <div class="text-xs font-bold text-slate-200 mb-1.5">Body Armour (6-Link — or 7-Link with Soul Core of Finesse)</div>
+            <div class="flex flex-wrap gap-1.5 text-xs mb-1.5">
+              <span class="px-2 py-0.5 rounded gem-g font-semibold">Lightning Strike</span>
+              <span class="px-2 py-0.5 rounded gem-b font-medium">Trinity</span>
+              <span class="px-2 py-0.5 rounded gem-r font-medium">Multistrike</span>
+              <span class="px-2 py-0.5 rounded gem-g font-medium">Nightblade</span>
+              <span class="px-2 py-0.5 rounded gem-r font-medium">Ele Damage w/ Attacks</span>
+              <span class="px-2 py-0.5 rounded gem-g font-medium">Returning Projectiles</span>
+            </div>
+            <p class="text-[11px] text-slate-400">Once <strong>Soul Core of Finesse</strong> imbues a support onto a spare Lvl 20 LS gem, drop that gem from your chest and add <strong>Volatility</strong> or <strong>Added Cold Damage</strong>.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border">
+              <div class="font-bold text-slate-200 mb-1.5">Helmet (4-Link Auras)</div>
+              <div class="flex flex-wrap gap-1.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded gem-g">Grace</span>
+                <span class="px-2 py-0.5 rounded gem-r">Determination / Arctic Armour</span>
+                <span class="px-2 py-0.5 rounded gem-g">Precision (Lvl 1–5)</span>
+                <span class="px-2 py-0.5 rounded gem-b">Enlighten (or Herald of Ice)</span>
+              </div>
+              <p class="text-[11px] text-emerald-300/90"><strong>Barkskin</strong> comes from Ascendancy with <strong>0% reservation</strong> in 3.30.</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border">
+              <div class="font-bold text-slate-200 mb-1.5">Gloves (4-Link Guard & Charges)</div>
+              <div class="flex flex-wrap gap-1.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded gem-r">Automation</span>
+                <span class="px-2 py-0.5 rounded gem-r">Immortal Call</span>
+                <span class="px-2 py-0.5 rounded gem-g">Blood Rage</span>
+                <span class="px-2 py-0.5 rounded gem-r font-semibold">Enduring Cry (Unlinked!)</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Keep Enduring Cry unlinked from Automation; tap every 8–10s for 3 Endurance Charges.</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border">
+              <div class="font-bold text-slate-200 mb-1.5">Boots (4-Link Move & Mark)</div>
+              <div class="flex flex-wrap gap-1.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded gem-g">Whirling Blades</span>
+                <span class="px-2 py-0.5 rounded gem-g">Faster Attacks</span>
+                <span class="px-2 py-0.5 rounded gem-r">Fortify</span>
+                <span class="px-2 py-0.5 rounded gem-g">Mark on Hit + Sniper's Mark</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Put Sniper's Mark + Mark on Hit in weapon/shield if running 3L Whirling Blades.</p>
+            </div>
+
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border">
+              <div class="font-bold text-slate-200 mb-1.5">Weapon & Shield (3-Links)</div>
+              <div class="flex flex-wrap gap-1.5 mb-1.5">
+                <span class="px-2 py-0.5 rounded gem-g">Vaal Lightning Strike</span>
+                <span class="px-2 py-0.5 rounded gem-b">Frostblink</span>
+                <span class="px-2 py-0.5 rounded gem-w">Portal</span>
+              </div>
+              <p class="text-[11px] text-slate-400">Use <strong>Frostblink</strong> (instant) to dodge Atziri Flameblasts without breaking Multistrike. Level spare LS gems in off-hand.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flasks & Ascendancy/Pantheon (5 Cols) -->
+        <div class="lg:col-span-5 space-y-4">
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-2.5">Flasks & Prismatic Tincture</h2>
+            <div class="space-y-2 text-xs">
+              <div class="p-2 rounded bg-poe-panel border border-poe-border flex justify-between items-center">
+                <div><strong class="text-red-300">1. Divine Life Flask:</strong> Bubbling/Seething + Staunching (CB/Bleed)</div>
+                <span class="text-[11px] font-mono text-slate-400">Manual</span>
+              </div>
+              <div class="p-2 rounded bg-emerald-950/30 border border-emerald-700/50 flex justify-between items-center">
+                <div><strong class="text-emerald-300">2. Prismatic Tincture:</strong> Effect/Burn Rate + <strong>Ele Pen + Attack Speed</strong></div>
+                <span class="text-[11px] font-mono text-emerald-300">Boss Toggle</span>
+              </div>
+              <div class="p-2 rounded bg-poe-panel border border-poe-border flex justify-between items-center">
+                <div><strong class="text-cyan-300">3. Jade Flask:</strong> Flagellant's + 55–60% Increased Evasion</div>
+                <span class="text-[11px] font-mono text-amber-300">Used when Full</span>
+              </div>
+              <div class="p-2 rounded bg-poe-panel border border-poe-border flex justify-between items-center">
+                <div><strong class="text-amber-300">4. Granite Flask:</strong> Flagellant's + 55–60% Increased Armour</div>
+                <span class="text-[11px] font-mono text-amber-300">Used when Full</span>
+              </div>
+              <div class="p-2 rounded bg-poe-panel border border-poe-border flex justify-between items-center">
+                <div><strong class="text-slate-200">5. Quicksilver (Map) / Ruby or Topaz (Atziri):</strong> MS or Curse Effect</div>
+                <span class="text-[11px] font-mono text-amber-300">Used when Full</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-2">Warden Ascendancy & Pantheon</h2>
+            <div class="text-xs space-y-2 text-slate-300">
+              <p><strong class="text-poe-gold">Ascendancy Order:</strong> <span class="text-emerald-300">Oath of Spring</span> (Normal) → <span class="text-cyan-300">Oath of Winter</span> (Cruel) → <span class="text-amber-300">Unbound Avatar 15s</span> (Merc) → <span class="text-emerald-300">Mother's Teachings 0-Res Barkskin</span> (Uber).</p>
+              <p><strong class="text-cyan-300">Major God:</strong> <em>Soul of the Brine King</em> (Freeze immunity) or <em>Soul of Lunaris</em>.</p>
+              <p><strong class="text-purple-300">Minor God:</strong> <em>Soul of Ralakesh</em> (mapping) → swap to <strong>Soul of Yugul</strong> (50% reduced Reflected Damage + 60% Ele Mastery = <strong>110% Reflect Immunity</strong> for Uber Atziri's 15% mirror clone).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: 3.30 ATLAS, CRAFTING & GOLD                                    -->
+    <!-- ===================================================================== -->
+    <section id="tab-atlas" class="tab-panel hidden space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left 6 Cols: Post-Kitava 5 Steps & 3-Phase Atlas -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-poe-card border border-poe-gold/40 rounded-xl p-4">
+            <h2 class="font-display text-base font-bold text-poe-gold mb-2.5">First 5 Actions After Killing Act 10 Kitava</h2>
+            <div class="space-y-2 text-xs">
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="map1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>1. Fix Post-Kitava Resistances:</strong> Bench-craft Ele Res to cap 75% after the final -30% penalty. Check Automation + Immortal Call.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="map2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>2. Spend Campaign Gold at Kirac:</strong> Kirac has no missions in 3.30—buy every uncompleted T1–T3 map in his Gold Shop.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="map3" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>3. Inspect Shaped Regions (Press G):</strong> Route your first maps directly into <em>Expedition</em> or <em>Betrayal</em> Shaped Regions to stack free +1 Threads.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="map4" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>4. Run T1–T5 Magic + 1 Safe Fate:</strong> Transmute white maps for bonus credit and invoke at least 1 Fate on the boss to drop early Viscera.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="map5" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>5. Spend First 15 Atlas Points in Center:</strong> Allocate the Inner Circle Map Drop / Tier Upgrade nodes first before branching outward.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4 space-y-3">
+            <h2 class="font-display text-base font-bold text-poe-gold">3.30 Atlas Passive Strategy (150-Pt Center Start)</h2>
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border text-xs space-y-1">
+              <div class="font-bold text-emerald-300">Phase 1 (Points 1–45): Center Map Sustain + Essence & Harvest</div>
+              <p class="text-slate-300">Rush Inner Circle map drop nodes + Kirac, then take secondary clusters <strong>Essence</strong> (Wrath/Hatred/Anger for claws) and <strong>Harvest</strong> (in-map flora for swapping res & reforging Chaos Res).</p>
+            </div>
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border text-xs space-y-1">
+              <div class="font-bold text-cyan-300">Phase 2 (Points 46–95): Shaped Region Loop (Expedition + Betrayal)</div>
+              <p class="text-slate-300">Allocate <strong>Expedition</strong> (Rog crafts 100% Suppression gear; Tujen supplies Alts/Fusings) & <strong>Betrayal</strong> (<em>Coercive Interrogation</em>, <em>Hidden Flank</em>, <em>Secrets Unveiled</em>). Run Betrayal Threads inside Shaped Expedition regions and vice versa!</p>
+            </div>
+            <div class="p-3 rounded-lg bg-poe-panel border border-poe-border text-xs space-y-1">
+              <div class="font-bold text-purple-300">Phase 3 (Points 96–150): Thread Sustain, Altars & Pinnacle Nodes</div>
+              <p class="text-slate-300">Take <strong>Amplified Artefacts</strong> (+50% Thread chance per rare mod), <strong>Searing Exarch Altars</strong> (Embers for +1 Strike gloves + Thread drops; swap to Eater for Incursion Soul Cores), and <strong>Remnants of the Past / Captivated Interest</strong> for Voidstones. Use <strong>Unwavering Vision</strong> late-game for 10-Thread single-mechanic bursts + Gold printing.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 6 Cols: SSF Crafting & Gold Strategy -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4 space-y-3">
+            <h2 class="font-display text-base font-bold text-poe-gold">3.30 SSF Crafting Step-by-Step</h2>
+            
+            <div class="p-3 rounded-lg bg-poe-panel border border-emerald-800/50 text-xs space-y-1">
+              <div class="font-bold text-emerald-300">1. Endgame Tri-Elemental Imperial Claw (ilvl 82+)</div>
+              <ol class="list-decimal list-inside text-slate-300 space-y-1">
+                <li>Use a <strong>Tier-5 Fractured</strong> Imperial Claw (T1/T2 Flat Ele or Attack Speed) or clean ilvl 82+ base.</li>
+                <li>Spam <strong>Essences of Wrath/Hatred/Anger</strong> until hitting a second T1–T3 flat elemental prefix.</li>
+                <li>Bench-craft the 3rd flat elemental prefix (or <em>Hits can't be Evaded</em>).</li>
+                <li>With 3 prefixes locked in, craft <strong>Prefixes Cannot Be Changed</strong> (<strong>4 Divines + 1 Sacred Orb</strong> in 3.30) → <strong>Harvest Reforge Speed</strong> for T2+ Attack Speed → bench-craft Crit Chance/Multi.</li>
+              </ol>
+            </div>
+
+            <div class="p-3 rounded-lg bg-poe-panel border border-cyan-800/50 text-xs space-y-1">
+              <div class="font-bold text-cyan-300">2. 100% Spell Suppression Armour (Rog + Eldritch Currency)</div>
+              <ol class="list-decimal list-inside text-slate-300 space-y-1">
+                <li>In <strong>Rog's window</strong>, pick Evasion/Armour bases starting with Spell Suppression, Life, or Chaos Res. Always take <em>Upgrade modifier tiers</em>; skip <em>Remove lowest level mod</em> if Suppression is lowest.</li>
+                <li>For Tier-5 fractured bases or finished suffixes (Suppression + Chaos Res), apply 1 Lesser Ember + 1 Lesser Ichor, make <strong>Searing Exarch dominant</strong>, and roll prefixes with <strong>Eldritch Chaos/Exalt/Annul</strong> for T1 Life.</li>
+              </ol>
+            </div>
+
+            <div class="p-3 rounded-lg bg-poe-panel border border-amber-800/50 text-xs space-y-1">
+              <div class="font-bold text-amber-300">3. +1 Strike Gloves & Gold Gambling (Kirac / Faustus)</div>
+              <ul class="list-disc list-inside text-slate-300 space-y-1">
+                <li><strong>Gloves:</strong> Spam Lesser/Greater <strong>Eldritch Embers</strong> for <em>Non-Vaal Strike Skills target 1 additional nearby Enemy</em> + Ichors for Cold/Lightning Exposure on Hit.</li>
+                <li><strong>Gold Management:</strong> Keep ~50k Gold buffer for Kirac's shop (uncompleted maps, Guardian maps, Expedition/Incursion Threads). Save the rest until <strong>Character Level 82–84+</strong> to gamble <strong>Claws, Belts, and Amulets</strong> at Faustus's Black Market on ilvl 82–84 bases.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 4: COVENS, WICKERMAN & BOSSES                                     -->
+    <!-- ===================================================================== -->
+    <section id="tab-bosses" class="tab-panel hidden space-y-5">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        
+        <!-- Left 6 Cols: Fate Combos & Wickerman -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-poe-card border border-purple-700/40 rounded-xl p-4 space-y-2.5">
+            <h2 class="font-display text-base font-bold text-purple-300">Fate Card Combos & Boss Rules</h2>
+            <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+              <li><strong>Sequential Drafting:</strong> You must pick a Fate at your current Cauldron before the next Cauldron reveals its cards. Clicking pauses the game so you can read safely.</li>
+              <li><strong>3-Card Cap & Duplicate Merging (3x Rewards!):</strong> Invoking <strong>two identical Fate Cards</strong> merges them into 1 slot, <strong>triples (3x) the rewards of the FIRST card played</strong>, and frees a slot for a 2- or 3-icon set combo.</li>
+              <li><strong>Tier Upgrades:</strong> Merging two Tier 2 Fates upgrades them into a Tier 3 Fate.</li>
+              <li><strong>Fated Gear Cards:</strong> Prioritize cards previewing a <span class="text-amber-300 font-semibold">Fated</span> reward (guaranteed Speed on boots or Crit/Speed on weapons).</li>
+              <li><strong>Dangerous Fates for Melee LS:</strong> Watch out for <em>Savage Fate</em> (spawns a 2nd boss—pop Vaal LS + Unbound Avatar immediately) and overlapping ground degen (use instant <strong>Frostblink</strong> to cancel Multistrike locks).</li>
+            </ul>
+          </div>
+
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <h2 class="font-display text-base font-bold text-poe-gold">Wickerman Viscera (4 Slots) & Soul Cores</h2>
+              <span class="text-[11px] text-slate-400">Boss needs ≥1 Fate to drop Viscera</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded bg-poe-panel border border-poe-border">
+                <div class="font-bold text-purple-300">Head Slot</div>
+                <p class="text-slate-300 mt-0.5">1. <strong>Greater Spectral Hood</strong> (+3% Max Chaos Res)<br>2. <strong>Greater Elder's Head</strong> (Chilled enemies shatter)<br>3. <em>Bandit Warrior's Head</em> (~1.9% Life Regen early)</p>
+              </div>
+              <div class="p-2.5 rounded bg-poe-panel border border-poe-border">
+                <div class="font-bold text-emerald-300">Arm Slot</div>
+                <p class="text-slate-300 mt-0.5">1. <strong>Ancestor's Club</strong> (+29% additional strike range — huge for double-hitting bosses)<br>2. <em>Warden's Arm</em> (+35–46 Life early)</p>
+              </div>
+              <div class="p-2.5 rounded bg-poe-panel border border-poe-border">
+                <div class="font-bold text-amber-300">Body Slot</div>
+                <p class="text-slate-300 mt-0.5">1. <strong>Maven's Orrery</strong> (3m Scorch aura — frees Cruel Lab for permanent Oath of Winter)<br>2. <strong>Greater Distended Stomach</strong> (Soul Eater)</p>
+              </div>
+              <div class="p-2.5 rounded bg-poe-panel border border-poe-border">
+                <div class="font-bold text-cyan-300">Leg Slot & Soul Cores</div>
+                <p class="text-slate-300 mt-0.5"><strong>Leg:</strong> Action Speed / Movement Speed / Phys Mitigation.<br><strong>Soul Core of Finesse:</strong> Corrupt <em>spare</em> Lvl 20 LS gems in off-hand for a permanent 7th link!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right 6 Cols: Voidstones, Lvl 84 Atziri & Fragment Swaps -->
+        <div class="lg:col-span-6 space-y-4">
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4 space-y-2.5">
+            <h2 class="font-display text-base font-bold text-poe-gold">Fastest SSF Voidstone Unlock Order</h2>
+            <div class="space-y-2 text-xs">
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="vs1" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>1. Eldritch Voidstone (Exarch + Eater):</strong> Guaranteed quest invitations. Use Ruby Flask + Abberath for Exarch; Topaz Flask + Frostblink through rolling meteors.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="vs2" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>2. Originator Voidstone (Eagon → Incarnation of Dread):</strong> Deterministic T14+ memory chain. Keep Maven's Beacon active while running Eagon maps.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="vs3" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>3. Ceremonial Voidstone (The Maven):</strong> Drop Gravity Wells on outer arena rim; never Whirling Blades across Phase 3 no-regen beams.</span>
+              </label>
+              <label class="flex items-start gap-2.5 p-2 rounded bg-poe-panel border border-poe-border cursor-pointer">
+                <input type="checkbox" data-check="vs4" class="check-item mt-0.5 w-4 h-4 rounded accent-poe-gold" />
+                <span><strong>4. Decayed Voidstone (Normal Shaper + Elder):</strong> Sapphire Flask for Shaper; stand inside Elder's inner ring during his expanding nova.</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="bg-poe-card border border-red-800/50 rounded-xl p-4 space-y-2 text-xs">
+            <h2 class="font-display text-base font-bold text-red-300">Level 84 Uber Atziri (Cradle of Creation Temple)</h2>
+            <div class="grid grid-cols-2 gap-2 p-2 rounded bg-red-950/25 border border-red-800/40 text-[11px]">
+              <div><strong>Reflect Immunity:</strong> Ele Mastery (60%) + <strong>Yugul</strong> (50%) = 110% (beats 15% Mirror Clone)</div>
+              <div><strong>Defenses:</strong> 100% Suppression, 78–80% Fire/Light Res, 50–75% Chaos Res, 4.8k+ Life</div>
+            </div>
+            <ul class="list-disc list-inside text-slate-300 space-y-1">
+              <li><strong>No Pause & Tapering DR:</strong> Don't blow Tincture/Unbound Avatar during her first 2s spawn DR.</li>
+              <li><strong>Below 66% HP:</strong> All abilities empower—save 15s Unbound Avatar + Tincture to burn 66% → 0%.</li>
+              <li><strong>Post-Split Adds:</strong> Clear high-HP Devoted waves with LS projectiles immediately after every split.</li>
+            </ul>
+          </div>
+
+          <div class="bg-poe-card border border-poe-border rounded-xl p-4">
+            <h2 class="font-display text-sm font-bold text-poe-gold mb-2">Pinnacle Map & Fragment Conversions (SSF)</h2>
+            <table class="w-full text-left text-[11px]">
+              <thead class="uppercase text-slate-400 border-b border-poe-border">
+                <tr>
+                  <th class="py-1">Set</th>
+                  <th class="py-1">Horizons Orb</th>
+                  <th class="py-1">Best SSF Conversion</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-poe-border/60 text-slate-300">
+                <tr>
+                  <td class="py-1.5 font-semibold">Shaper Guardians</td>
+                  <td class="py-1.5 text-red-400">NO (Locked tiles)</td>
+                  <td class="py-1.5">Run duplicates → <strong>Harvest Fragment Swap</strong></td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 font-semibold">Elder & Conquerors</td>
+                  <td class="py-1.5 text-emerald-400">YES (Rerolls boss)</td>
+                  <td class="py-1.5"><strong>Horizons Orb</strong> maps before running + Harvest Swap</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 font-semibold">Uber Elder</td>
+                  <td class="py-1.5 text-slate-500">—</td>
+                  <td class="py-1.5">Cannot swap Uber Elder pieces; balance base Shaper/Elder runs</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 5: FILTER VISUAL LEGEND                                           -->
+    <!-- ===================================================================== -->
+    <section id="tab-filter" class="tab-panel hidden space-y-5">
+      <div class="bg-poe-card border border-poe-border rounded-xl p-4 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h2 class="font-display text-base font-bold text-poe-gold">LS_Warden_330_SSF.filter — Quick Visual Cheat Sheet</h2>
+          <span class="text-xs text-slate-400">Color-coded so you never have to stop moving to read ground labels</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+          <!-- Green -->
+          <div class="p-3.5 rounded-lg bg-emerald-950/35 border border-emerald-500/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-emerald-300 text-sm">BRIGHT NEON GREEN</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-200 font-mono text-[11px]">Green Star/Diamond</span>
+            </div>
+            <p class="text-slate-200 font-medium">Weapons & DPS Tinctures</p>
+            <p class="text-slate-400">Imperial, Gemini & Twin Claws + Prismatic & Rosethorn Tinctures. Tier-5 claws get a gold jackpot border + Divine sound.</p>
+          </div>
+
+          <!-- Cyan -->
+          <div class="p-3.5 rounded-lg bg-cyan-950/35 border border-cyan-500/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-cyan-300 text-sm">ELECTRIC CYAN</span>
+              <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-200 font-mono text-[11px]">Cyan Star/Diamond</span>
+            </div>
+            <p class="text-slate-200 font-medium">Spell Suppression Armour & Threads</p>
+            <p class="text-slate-400">Full Dragonscale, Zodiac Leather, Dragonscale/Slink gloves & boots, Royal Burgonet, Lion Pelt, shields, and Expedition/Betrayal/Incursion Threads.</p>
+          </div>
+
+          <!-- Gold -->
+          <div class="p-3.5 rounded-lg bg-amber-950/35 border border-amber-500/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-amber-300 text-sm">WARM GOLD</span>
+              <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 font-mono text-[11px]">Yellow Star/Diamond</span>
+            </div>
+            <p class="text-slate-200 font-medium">Jewelry, Belts & Fated Items</p>
+            <p class="text-slate-400">Stygian Vise, Cord Belt, Simplex Amulet, Amethyst/Two-Stone Rings, attribute amulets, and Fated items with guaranteed modifier templates.</p>
+          </div>
+
+          <!-- Purple -->
+          <div class="p-3.5 rounded-lg bg-purple-950/35 border border-purple-500/60 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-purple-300 text-sm">MAGENTA / PURPLE</span>
+              <span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-200 font-mono text-[11px]">Purple Star/Diamond</span>
+            </div>
+            <p class="text-slate-200 font-medium">Viscera & Off-Build Tier-5 / Fractured</p>
+            <p class="text-slate-400">All Covens Viscera, Cursed Poppets, identified Fractured items, and off-build Tier-5 drops (check for Fractured T1 mods or alt-build bases).</p>
+          </div>
+
+          <!-- White/Red -->
+          <div class="p-3.5 rounded-lg bg-red-950/35 border border-red-500/70 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-red-300 text-sm">WHITE BG + RED STAR</span>
+              <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-200 font-mono text-[11px]">Divine Alert Sound</span>
+            </div>
+            <p class="text-slate-200 font-medium">Jackpots & Chase SSF Uniques</p>
+            <p class="text-slate-400">Soul Cores, Divines/Sacred/Fracturing Orbs, 6-Links, and Chase Unique base types (The Taming, Yoke, Doedre's Tongue, Perseverance, Mageblood/HH).</p>
+          </div>
+
+          <!-- Auto-Strictness -->
+          <div class="p-3.5 rounded-lg bg-poe-panel border border-poe-border space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-200 text-sm">AUTO-STRICTNESS STAGES</span>
+              <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[11px]">By AreaLevel</span>
+            </div>
+            <ul class="text-slate-300 space-y-1 list-disc list-inside">
+              <li><strong>Lvl 78+ (T11+):</strong> Hides Scrolls, Transmutes, Augs, Scraps, Whetstones; narrows Tier 3–4 drops to <strong>ilvl 84+</strong>.</li>
+              <li><strong>Lvl 83+ (T16):</strong> Shows Alts, Chroms & Jeweller's only in <strong>stacks of 3+</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const STORAGE_KEY_CHECKS = 'poe330_ls_warden_checks_v1';
+    const STORAGE_KEY_TAB = 'poe330_ls_warden_tab_v1';
+    const STORAGE_KEY_LUCKY = 'poe330_ls_warden_lucky_supp_v1';
+
+    const TREE_STAGE_INFO = {
+      0: {
+        title: 'All Stages Overview (Lvl 1 → 90+)',
+        badge: 'Right-Side Evasion/Claw Path',
+        desc: 'Start out of Ranger\'s right-side Attack/Projectile exit → rush <strong>Soul Raker</strong> claw wheel by Act 3 → grab <strong>+1 Strike Target</strong> for double-hits → cap <strong>100% Spell Suppression</strong> via Inveterate/Entrench → scale <strong>Ele Pen &amp; Tinctures</strong> → finish in Shadow for <strong>Charisma</strong> reservation &amp; <strong>Ghost Dance</strong>.'
+      },
+      1: {
+        title: 'Stage 1: Ranger Start → Heart of Oak & Herbalism',
+        badge: 'Levels 1–18 (Acts 1–2)',
+        desc: 'Exit Ranger via the right-side Projectile/Attack Speed nodes, pick up <strong>Finesse</strong> (Accuracy + Attack Speed), then path into <strong>Heart of Oak</strong> (Life + Stun Avoidance) and <strong>Herbalism</strong> (Life + Flask Recovery) for smooth Act 1–2 sustain.'
+      },
+      2: {
+        title: 'Stage 2: Claw Wheel (Soul Raker) & Nightblade Crit',
+        badge: 'Levels 19–35 (Act 3 / Normal Lab)',
+        desc: 'Path straight up-right into <strong>Soul Raker</strong> right before Normal Lab. Allocate both Claw Masteries: <strong>+150% increased Crit Chance with Elusive</strong> (synergizes with Nightblade at Lvl 38) and <strong>10% of Leech is Instant</strong>.'
+      },
+      3: {
+        title: 'Stage 3: Strike Range & +1 Additional Target',
+        badge: 'Levels 36–48 (Acts 4–6)',
+        desc: 'Path down-left toward Duelist to grab <strong>Tribal Fury</strong> or the Attack Mastery <strong>Non-Vaal Strike Skills target 1 additional nearby Enemy</strong>. Stand slightly back from bosses so both your ancestral strike and projectile hit simultaneously. Unspec once you roll +1 Strike on Searing Exarch gloves.'
+      },
+      4: {
+        title: 'Stage 4: 100% Spell Suppression (Inveterate & Entrench)',
+        badge: 'Levels 49–65 (Acts 7–10)',
+        desc: 'Allocate <strong>Inveterate</strong> and <strong>Entrench</strong> on the lower-right perimeter. Take the <strong>Chance to Suppress Spell Damage is Lucky</strong> mastery while gearing, then unspec it for a passive point once your Evasion gear naturally hits 85%+ suppression.'
+      },
+      5: {
+        title: 'Stage 5: Elemental Penetration & Tincture Wheels',
+        badge: 'Levels 66–80 (White–Red Maps)',
+        desc: 'Grab <strong>Primeval Force</strong> and <strong>Forces of Nature</strong> for elemental attack penetration, take the Elemental Masteries (<strong>25% chance to invert Enemy Ele Res</strong> + <strong>60% reduced Reflected Ele Damage</strong>), and allocate the <strong>Tincture Wheel</strong> so your Prismatic Tincture stays up through long Fate boss phases.'
+      },
+      6: {
+        title: 'Stage 6: Shadow Reservation, Blood Drinker & Ghost Dance',
+        badge: 'Levels 80–92+ (T14+ & Pinnacles)',
+        desc: 'Path up into Shadow for <strong>Charisma</strong> (reservation efficiency to comfortably fit Grace + Determination/Arctic Armour + Precision alongside 0-reservation Barkskin), <strong>Blood Drinker</strong>, and <strong>Ghost Dance</strong> once wearing Evasion/ES hybrid gear.'
+      }
+    };
+
+    function selectTreeStage(stageNum) {
+      const info = TREE_STAGE_INFO[stageNum] || TREE_STAGE_INFO[0];
+      document.getElementById('inspector-title').innerHTML = info.title;
+      document.getElementById('inspector-badge').textContent = info.badge;
+      document.getElementById('inspector-desc').innerHTML = info.desc;
+
+      // Update stage pill styling
+      document.querySelectorAll('.stage-pill').forEach(btn => {
+        const s = Number(btn.dataset.stageBtn);
+        if (s === stageNum) {
+          btn.classList.add('ring-2', 'ring-poe-gold', 'bg-poe-gold/20', 'text-poe-gold');
+        } else {
+          btn.classList.remove('ring-2', 'ring-poe-gold', 'bg-poe-gold/20', 'text-poe-gold');
+        }
+      });
+
+      // Dim non-selected stages on SVG when a specific stage (1-6) is chosen
+      document.querySelectorAll('.tree-stage-group').forEach(group => {
+        const gStage = Number(group.dataset.stage);
+        if (stageNum === 0 || gStage === stageNum) {
+          group.style.opacity = '1';
+        } else {
+          group.style.opacity = '0.22';
+        }
+      });
+    }
+
+    function applyLuckySuppressionUI(isOn) {
+      const btn = document.getElementById('lucky-supp-btn');
+      const dot = document.getElementById('lucky-supp-dot');
+      const label = document.getElementById('lucky-supp-label');
+      const svgText = document.getElementById('svg-lucky-text');
+      if (!btn) return;
+
+      if (isOn) {
+        btn.className = 'px-2.5 py-1 rounded-md text-xs font-semibold border transition flex items-center gap-1.5 bg-cyan-950/60 border-cyan-500/60 text-cyan-300';
+        dot.className = 'w-2 h-2 rounded-full bg-cyan-400';
+        label.textContent = 'Lucky Suppression: ON (<85% Gear)';
+        if (svgText) svgText.textContent = 'Mastery: Lucky Suppress';
+      } else {
+        btn.className = 'px-2.5 py-1 rounded-md text-xs font-semibold border transition flex items-center gap-1.5 bg-emerald-950/60 border-emerald-500/60 text-emerald-300';
+        dot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+        label.textContent = '100% Capped: Lucky Unspecced (+1 Pt)';
+        if (svgText) svgText.textContent = '100% Capped (+1 Pt Saved)';
+      }
+    }
+
+    function toggleLuckySuppression() {
+      let current = true;
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY_LUCKY);
+        if (saved !== null) current = saved === 'true';
+      } catch (e) {}
+      const next = !current;
+      try {
+        localStorage.setItem(STORAGE_KEY_LUCKY, String(next));
+      } catch (e) {}
+      applyLuckySuppressionUI(next);
+      showToast(next ? 'Enabled Lucky Suppression Mastery' : 'Marked 100% Capped — Lucky Mastery unspecced!');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2200);
+    }
+
+    function copyRegex(text, label) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Copied ${label}!`);
+      } catch (err) {
+        showToast('Failed to copy regex');
+      }
+      document.body.removeChild(textarea);
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.add('hidden');
+      });
+      const activePanel = document.getElementById(`tab-${tabId}`);
+      if (activePanel) activePanel.classList.remove('hidden');
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === tabId) {
+          btn.classList.add('bg-poe-gold', 'text-poe-bg', 'shadow');
+          btn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+        } else {
+          btn.classList.remove('bg-poe-gold', 'text-poe-bg', 'shadow');
+          btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+        }
+      });
+
+      try {
+        localStorage.setItem(STORAGE_KEY_TAB, tabId);
+      } catch (e) {}
+    }
+
+    function updateProgress() {
+      const checkboxes = document.querySelectorAll('.check-item');
+      const total = checkboxes.length;
+      let checked = 0;
+      const state = {};
+
+      checkboxes.forEach(cb => {
+        if (cb.checked) checked++;
+        if (cb.dataset.check) {
+          state[cb.dataset.check] = cb.checked;
+        }
+      });
+
+      const pct = total > 0 ? Math.round((checked / total) * 100) : 0;
+      document.getElementById('progress-text').textContent = `${checked} / ${total} (${pct}%)`;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+
+      try {
+        localStorage.setItem(STORAGE_KEY_CHECKS, JSON.stringify(state));
+      } catch (e) {}
+    }
+
+    function resetProgress() {
+      document.querySelectorAll('.check-item').forEach(cb => {
+        cb.checked = false;
+      });
+      updateProgress();
+      showToast('Progress reset');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      // Restore saved checkboxes
+      try {
+        const savedChecks = JSON.parse(localStorage.getItem(STORAGE_KEY_CHECKS) || '{}');
+        document.querySelectorAll('.check-item').forEach(cb => {
+          if (cb.dataset.check && savedChecks[cb.dataset.check]) {
+            cb.checked = true;
+          }
+          cb.addEventListener('change', updateProgress);
+        });
+      } catch (e) {}
+
+      updateProgress();
+
+      // Restore active tab
+      let initialTab = 'campaign';
+      try {
+        const savedTab = localStorage.getItem(STORAGE_KEY_TAB);
+        if (savedTab && document.getElementById(`tab-${savedTab}`)) {
+          initialTab = savedTab;
+        }
+      } catch (e) {}
+      switchTab(initialTab);
+
+      // Restore Lucky Suppression toggle state
+      let luckyOn = true;
+      try {
+        const savedLucky = localStorage.getItem(STORAGE_KEY_LUCKY);
+        if (savedLucky !== null) luckyOn = savedLucky === 'true';
+      } catch (e) {}
+      applyLuckySuppressionUI(luckyOn);
+      selectTreeStage(0);
+    });
+  </script>
+</body>
+</html>
