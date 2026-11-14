@@ -1,617 +1,340 @@
 # ==============================================================================
-#  PATH OF EXILE 3.30: COVENS OF UMBRA — COMPLETE SSF LIGHTNING STRIKE WARDEN FILTER
-#  Includes:
-#   - 3.30 Soul Cores, Viscera, Grim Fates, Fated Items, Threads & Astrolabes
-#   - Color-Coded Build Gear (Claws = Green | Suppression = Cyan | Jewelry = Gold)
-#   - Tier 5 Jackpot & Fractured/Synthesised/Influenced/Lvl 21 Gem Safeguards
-#   - Chase Unique Base Highlights (The Taming, Yoke, Perseverance, Doedre's Tongue, etc.)
-#   - 3-Stage Auto-Scaling Currency Strictness (Campaign -> Red Maps 78+ -> T16 83+)
+# LS_Warden_330_SSF.filter — PoE 3.30 Lightning Strike Warden SSF Loot Filter
+# Distinct Visual Hierarchy: Rares, Magic, Normal Links, Currency & Claws
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# 1. SAFETY & QUEST ITEMS (NEVER HIDE)
+# 0. QUEST ITEMS, GEMS & LABYRINTHKEYS (MINT GREEN)
 # ------------------------------------------------------------------------------
 Show
-    Class == "Quest Items" "Pantheon Souls"
+    Class "Quest" "Labyrinth" "Pantheon"
     SetFontSize 42
-    SetTextColor 74 230 58 255
-    SetBorderColor 74 230 58 255
-    MinimapIcon 0 Green Star
-
-# ------------------------------------------------------------------------------
-# 2. 3.30 LEAGUE MECHANICS: SOUL CORES, VISCERA, FATED ITEMS & THREADS
-# ------------------------------------------------------------------------------
-Show # Chase Soul Cores (7th Link for Level 20 Lightning Strike)
-    BaseType == "Soul Core of Finesse" "Soul Core of Might" "Soul Core of Intellect" "Soul Core of Instability"
-    SetFontSize 45
-    SetTextColor 255 0 0 255
-    SetBackgroundColor 255 255 255 255
-    SetBorderColor 255 0 0 255
-    PlayAlertSound 6 300
-    MinimapIcon 0 Red Star
-    PlayEffect Red
-
-Show # Covens of Umbra: Viscera, Grim Fates & Cursed Poppets
-    BaseType "Viscera" "Cursed Poppet"
-    SetFontSize 44
-    SetTextColor 255 180 255 255
-    SetBackgroundColor 60 0 80 255
-    SetBorderColor 255 0 255 255
-    PlayAlertSound 3 300
-    MinimapIcon 0 Purple Star
-    PlayEffect Purple
-
-Show # Priority Threads (Expedition, Betrayal, Incursion) & Astrolabes
-    BaseType "Expedition Thread" "Betrayal Thread" "Incursion Thread" "Astrolabe"
-    SetFontSize 42
-    SetTextColor 0 255 220 255
-    SetBackgroundColor 15 45 55 255
-    SetBorderColor 0 255 220 255
+    SetTextColor 74 222 128 255
+    SetBorderColor 74 222 128 255
+    SetBackgroundColor 10 35 20 245
     PlayAlertSound 2 300
-    MinimapIcon 0 Cyan Diamond
-    PlayEffect Cyan
+    PlayEffect Green
+    MinimapIcon 0 Green Pentagon
 
-Show # All Other Threads of Creation & Frayed Threads (100% Visible in SSF)
-    BaseType "Thread" "Frayed Thread"
-    SetFontSize 38
-    SetTextColor 130 230 255 255
-    SetBackgroundColor 15 30 40 245
-    SetBorderColor 100 200 255 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Cyan Circle
-
-Show # Fated Items (Guaranteed Modifier Templates from Fate Combos)
-    Fated True
-    SetFontSize 40
-    SetTextColor 255 220 120 255
-    SetBackgroundColor 45 30 10 245
-    SetBorderColor 255 200 50 255
-    PlayAlertSound 2 250
-    MinimapIcon 1 Yellow Diamond
-    PlayEffect Yellow
-
-# ------------------------------------------------------------------------------
-# 3. 3-STAGE AUTO-SCALING CURRENCY (Campaign -> Red Maps 78+ -> T16 83+)
-# ------------------------------------------------------------------------------
-Show # T0 / High-Value Crafting Currency (Always Top Tier)
-    Class == "Stackable Currency"
-    BaseType == "Mirror of Kalandra" "Mirror Shard" "Divine Orb" "Exalted Orb" "Sacred Orb" "Fracturing Orb" "Fracturing Shard" "Hinekora's Lock" "Orb of Annulment" "Orb of Conflict" "Awakener's Orb" "Veiled Chaos Orb" "Eldritch Chaos Orb" "Eldritch Exalted Orb" "Eldritch Orb of Annulment" "Tempering Orb" "Tailoring Orb"
-    SetFontSize 45
-    SetTextColor 255 0 0 255
-    SetBackgroundColor 255 255 255 255
-    SetBorderColor 255 0 0 255
-    PlayAlertSound 6 300
-    MinimapIcon 0 Red Star
-    PlayEffect Red
-
-Show # Mid-High Crafting & 3.30 Meta-Mod Currency (Blessed, Chance, Regret, Chaos, Vaal, Regal, Scour, Fusing, Instilling)
-    Class == "Stackable Currency"
-    BaseType == "Chaos Orb" "Orb of Regret" "Orb of Unmaking" "Vaal Orb" "Regal Orb" "Orb of Scouring" "Orb of Fusing" "Blessed Orb" "Orb of Chance" "Orb of Horizons" "Harbinger's Orb" "Instilling Orb" "Enkindling Orb" "Gemcutter's Prism" "Cartographer's Chisel" "Exalted Shard" "Annulment Shard" "Ancient Orb" "Ancient Shard"
-    SetFontSize 40
-    SetTextColor 255 215 0 255
-    SetBackgroundColor 40 30 10 245
-    SetBorderColor 255 215 0 255
-    PlayAlertSound 2 250
-    MinimapIcon 1 Yellow Circle
-    PlayEffect Yellow Temp
-
-Show # Eldritch Embers & Ichors (Crucial for +1 Strike Gloves & Implicit Crafting)
-    Class == "Stackable Currency"
-    BaseType "Eldritch Ember" "Eldritch Ichor"
-    SetFontSize 40
-    SetTextColor 255 120 80 255
-    SetBackgroundColor 45 15 15 245
-    SetBorderColor 255 100 50 255
-    PlayAlertSound 2 250
-    MinimapIcon 1 Orange Diamond
-
-Show # Essences (Wrath, Hatred, Anger, Greed, Envy, Loathing, Zeal + Remnants)
-    Class == "Stackable Currency"
-    BaseType "Essence of" "Remnant of Corruption"
-    SetFontSize 38
-    SetTextColor 100 220 255 255
-    SetBackgroundColor 15 35 55 245
-    SetBorderColor 80 200 255 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Blue Square
-
-Show # Expedition, Harvest, Delve, Oil & Catalyst Currencies
-    Class == "Stackable Currency"
-    BaseType "Astragali" "Exotic Coinage" "Burial Medallion" "Scrap Metal" "Lifeforce" "Oil" "Catalyst" "Fossil" "Resonator" "Splinter" "Simulacrum" "Crescent Splinter" "Tainted"
-    SetFontSize 38
-    SetTextColor 200 180 255 255
-    SetBackgroundColor 25 20 45 245
-    SetBorderColor 180 150 255 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Purple Circle
-
-Show # Alch & Binding (Always Kept for Map Rolling)
-    Class == "Stackable Currency"
-    BaseType == "Orb of Alchemy" "Orb of Binding"
-    SetFontSize 37
-    SetTextColor 235 215 170 255
-    SetBackgroundColor 25 25 20 240
-    SetBorderColor 180 160 110 255
-
-Show # Stage 1–2: Alt, Chrom, Jeweller, Engineer, Bauble (All Visible up to AreaLevel 82)
-    AreaLevel <= 82
-    Class == "Stackable Currency"
-    BaseType == "Orb of Alteration" "Chromatic Orb" "Jeweller's Orb" "Engineer's Orb" "Glassblower's Bauble"
-    SetFontSize 36
-    SetTextColor 225 205 165 255
-    SetBackgroundColor 20 20 20 235
-    SetBorderColor 160 140 100 255
-
-Show # Stage 3 (T16 Uber-Strict, AreaLevel 83+): Show Alt/Chrom/Jeweller ONLY in Stacks of 3+
-    AreaLevel >= 83
-    Class == "Stackable Currency"
-    BaseType == "Orb of Alteration" "Chromatic Orb" "Jeweller's Orb"
-    StackSize >= 3
-    SetFontSize 37
-    SetTextColor 225 205 165 255
-    SetBackgroundColor 20 20 20 235
-    SetBorderColor 160 140 100 255
-
-Hide # Stage 3 (T16 Uber-Strict, AreaLevel 83+): Hide Single Alt/Chrom/Jeweller/Engineer/Bauble
-    AreaLevel >= 83
-    Class == "Stackable Currency"
-    BaseType == "Orb of Alteration" "Chromatic Orb" "Jeweller's Orb" "Engineer's Orb" "Glassblower's Bauble"
-
-Show # Stage 1: Low Bubble-Gum Currency (Visible in Campaign & White/Yellow Maps <= 77)
-    AreaLevel <= 77
-    Class == "Stackable Currency"
-    BaseType == "Orb of Augmentation" "Orb of Transmutation" "Blacksmith's Whetstone" "Armourer's Scrap" "Portal Scroll" "Scroll of Wisdom"
-    SetFontSize 34
-    SetTextColor 190 175 140 240
-    SetBackgroundColor 20 20 20 220
-    SetBorderColor 110 95 70 240
-
-Hide # Stage 2 (Red Map Strict, AreaLevel 78+): Hide Low Bubble-Gum Currency
-    AreaLevel >= 78
-    Class == "Stackable Currency"
-    BaseType == "Orb of Augmentation" "Orb of Transmutation" "Blacksmith's Whetstone" "Armourer's Scrap" "Portal Scroll" "Scroll of Wisdom"
-
-# ------------------------------------------------------------------------------
-# 4. DIVINATION CARDS, CHASE UNIQUES & GEMS
-# ------------------------------------------------------------------------------
-Show # Divination Cards (All Visible in SSF)
-    Class == "Divination Cards"
-    SetFontSize 40
-    SetTextColor 14 186 255 255
-    SetBackgroundColor 15 35 50 250
-    SetBorderColor 14 186 255 255
-    PlayAlertSound 2 220
-    MinimapIcon 1 Blue Triangle
-
-Show # CHASE SSF UNIQUE BASES (The Taming/Berek's, Yoke, Doedre's Tongue, Perseverance, Mageblood/HH, Covetous Dark, Ralakesh, Farrul's, etc.)
-    Rarity == Unique
-    BaseType == "Heavy Belt" "Leather Belt" "Vanguard Belt" "Two-Stone Ring" "Prismatic Ring" "Amethyst Ring" "Onyx Amulet" "Turquoise Amulet" "Citrine Amulet" "Imperial Claw" "Terror Claw" "Riveted Boots" "Slink Boots" "Triumphant Lamellar" "Zodiac Leather" "Murder Mitts" "Deerskin Gloves" "Elegant Round Shield" "Colossal Tower Shield" "Topaz Flask" "Silver Flask" "Granite Flask" "Ruby Flask" "Sapphire Flask" "Crimson Jewel" "Viridian Jewel" "Cobalt Jewel" "Prismatic Jewel"
-    SetFontSize 45
-    SetTextColor 255 120 40 255
-    SetBackgroundColor 255 245 230 255
-    SetBorderColor 255 80 0 255
-    PlayAlertSound 6 300
-    MinimapIcon 0 Red Star
-    PlayEffect Red
-
-Show # All Other Unique Items (Visible in SSF for Collection/Chance/Alch Shards)
-    Rarity == Unique
-    SetFontSize 41
-    SetTextColor 175 96 37 255
-    SetBackgroundColor 45 20 5 250
-    SetBorderColor 175 96 37 255
-    PlayAlertSound 3 250
-    MinimapIcon 0 Brown Star
-    PlayEffect Brown
-
-Show # Exceptional, Transfigured, Vaal, Level 21+ & Build-Core Gems
+Show
     Class "Skill Gems" "Support Gems"
-    BaseType "Enlighten" "Empower" "Enhance" "Awakened" "Vaal Lightning Strike" "Lightning Strike" "Returning Projectiles" "Nightblade" "Trinity" "Multistrike"
+    Quality >= 1
     SetFontSize 40
-    SetTextColor 30 220 180 255
-    SetBackgroundColor 10 40 35 250
-    SetBorderColor 30 220 180 255
-    PlayAlertSound 2 220
+    SetTextColor 27 162 155 255
+    SetBorderColor 27 162 155 255
+    SetBackgroundColor 10 30 35 245
+    PlayAlertSound 2 250
+    PlayEffect Cyan
     MinimapIcon 1 Cyan Triangle
 
-Show # Safeguard: Any Level 21+ Corrupted Gem
+Show
     Class "Skill Gems" "Support Gems"
-    GemLevel >= 21
-    SetFontSize 40
-    SetTextColor 30 220 180 255
-    SetBackgroundColor 10 40 35 250
-    SetBorderColor 30 220 180 255
-    PlayAlertSound 2 240
-    MinimapIcon 1 Cyan Star
-
-Show # Any Quality Gems (for GCP Recipe)
-    Class "Skill Gems" "Support Gems"
-    Quality >= 10
     SetFontSize 36
-    SetTextColor 30 200 170 255
-    SetBorderColor 30 200 170 255
+    SetTextColor 27 162 155 255
+    SetBorderColor 15 90 85 220
+    SetBackgroundColor 10 22 26 230
 
 # ------------------------------------------------------------------------------
-# 5. MAPS, PINNACLE FRAGMENTS, INVITATIONS & LOGBOOKS
+# 1. CURRENCY TIERS (RED/WHITE -> GOLD -> BRONZE -> SCROLLS)
 # ------------------------------------------------------------------------------
-Show # Pinnacle Fragments, Invitations, Logbooks & Memories
-    Class == "Map Fragments" "Misc Map Items" "Expedition Logbooks" "Vault Keys" "Incursion Items" "Memories"
-    SetFontSize 44
-    SetTextColor 255 80 80 255
-    SetBackgroundColor 50 10 10 255
-    SetBorderColor 255 80 80 255
-    PlayAlertSound 3 280
-    MinimapIcon 0 Red Square
-    PlayEffect Red
-
-Show # T14–T16 Red Maps (High Priority)
-    Class == "Maps"
-    MapTier >= 14
-    SetFontSize 42
-    SetTextColor 255 100 100 255
-    SetBackgroundColor 45 10 10 250
-    SetBorderColor 255 100 100 255
-    PlayAlertSound 2 250
-    MinimapIcon 1 Red Square
-    PlayEffect Red Temp
-
-Show # T6–T13 Yellow & Early Red Maps
-    Class == "Maps"
-    MapTier >= 6
-    SetFontSize 38
-    SetTextColor 255 220 100 255
-    SetBackgroundColor 35 30 10 245
-    SetBorderColor 255 220 100 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Yellow Square
-
-Show # T1–T5 White Maps
-    Class == "Maps"
-    SetFontSize 36
-    SetTextColor 240 240 240 255
-    SetBackgroundColor 25 25 25 240
-    SetBorderColor 200 200 200 255
-    PlayAlertSound 2 180
-    MinimapIcon 1 White Square
-
-# ------------------------------------------------------------------------------
-# 6. 6-LINKS, 6-SOCKETS, CLUSTER JEWELS & TINCTURES
-# ------------------------------------------------------------------------------
-Show # 6-Linked Items (Immediate Divine / Endgame Base)
-    LinkedSockets == 6
+# Tier 1: God-Tier Currency
+Show
+    Class "Stackable Currency"
+    BaseType "Mirror" "Divine Orb" "Exalted Orb" "Orb of Annulment" "Sacred Orb" "Fracturing Orb" "Hinekora's Lock"
     SetFontSize 45
     SetTextColor 255 0 0 255
-    SetBackgroundColor 255 255 255 255
     SetBorderColor 255 0 0 255
+    SetBackgroundColor 255 255 255 255
     PlayAlertSound 6 300
-    MinimapIcon 0 Red Star
     PlayEffect Red
+    MinimapIcon 0 Red Star
 
-Show # 6-Socket Items (7x Jeweller's Orbs Vendor Recipe)
-    Sockets == 6
-    SetFontSize 38
-    SetTextColor 255 190 90 255
-    SetBackgroundColor 30 25 20 240
-    SetBorderColor 255 190 90 255
-    MinimapIcon 2 Orange Circle
+# Tier 2: High SSF Crafting & Progression Currency
+Show
+    Class "Stackable Currency"
+    BaseType "Chaos Orb" "Orb of Alchemy" "Orb of Binding" "Orb of Regret" "Orb of Unmaking" "Vaal Orb" "Gemcutter's Prism" "Instilling Orb" "Enkindling Orb" "Orb of Scouring" "Blessed Orb" "Regal Orb" "Cartographer's Chisel" "Glassblower's Bauble" "Orb of Horizons" "Harbinger's Orb" "Ancient Orb" "Exotic Coinage" "Scrap Metal" "Astragali" "Burial Medallion"
+    SetFontSize 42
+    SetTextColor 255 205 55 255
+    SetBorderColor 255 205 55 255
+    SetBackgroundColor 35 28 10 245
+    PlayAlertSound 2 300
+    PlayEffect Yellow
+    MinimapIcon 1 Yellow Circle
 
-Show # Prismatic & Rosethorn Tinctures (Core Warden DPS Slot — Bright Green)
-    Class == "Tinctures"
-    BaseType == "Prismatic Tincture" "Rosethorn Tincture"
+# Tier 2B: Essences, Fossils, Oils, Catalysts & Eldritch Currency
+Show
+    Class "Stackable Currency"
+    BaseType "Essence" "Remnant of Corruption" "Fossil" "Resonator" "Oil" "Catalyst" "Eldritch" "Lesser Eldritch" "Greater Eldritch" "Grand Eldritch" "Exceptional Eldritch" "Lifeforce"
     SetFontSize 41
-    SetTextColor 80 255 120 255
-    SetBackgroundColor 15 50 20 250
-    SetBorderColor 80 255 120 255
-    PlayAlertSound 2 230
-    MinimapIcon 1 Green Diamond
-    PlayEffect Green Temp
+    SetTextColor 56 189 248 255
+    SetBorderColor 56 189 248 255
+    SetBackgroundColor 12 28 48 245
+    PlayAlertSound 2 300
+    PlayEffect Cyan
+    MinimapIcon 1 Cyan Circle
 
-Show # Cluster Jewels & Abyss Jewels
-    Class == "Jewels"
-    BaseType "Cluster Jewel" "Searching Eye Jewel" "Murderous Eye Jewel" "Hypnotic Eye Jewel" "Ghastly Eye Jewel" "Crimson Jewel" "Viridian Jewel" "Cobalt Jewel"
+# Tier 3: Everyday SSF Socket & Bench Currency (Distinct Warm Bronze/Orange)
+Show
+    Class "Stackable Currency"
+    BaseType "Orb of Alteration" "Chromatic Orb" "Jeweller's Orb" "Orb of Fusing" "Orb of Chance"
     SetFontSize 38
-    SetTextColor 100 220 255 255
-    SetBackgroundColor 15 30 45 245
-    SetBorderColor 100 220 255 255
+    SetTextColor 245 165 85 255
+    SetBorderColor 180 110 45 255
+    SetBackgroundColor 26 20 14 235
+    PlayAlertSound 4 200
+    MinimapIcon 2 Brown Circle
+
+# Tier 4: Early Act Crafting Currency (Soft Tan - No Loud Border)
+Show
+    Class "Stackable Currency"
+    BaseType "Orb of Transmutation" "Orb of Augmentation" "Blacksmith's Whetstone" "Armourer's Scrap"
+    SetFontSize 35
+    SetTextColor 210 185 145 255
+    SetBorderColor 90 75 55 200
+    SetBackgroundColor 18 16 14 220
+
+# Tier 5: Wisdom & Portal Scrolls (Small Subtle Grey-Tan)
+Show
+    Class "Stackable Currency"
+    BaseType "Scroll of Wisdom" "Portal Scroll"
+    SetFontSize 32
+    SetTextColor 165 155 140 230
+    SetBorderColor 60 55 50 180
+    SetBackgroundColor 12 12 12 200
+
+# ------------------------------------------------------------------------------
+# 2. UNIQUE ITEMS (BRIGHT ORANGE ON DARK ESPRESSO + BEAM)
+# ------------------------------------------------------------------------------
+# Berek's Two-Stone Rings for The Taming Vendor Recipe
+Show
+    Rarity Unique
+    BaseType "Two-Stone Ring"
+    SetFontSize 45
+    SetTextColor 255 125 30 255
+    SetBorderColor 255 230 80 255
+    SetBackgroundColor 50 20 5 255
+    PlayAlertSound 6 300
+    PlayEffect Orange
+    MinimapIcon 0 Orange Star
+
+Show
+    Rarity Unique
+    SetFontSize 42
+    SetTextColor 240 120 40 255
+    SetBorderColor 240 120 40 255
+    SetBackgroundColor 42 20 10 245
+    PlayAlertSound 3 300
+    PlayEffect Orange
+    MinimapIcon 1 Orange Star
+
+# ------------------------------------------------------------------------------
+# 3. 5-LINK & 6-LINK GEAR (WHITE/CYAN GLOW)
+# ------------------------------------------------------------------------------
+Show
+    LinkedSockets >= 6
+    SetFontSize 45
+    SetTextColor 255 0 0 255
+    SetBorderColor 255 0 0 255
+    SetBackgroundColor 255 255 255 255
+    PlayAlertSound 6 300
+    PlayEffect Red
+    MinimapIcon 0 Red Star
+
+Show
+    LinkedSockets >= 5
+    SetFontSize 43
+    SetTextColor 255 255 255 255
+    SetBorderColor 56 189 248 255
+    SetBackgroundColor 15 35 65 250
+    PlayAlertSound 1 300
+    PlayEffect Cyan
+    MinimapIcon 0 Cyan Star
+
+# ------------------------------------------------------------------------------
+# 4. WARDEN TINCTURES & FLASKS (EMERALD / TEAL)
+# ------------------------------------------------------------------------------
+Show
+    BaseType "Prismatic Tincture" "Rosethorn Tincture" "Borealwood Tincture" "Ashbark Tincture" "Fulgurite Tincture" "Ironwood Tincture" "Oakbranch Tincture" "Sporebloom Tincture"
+    SetFontSize 41
+    SetTextColor 52 211 153 255
+    SetBorderColor 229 184 92 255
+    SetBackgroundColor 10 38 30 245
+    PlayAlertSound 2 250
+    PlayEffect Green
+    MinimapIcon 1 Green Hexagon
+
+Show
+    Class "Utility Flasks"
+    BaseType "Jade Flask" "Granite Flask" "Quicksilver Flask" "Silver Flask" "Diamond Flask" "Quartz Flask" "Amethyst Flask"
+    SetFontSize 38
+    SetTextColor 140 240 200 255
+    SetBorderColor 52 211 153 230
+    SetBackgroundColor 12 28 24 235
+
+Show
+    Class "Life Flasks" "Mana Flasks"
+    AreaLevel <= 67
+    SetFontSize 35
+    SetTextColor 200 220 220 240
+    SetBorderColor 100 130 130 200
+    SetBackgroundColor 15 20 22 215
+
+# ------------------------------------------------------------------------------
+# 5. RARE ITEMS — UNMISTAKABLE BRIGHT YELLOW HIERARCHY!
+# ------------------------------------------------------------------------------
+# 5A. PRIORITY RARES: Claws, Rings, Amulets, Belts & Jewels (Bright Yellow + Cyan Border!)
+Show
+    Rarity Rare
+    Class "Claws" "Rings" "Amulets" "Belts" "Jewels" "Abyss Jewels"
+    SetFontSize 41
+    SetTextColor 255 255 85 255
+    SetBorderColor 56 189 248 255
+    SetBackgroundColor 22 32 48 245
+    PlayAlertSound 2 250
+    PlayEffect Yellow
+    MinimapIcon 1 Yellow Diamond
+
+# 5B. PRIORITY RARES: Evasion / Hybrid Boots, Gloves, Helmets, Body Armour, Shields (Classic Rare Yellow on Dark Olive/Gold)
+Show
+    Rarity Rare
+    Class "Boots" "Gloves" "Helmets" "Body Armours" "Shields"
+    BaseEvasion >= 1
+    SetFontSize 39
+    SetTextColor 255 255 119 255
+    SetBorderColor 235 200 60 255
+    SetBackgroundColor 38 34 12 240
+    MinimapIcon 2 Yellow Square
+
+# 5C. OTHER RARES (Campaign / Vendor Trash Rares - Smaller Muted Yellow, No Minimap Icon)
+Show
+    Rarity Rare
+    AreaLevel <= 67
+    SetFontSize 34
+    SetTextColor 215 205 115 235
+    SetBorderColor 120 110 50 200
+    SetBackgroundColor 24 22 12 215
+
+# ------------------------------------------------------------------------------
+# 6. CLAW CRAFTING BASES (NORMAL & MAGIC — CYAN/PURPLE BORDER)
+# ------------------------------------------------------------------------------
+# Endgame Top Claw Bases (Imperial / Gemini / Noble)
+Show
+    Rarity <= Magic
+    Class "Claws"
+    BaseType "Imperial Claw" "Gemini Claw" "Noble Claw"
+    ItemLevel >= 73
+    SetFontSize 41
+    SetTextColor 147 197 253 255
+    SetBorderColor 192 132 252 255
+    SetBackgroundColor 20 18 42 245
+    PlayAlertSound 1 250
+    PlayEffect Blue
     MinimapIcon 1 Blue Diamond
 
-# ------------------------------------------------------------------------------
-# 7. COLOR-CODED BUILD GEAR (Weapons = Green | Armour = Cyan | Jewelry = Gold)
-# ------------------------------------------------------------------------------
-
-# --- A. TIER 5 BUILD-SPECIFIC JACKPOTS (Fractured / Special Bases for LS Warden) ---
-Show # Tier 5 CLAWS (Bright Neon Green + Gold Jackpot Border)
-    UnidentifiedItemTier >= 5
-    BaseType == "Imperial Claw" "Gemini Claw" "Twin Claw"
-    SetFontSize 45
-    SetTextColor 50 255 100 255
-    SetBackgroundColor 15 60 25 255
-    SetBorderColor 255 255 100 255
-    PlayAlertSound 6 300
-    MinimapIcon 0 Green Star
-    PlayEffect Green
-
-Show # Tier 5 SUPPRESSION ARMOUR & SHIELDS (Bright Electric Cyan + Gold Border)
-    UnidentifiedItemTier >= 5
-    BaseType == "Full Dragonscale" "Zodiac Leather" "Dragonscale Gauntlets" "Slink Gloves" "Dragonscale Boots" "Slink Boots" "Royal Burgonet" "Lion Pelt" "Colossal Tower Shield" "Cardinal Round Shield"
-    SetFontSize 44
-    SetTextColor 0 255 255 255
-    SetBackgroundColor 10 55 65 255
-    SetBorderColor 255 255 100 255
-    PlayAlertSound 3 300
-    MinimapIcon 0 Cyan Star
-    PlayEffect Cyan
-
-Show # Tier 5 JEWELRY & BELTS (Simplex Amulet, Cord Belt, Stygian Vise, Rings — Bright Gold)
-    UnidentifiedItemTier >= 5
-    BaseType == "Simplex Amulet" "Cord Belt" "Stygian Vise" "Amethyst Ring" "Two-Stone Ring" "Turquoise Amulet" "Jade Amulet" "Agate Amulet"
-    SetFontSize 44
-    SetTextColor 255 225 80 255
-    SetBackgroundColor 60 45 10 255
-    SetBorderColor 255 255 150 255
-    PlayAlertSound 3 300
-    MinimapIcon 0 Yellow Star
-    PlayEffect Yellow
-
-Show # Tier 5 OFF-BUILD BASES (Purple — Still Shown for Fractured Mods / Alt Projects)
-    UnidentifiedItemTier >= 5
-    SetFontSize 41
-    SetTextColor 240 150 255 255
-    SetBackgroundColor 45 15 55 250
-    SetBorderColor 200 80 255 255
-    PlayAlertSound 3 240
-    MinimapIcon 1 Purple Star
-    PlayEffect Purple Temp
-
-# --- B. SAFEGUARDS: IDENTIFIED FRACTURED, SYNTHESISED & INFLUENCED ITEMS ---
-Show # Safeguard: Identified Fractured Items (From Ritual, Expedition, Heist, Bosses)
-    FracturedItem True
-    SetFontSize 42
-    SetTextColor 255 160 255 255
-    SetBackgroundColor 50 10 60 255
-    SetBorderColor 255 0 255 255
-    PlayAlertSound 3 260
-    MinimapIcon 0 Purple Diamond
-    PlayEffect Purple
-
-Show # Safeguard: Synthesised Items
-    SynthesisedItem True
-    SetFontSize 42
-    SetTextColor 120 220 255 255
-    SetBackgroundColor 15 35 60 255
-    SetBorderColor 100 200 255 255
-    PlayAlertSound 3 260
-    MinimapIcon 0 Blue Diamond
-    PlayEffect Blue
-
-Show # Safeguard: Shaper / Elder / Conqueror / Exarch / Eater Influenced Items
-    HasInfluence != None
-    SetFontSize 39
-    SetTextColor 255 190 120 255
-    SetBackgroundColor 40 20 15 245
-    SetBorderColor 255 140 60 255
-    MinimapIcon 1 Orange Square
-
-# --- C. TIER 3–4 BUILD GEAR (White/Yellow Maps: Any ilvl | Red Maps 78+: ilvl 84+ Only) ---
-Show # Tier 3–4 CLAWS — Bright Green (White/Yellow Maps)
-    AreaLevel <= 77
-    UnidentifiedItemTier >= 3
-    BaseType == "Imperial Claw" "Gemini Claw" "Twin Claw"
-    SetFontSize 40
-    SetTextColor 80 255 130 255
-    SetBackgroundColor 15 45 20 250
-    SetBorderColor 80 255 130 255
-    PlayAlertSound 2 220
-    MinimapIcon 1 Green Diamond
-
-Show # Tier 3–4 CLAWS — Bright Green (Red Map Strict: ilvl 82+ for T1 Ele Rolls)
-    AreaLevel >= 78
-    ItemLevel >= 82
-    UnidentifiedItemTier >= 3
-    BaseType == "Imperial Claw" "Gemini Claw"
-    SetFontSize 40
-    SetTextColor 80 255 130 255
-    SetBackgroundColor 15 45 20 250
-    SetBorderColor 80 255 130 255
-    PlayAlertSound 2 220
-    MinimapIcon 1 Green Diamond
-
-Show # Tier 3–4 SUPPRESSION ARMOUR & SHIELDS — Cyan (White/Yellow Maps)
-    AreaLevel <= 77
-    UnidentifiedItemTier >= 3
-    BaseType == "Full Dragonscale" "Zodiac Leather" "Dragonscale Gauntlets" "Slink Gloves" "Dragonscale Boots" "Slink Boots" "Royal Burgonet" "Lion Pelt" "Colossal Tower Shield" "Cardinal Round Shield"
-    SetFontSize 39
-    SetTextColor 0 235 255 255
-    SetBackgroundColor 10 40 50 250
-    SetBorderColor 0 235 255 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Cyan Diamond
-
-Show # Tier 3–4 SUPPRESSION ARMOUR & SHIELDS — Cyan (Red Map Strict: ilvl 84+ for T1 Suppression)
-    AreaLevel >= 78
-    ItemLevel >= 84
-    UnidentifiedItemTier >= 3
-    BaseType == "Full Dragonscale" "Zodiac Leather" "Dragonscale Gauntlets" "Slink Gloves" "Dragonscale Boots" "Slink Boots" "Royal Burgonet" "Lion Pelt" "Colossal Tower Shield" "Cardinal Round Shield"
-    SetFontSize 39
-    SetTextColor 0 235 255 255
-    SetBackgroundColor 10 40 50 250
-    SetBorderColor 0 235 255 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Cyan Diamond
-
-Show # Tier 3–4 JEWELRY & BELTS — Gold (White/Yellow Maps)
-    AreaLevel <= 77
-    UnidentifiedItemTier >= 3
-    BaseType == "Stygian Vise" "Cord Belt" "Simplex Amulet" "Amethyst Ring" "Two-Stone Ring" "Turquoise Amulet" "Jade Amulet" "Agate Amulet"
-    SetFontSize 39
-    SetTextColor 255 215 90 255
-    SetBackgroundColor 45 35 10 250
-    SetBorderColor 255 215 90 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Yellow Diamond
-
-Show # Tier 3–4 JEWELRY & BELTS — Gold (Red Map Strict: ilvl 84+ Bases)
-    AreaLevel >= 78
-    ItemLevel >= 84
-    UnidentifiedItemTier >= 3
-    BaseType == "Stygian Vise" "Cord Belt" "Simplex Amulet" "Amethyst Ring" "Two-Stone Ring" "Turquoise Amulet" "Jade Amulet" "Agate Amulet"
-    SetFontSize 39
-    SetTextColor 255 215 90 255
-    SetBackgroundColor 45 35 10 250
-    SetBorderColor 255 215 90 255
-    PlayAlertSound 2 200
-    MinimapIcon 1 Yellow Diamond
-
-# --- D. NON-TIERED HIGH-ILVL CRAFTING BASES (ilvl 84+ for Essence / Rog / Eldritch) ---
-Show # ilvl 84+ Imperial Claw (Green)
-    ItemLevel >= 84
-    Rarity <= Rare
-    BaseType == "Imperial Claw"
+# Campaign Progression Claw Bases (Nailed Fist, Sharktooth, Awl, Cat's Paw, Blinder, Timeworn, Sparkling, Fright, Double, Twin, Great White, Throat Stabber)
+Show
+    Rarity <= Magic
+    Class "Claws"
+    AreaLevel <= 67
     SetFontSize 37
-    SetTextColor 120 255 150 255
-    SetBackgroundColor 15 35 20 235
-    SetBorderColor 80 220 110 255
-
-Show # ilvl 84+ Suppression Armour & Gloves (Cyan)
-    ItemLevel >= 84
-    Rarity <= Rare
-    BaseType == "Dragonscale Gauntlets" "Slink Gloves" "Full Dragonscale" "Zodiac Leather" "Dragonscale Boots" "Slink Boots" "Royal Burgonet" "Lion Pelt" "Colossal Tower Shield" "Cardinal Round Shield"
-    SetFontSize 36
-    SetTextColor 120 235 255 255
-    SetBackgroundColor 15 30 40 235
-    SetBorderColor 80 200 220 255
-
-Show # ilvl 84+ Jewelry & Belts (Gold)
-    ItemLevel >= 84
-    Rarity <= Rare
-    BaseType == "Stygian Vise" "Cord Belt" "Simplex Amulet" "Amethyst Ring"
-    SetFontSize 36
-    SetTextColor 255 225 130 255
-    SetBackgroundColor 35 28 12 235
-    SetBorderColor 210 180 90 255
+    SetTextColor 135 206 250 255
+    SetBorderColor 56 189 248 230
+    SetBackgroundColor 12 24 38 230
 
 # ------------------------------------------------------------------------------
-# 8. FLASKS (Campaign & Endgame Utility Bases)
+# 7. CAMPAIGN 4-LINKS & 3-LINKS (NORMAL & MAGIC — DISTINCT FROM RARES!)
 # ------------------------------------------------------------------------------
-Show # Core Endgame Utility & Divine Life Flasks (ilvl 60+ up to AreaLevel 77)
-    AreaLevel <= 77
-    Class "Flasks"
-    BaseType == "Divine Life Flask" "Jade Flask" "Granite Flask" "Quicksilver Flask" "Ruby Flask" "Topaz Flask" "Sapphire Flask" "Silver Flask" "Amethyst Flask"
-    ItemLevel >= 60
-    SetFontSize 36
-    SetTextColor 220 255 220 255
-    SetBackgroundColor 20 35 20 235
-    SetBorderColor 120 200 120 255
-
-Show # Red Map Strict (AreaLevel 78+): Only ilvl 84+ Endgame Flasks (for T1 Suffixes)
-    AreaLevel >= 78
-    Class "Flasks"
-    BaseType == "Divine Life Flask" "Jade Flask" "Granite Flask" "Quicksilver Flask" "Ruby Flask" "Topaz Flask" "Sapphire Flask" "Silver Flask" "Amethyst Flask"
-    ItemLevel >= 84
-    SetFontSize 36
-    SetTextColor 220 255 220 255
-    SetBackgroundColor 20 35 20 235
-    SetBorderColor 120 200 120 255
-
-Show # Campaign Life, Mana & Utility Flasks (Acts 1–10)
-    Class "Flasks"
-    AreaLevel <= 67
-    SetFontSize 35
-    SetTextColor 200 240 200 255
-    SetBorderColor 100 180 100 255
-
-# ------------------------------------------------------------------------------
-# 9. CAMPAIGN LEVELING RULES (Color-Coded by Slot, Auto-Hide in Maps)
-# ------------------------------------------------------------------------------
-Show # 5-Link Items in Campaign & Early Maps
-    LinkedSockets == 5
+# 4-Linked Evasion/Hybrid Gear during Campaign & Early Maps (Crisp White/Blue with Purple Border)
+Show
+    Rarity <= Magic
+    LinkedSockets >= 4
+    Class "Boots" "Gloves" "Helmets" "Body Armours"
     AreaLevel <= 75
-    SetFontSize 42
-    SetTextColor 255 255 255 255
-    SetBackgroundColor 60 20 80 250
-    SetBorderColor 220 100 255 255
-    PlayAlertSound 2 250
-    MinimapIcon 1 Purple Circle
+    SetFontSize 39
+    SetTextColor 225 240 255 255
+    SetBorderColor 192 132 252 255
+    SetBackgroundColor 24 18 40 235
+    MinimapIcon 2 Purple Square
 
-Show # Acts 3–10 Target 4-Links (G-G-B-R / G-G-G-B for Lightning Strike + Trinity + Multistrike + Nightblade)
-    AreaLevel >= 24
-    AreaLevel <= 67
-    LinkedSockets == 4
-    SocketGroup "GGBR" "GGGB" "GGRR"
-    SetFontSize 40
-    SetTextColor 100 255 150 255
-    SetBackgroundColor 15 50 25 250
-    SetBorderColor 100 255 150 255
-    PlayAlertSound 2 200
-
-Show # Acts 1–4 Target 3-Links (G-G-R / G-G-B for Frost Blades / Early LS)
-    AreaLevel <= 38
+# Act 1–3 Useful 3-Linked Gear (G-G-G, G-G-R, G-G-B, G-B-R) — Clean Slate/Cyan, NOT Yellow!
+Show
+    Rarity <= Magic
     LinkedSockets >= 3
-    SocketGroup "GGR" "GGB"
-    SetFontSize 38
-    SetTextColor 120 255 180 255
-    SetBackgroundColor 15 45 25 245
-    SetBorderColor 120 255 180 255
-
-Show # Campaign Claws (Green)
-    AreaLevel <= 67
-    Rarity >= Magic
-    Class == "Claws"
-    SetFontSize 38
-    SetTextColor 100 255 140 255
-    SetBackgroundColor 15 40 20 240
-    SetBorderColor 100 255 140 255
-
-Show # Campaign Evasion & Armour/Evasion Gear (Cyan)
-    AreaLevel <= 67
-    Rarity >= Magic
-    Class == "Boots" "Gloves" "Body Armours" "Helmets" "Shields"
-    BaseEvasion >= 1
+    SocketGroup "GGG" "GGR" "GGB" "GBR"
+    AreaLevel <= 32
     SetFontSize 36
-    SetTextColor 120 235 255 255
-    SetBackgroundColor 15 35 45 235
-    SetBorderColor 100 200 220 255
+    SetTextColor 186 230 253 255
+    SetBorderColor 56 189 248 210
+    SetBackgroundColor 14 22 34 225
 
-Show # Campaign Rings, Amulets & Belts (Gold)
-    AreaLevel <= 67
-    Rarity >= Magic
-    Class == "Rings" "Amulets" "Belts"
-    SetFontSize 36
-    SetTextColor 255 225 120 255
-    SetBackgroundColor 35 28 12 235
-    SetBorderColor 210 180 90 255
-
-Show # Campaign Normal Claws & Boots for Vendor Recipes (MS Boots / Flat Ele Claw)
-    AreaLevel <= 55
-    Rarity == Normal
-    Class == "Claws" "Boots"
-    SetFontSize 34
-    SetTextColor 210 210 210 255
-    SetBorderColor 130 130 130 255
-
-Show # RGB Chromatic Vendor Items (Campaign + White Maps)
-    AreaLevel <= 72
+# Chromatic Orb Vendor Recipe Items (R-G-B Linked)
+Show
+    Rarity <= Magic
     SocketGroup "RGB"
     Width <= 2
-    Height <= 3
+    Height <= 2
     SetFontSize 34
-    SetTextColor 200 220 255 255
-    SetBorderColor 120 150 220 255
+    SetTextColor 180 190 205 235
+    SetBorderColor 100 180 140 210
+    SetBackgroundColor 16 22 20 215
 
-Show # Rare Rings, Amulets & Belts in White/Yellow Maps (Early Res/Life — Hides in Red Maps 78+)
-    AreaLevel >= 68
-    AreaLevel <= 77
-    Rarity == Rare
-    Class == "Rings" "Amulets" "Belts"
+# Act 1–2 Normal/Magic Jewellery & Belts (Rings, Amulets, Rustic Sash, Leather Belt)
+Show
+    Rarity <= Magic
+    Class "Rings" "Amulets" "Belts"
+    AreaLevel <= 28
+    SetFontSize 36
+    SetTextColor 165 215 255 255
+    SetBorderColor 80 140 200 220
+    SetBackgroundColor 14 20 30 225
+
+# Act 1 Magic Boots (For finding 10% Movement Speed early)
+Show
+    Rarity Magic
+    Class "Boots"
+    AreaLevel <= 18
     SetFontSize 35
-    SetTextColor 255 235 130 255
-    SetBackgroundColor 30 25 12 230
-    SetBorderColor 180 160 80 255
+    SetTextColor 130 175 255 255
+    SetBorderColor 60 110 200 200
+    SetBackgroundColor 12 18 32 215
 
 # ------------------------------------------------------------------------------
-# 10. HIDE ALL REMAINING CLUTTER IN MAPS (Tier 2, Untiered Rares, Non-Build Bases)
+# 8. MAPS, SCARABS, DIVINATION CARDS & CLUSTER JEWELS
 # ------------------------------------------------------------------------------
+Show
+    Class "Maps" "Map Fragments" "Misc Map Items" "Vault Keys"
+    SetFontSize 42
+    SetTextColor 255 255 255 255
+    SetBorderColor 229 184 92 255
+    SetBackgroundColor 30 20 45 245
+    PlayAlertSound 5 300
+    PlayEffect Yellow
+    MinimapIcon 0 Yellow Square
+
+Show
+    Class "Divination Cards"
+    SetFontSize 41
+    SetTextColor 14 186 255 255
+    SetBorderColor 14 186 255 255
+    SetBackgroundColor 15 25 45 245
+    PlayAlertSound 2 300
+    PlayEffect Cyan
+    MinimapIcon 1 Cyan Triangle
+
+# ------------------------------------------------------------------------------
+# 9. HIDE CLUTTER (UNLINKED WHITE/MAGIC TRASH IN CAMPAIGN & MAPS)
+# ------------------------------------------------------------------------------
+# Keep Act 1 Level 1-4 items visible only on The Twilight Strand / Coast
+Show
+    AreaLevel <= 3
+    SetFontSize 32
+    SetTextColor 170 170 170 210
+    SetBackgroundColor 10 10 10 180
+
+# Hide unlinked normal/magic weapons & armour from Act 1 Mud Flats onward!
 Hide
-    AreaLevel >= 68
-    Rarity <= Rare
-    Class == "Claws" "Daggers" "Rune Daggers" "Wands" "One Hand Swords" "Thrusting One Hand Swords" "One Hand Axes" "One Hand Maces" "Sceptres" "Bows" "Staves" "Warstaves" "Two Hand Swords" "Two Hand Axes" "Two Hand Maces" "Fishing Rods" "Body Armours" "Boots" "Gloves" "Helmets" "Shields" "Quivers" "Life Flasks" "Mana Flasks" "Hybrid Flasks" "Utility Flasks" "Tinctures"
+    Rarity <= Magic
+    Class "Boots" "Gloves" "Helmets" "Body Armours" "Shields" "Bows" "Quivers" "Swords" "Axes" "Maces" "Staves" "Wands" "Daggers" "Sceptres" "Claws"
+    LinkedSockets < 3
+    AreaLevel >= 4
+    SetFontSize 24
