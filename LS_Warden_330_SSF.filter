@@ -151,7 +151,7 @@ Show
 
 # MAPS, FRAGMENTS, SCARABS AND KEYS
 Show
-    Class "Maps" "Map Fragments" "Misc Map Items" "Vault Keys" "Scarabs"
+    Class "Maps" "Map Fragments" "Misc Map Items" "Vault Keys"
     SetTextColor 255 255 255 255
     SetBorderColor 240 190 70 255
     SetBackgroundColor 40 18 60 250
