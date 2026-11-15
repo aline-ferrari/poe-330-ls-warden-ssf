@@ -483,6 +483,17 @@
     .loot-link { color: #e6e6e6; border-color: #c084fc; }
     .loot-currency { color: #fff0bd; border-color: #ca9955; background: #30200c; }
     .guide-sources { color: var(--text-1); font-size: .83rem; margin-top: 16px; }
+    .craft-route-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    .craft-route-nav a { text-decoration: none; padding: 6px 10px; }
+    .craft-recipe { scroll-margin-top: calc(var(--site-top-height, 200px) + 12px); }
+    .craft-recipe summary { color: var(--accent-gold); font-size: 1.05rem; font-weight: 700; cursor: pointer; }
+    .craft-recipe summary .badge { display: inline-block; white-space: nowrap; margin-left: 8px; vertical-align: middle; }
+    .craft-recipe summary:focus-visible, .craft-route-nav a:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 4px; }
+    .craft-recipe .craft-inputs { margin-top: 14px; color: var(--text-1); font-size: .9rem; }
+    .craft-steps { padding-left: 24px; margin: 14px 0; }
+    .craft-steps li { padding-left: 4px; margin: 10px 0; font-size: .9rem; }
+    .craft-stop { border-left-color: var(--accent-green); background: #34d39909; }
+    .craft-method-table { min-width: 620px; }
     .gear-stage[hidden] { display: none; }
     .gear-table { min-width: 580px; }
     .gear-table th:first-child { width: 25%; }
@@ -811,7 +822,169 @@
 <div class="card"><h2>Tinctures without breaking the character</h2><ol class="step-list"><li><strong>One first, two later.</strong> A useful Prismatic Tincture is the first damage candidate; Rosethorn can help a crit setup. Do not stop early campaign progress to farm a specific tincture.</li><li><strong>Choose the two different mastery effects.</strong> At Practised Reapplication, select first six Mana Burn have no effect; at Burst of Energy, select deactivation at 12 or more. They must be selected in game, not merely highlighted on the map.</li><li><strong>Understand lingering effects.</strong> Enduring Suffusion gives 0.5 seconds per Mana Burn stack at deactivation, capped at six seconds. Lower stacks mean less linger. Slower Mana Burn changes timing, not the requirement to monitor mana.</li><li><strong>Press them again.</strong> Automatic deactivation is not automatic reactivation. Actual downtime depends on cooldown and when you reactivate. Check single-target recovery, trigger costs and unreserved mana together.</li><li><strong>Respect flask slots.</strong> With two tinctures, start with a life flask plus two useful utility flasks. Jade and Quicksilver are practical; Diamond can replace a utility slot if crit needs it. Whirling Blades may reduce the need for Quicksilver later. Do not remove your only life flask to chase tooltip damage.</li><li><strong>Turn off a failing setup.</strong> If mana collapses, disable a tincture or aura and keep a mana flask until the recovery problem is fixed. Clever Thief helps only while your attacks hit and deal damage.</li></ol><div class="callout"><strong>Defensive limitations:</strong> evasion and suppression do not solve large physical hits or damage over time. Favor useful armor/evasion shield and body bases, life, appropriate flasks and ailment handling. A manually used Enduring Cry is an optional source of endurance charges when you can safely generate them; it is not automated by Automation and its boss uptime must be checked.</div></div></div></section>
 
   <!-- TAB 5: SSF CRAFTING & REGEX -->
-  <section id="tab-crafting" class="tab-panel"><div class="card"><h2>When to craft &mdash; spend only to solve a problem</h2><div class="table-scroll"><table><thead><tr><th>Stage / trigger</th><th>Action</th><th>Stop / save</th></tr></thead><tbody>
+  <section id="tab-crafting" class="tab-panel">
+    <div class="card">
+      <h2>Craft gear you can actually use <span class="badge">SSF · 3.30</span></h2>
+      <p><strong>Essences are a good early claw method, but they are not the answer to every slot.</strong> For a first chest, start with links and salvage usable drops. Rog and Harvest can build defenses with different resources; Eldritch currency can later improve one half of an armor item without destroying the other half.</p>
+      <div class="callout"><strong>3.30 check · 15 November 2026:</strong> Harvest is now Sacred Flora in maps; resistance swaps cost 300 each of two Lifeforce types. Rog's strongest reroll/upgrade offers are less generous. Recombination keeps the chosen base's item level; old sparse-donor odds changed. Full weapon locks cost 4 Divines + 1 Sacred Orb; armor locks cost 4 Divines + 4 Blessed Orbs. Partial locks also exist. Metacraft recipes moved to Nightmare Maps; Orbs of Binding no longer drop. All-white sockets can be benched for 1 Scouring Orb on an uncorrupted item. <a href="https://www.pathofexile.com/forum/view-thread/4013680" target="_blank" rel="noopener noreferrer">GGG 3.30 patch notes</a>.</div>
+      <p><strong>Before spending:</strong> work on a spare, uncorrupted item. Hold Alt to distinguish item level from required character level, inspect prefixes/suffixes, and check any fracture. A rare normally has up to three prefixes and three suffixes; the bench usually adds only one crafted modifier. Reforging affixes keeps sockets and links, but rerolls the explicit stats unless a supported protection mechanic applies. Choose a small spending batch first; suggested batch sizes below are limits, not success-rate estimates.</p>
+      <nav class="craft-route-nav" aria-label="Step-by-step crafting recipes">
+        <a class="small-pill" href="#craft-claw-early" onclick="openCraftRecipe('craft-claw-early')">1. Early-map claw</a>
+        <a class="small-pill" href="#craft-claw-alts" onclick="openCraftRecipe('craft-claw-alts')">2. Claw without essences</a>
+        <a class="small-pill" href="#craft-chest-start" onclick="openCraftRecipe('craft-chest-start')">3. First mapping chest</a>
+        <a class="small-pill" href="#craft-rog" onclick="openCraftRecipe('craft-rog')">4. Rog armor</a>
+        <a class="small-pill" href="#craft-harvest" onclick="openCraftRecipe('craft-harvest')">5. Harvest repairs</a>
+        <a class="small-pill" href="#craft-fossils" onclick="openCraftRecipe('craft-fossils')">6. Fossil alternatives</a>
+        <a class="small-pill" href="#craft-fractured" onclick="openCraftRecipe('craft-fractured')">7. Found fractures</a>
+        <a class="small-pill" href="#craft-eldritch" onclick="openCraftRecipe('craft-eldritch')">8. Finish a good chest</a>
+        <a class="small-pill" href="#craft-recombine" onclick="openCraftRecipe('craft-recombine')">9. Recombination</a>
+        <a class="small-pill" href="#craft-metamods" onclick="openCraftRecipe('craft-metamods')">10. Later claw finishing</a>
+      </nav>
+      <div class="table-scroll"><table class="craft-method-table"><caption>Choose the method that matches the item and resources you already have</caption><thead><tr><th scope="col">Your situation</th><th scope="col">Best first attempt</th><th scope="col">What it actually guarantees</th></tr></thead><tbody>
+        <tr><td>Weak claw, several elemental essences</td><td>Flat-element essence → inspect → craft missing speed or damage</td><td>The essence's listed modifier, not two damage rolls or good speed.</td></tr>
+        <tr><td>Few essences, many Alterations and a Regal</td><td>Roll a good damage/speed magic claw → Regal → craft second element</td><td>You retain the magic item's mods when Regaling; the added mod is random.</td></tr>
+        <tr><td>Usable 5-link, poor stats</td><td>Greed essence or Harvest Life reforge</td><td>Greed fixes flat life; Life reforge fixes a life-tagged mod. Neither fixes all defenses.</td></tr>
+        <tr><td>No good armor base, Expedition resources ready</td><td>Rog's shop → preserve a useful half → improve the other</td><td>Only the accepted offer's effect; the next offer is not guaranteed.</td></tr>
+        <tr><td>Good item, wrong elemental resistance</td><td>Harvest resistance conversion</td><td>A targeted eligible resistance change, rather than a whole-item reroll.</td></tr>
+        <tr><td>Good suppression/resistance suffixes, weak chest life</td><td>Exarch-dominant Eldritch Chaos, later in maps</td><td>Rerolls prefixes while retaining suffixes; high life and an open prefix remain random.</td></tr>
+      </tbody></table></div>
+    </div>
+
+    <details class="card craft-recipe" id="craft-claw-early" open>
+      <summary>1. An elemental claw good enough for early maps <span class="badge">First priority</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> a spare fast claw, a few Screaming-or-better Essences of Wrath, Hatred or Anger, and currency for one finishing craft. Noble Claw is usable before Imperial Claw; Imperial requires character level 68 and has 1.6 base attacks/sec with life on hit. Item level 63+ is a useful early project, not a requirement to enter T1.</p>
+      <ol class="craft-steps">
+        <li><strong>Choose the guaranteed damage.</strong> Wrath gives flat lightning on a claw; Hatred gives cold; Anger gives fire. Read the <em>claw/one-handed weapon</em> line. Torment's spell lightning is not the same thing. Screaming and higher can repeatedly reforge a rare; lower essences need a normal item and may restrict other affix levels.</li>
+        <li><strong>Try one essence, then inspect.</strong> Look for a second worthwhile flat elemental prefix, local attack speed, and room to fix one missing stat. Cold somewhere in the attack supports the Warden freeze plan. Do not apply the next essence automatically.</li>
+        <li><strong>Choose the finishing branch.</strong> Two useful elements with no speed? Craft attack speed into an open suffix. Good speed plus two elements and an open prefix? Craft a third element you do not already have. A natural modifier usually blocks the bench version of its own mod family; you cannot overwrite a bad natural fire roll with crafted fire.</li>
+        <li><strong>Use the affordable unlocked craft.</strong> Check the bench's actual tier, recipe and price. One solid crafted stat is enough. If all relevant slots are full, keep a usable result or roll the spare again; an early Annul is not a reliable way to rescue it.</li>
+        <li><strong>Compare, equip, then stop.</strong> Count flat weapon damage and local attacks/sec, then check accuracy, crit, recovery and real boss sustain. Save your old claw before changing anything else.</li>
+      </ol>
+      <div class="callout"><strong>A possible finished item:</strong> 45–90 cold, 12–220 lightning, crafted 25–45 fire, and 20% local attack speed on an Imperial Claw. Its 1.92 attacks/sec gives about <strong>420 elemental DPS</strong>: (67.5 + 116 + 35) × 1.92. This is an illustration, not a promised essence outcome or a required minimum.</div>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> a clear improvement with two useful elements and good attack speed is enough to test easy white maps. Start with a five-attempt spending cap if resources are scarce. Do not spend your whole essence stock looking for three high-tier elements plus crit.</p>
+      <p class="guide-sources">Mechanics and pools: <a href="https://poedb.tw/us/Essence" target="_blank" rel="noopener noreferrer">essence outcomes by item class</a>, <a href="https://poedb.tw/us/Imperial_Claw" target="_blank" rel="noopener noreferrer">Imperial Claw</a>, <a href="https://poepage.com/poe1/modifiers/claw/" target="_blank" rel="noopener noreferrer">claw affix tiers</a>, <a href="https://poedb.tw/us/Crafting_Bench" target="_blank" rel="noopener noreferrer">bench recipes</a>. Method and stopping points are this companion's SSF recommendations.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-claw-alts">
+      <summary>2. A claw when you have Alterations instead of essences <span class="badge">Alternative</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> an ordinary spare claw, Transmutation/Alteration/Augmentation Orbs, one Regal, and an unlocked flat-element bench craft. This can be slower than essences; choose it when those are the resources you already have.</p>
+      <ol class="craft-steps">
+        <li>Start with a normal claw, or Scour an expendable ordinary rare. Transmute it. A magic claw can have only one prefix and one suffix, so do not search for two different flat elemental prefixes at this stage.</li>
+        <li>Alteration-roll for a substantial flat elemental prefix plus local attack speed. If it has only one excellent mod, an Augmentation fills the other affix type randomly; it does not guarantee the missing stat.</li>
+        <li>Regal a magic result only when its existing damage and speed are worth keeping. Regal adds one random affix without rerolling them.</li>
+        <li>Bench-craft a different flat element into an open prefix. A two-mod magic item plus one Regal cannot already have all three prefix slots filled. The extra Regal mod can be unhelpful; it does not have to be removed for this budget finish.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> use the resulting two-element, fast rare if it improves your character. Do not turn this budget method into a Divine-cost multimod craft. If repeated Alterations give nothing useful, pause and use drops, Rog or essences rather than chasing a sunk cost.</p>
+      <p class="guide-sources">Reference: <a href="https://www.poewiki.net/wiki/Crafting" target="_blank" rel="noopener noreferrer">basic currency crafting</a>, <a href="https://poepage.com/poe1/modifiers/claw/" target="_blank" rel="noopener noreferrer">natural and crafted claw modifiers</a>.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-chest-start" open>
+      <summary>3. Your first mapping chest: preserve links, build usable defenses <span class="badge">Early maps</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> an uncorrupted evasion or armor/evasion chest with a usable 4/5-link. Prioritize a found 5-link over a perfect unlinked base; keep evasion while relying on the four-slot Evasion Mastery. There is no ilvl-86 requirement for your first maps.</p>
+      <ol class="craft-steps">
+        <li><strong>First ask whether it needs rerolling.</strong> A dropped rare with life, two helpful suffixes and one open craft can already be finished. If only one resistance is wrong, use the Harvest conversion recipe below instead of erasing the item.</li>
+        <li><strong>For a linked base with bad stats:</strong> use a Screaming-or-better Essence of Greed for guaranteed flat life, or a resistance essence if that resistance is the urgent problem. These change affixes while keeping the links. The same essence has different effects on weapons, armor and jewelry, so inspect its chest line.</li>
+        <li><strong>Keep a balanced result.</strong> Roughly 70–100+ life and a couple of meaningful resistances is a useful early direction. Suppression is valuable when it closes your actual gap; do not require life, three resistances and suppression together, since those suffixes compete.</li>
+        <li><strong>Finish the missing half.</strong> Good suffixes and an open prefix can take crafted life; good life and an open suffix can take resistance. If the item is already an upgrade, equip it and make the next attempt on another base.</li>
+        <li><strong>Separate links from affixes.</strong> If you must link a worthwhile chest, use quality first when available and set a Fusing budget. After unlocking the recipes, the guaranteed bench costs are 150 Fusings for five links or 1,500 for six, with sockets handled separately. Check the bench recipe before farming its cost; random Fusings have no fixed success count.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> a defensive 5-link is a strong early mapping result. Do not strip life and resistance just to wear six links, or spend 1,500 Fusings on a temporary base by default. For a durable later project, choose a suitable high-level base; ilvl 86 opens top natural body-armor suppression tiers.</p>
+      <p class="guide-sources">References: <a href="https://poedb.tw/us/Essence" target="_blank" rel="noopener noreferrer">Greed and resistance essences</a>, <a href="https://poedb.tw/us/Crafting_Bench" target="_blank" rel="noopener noreferrer">socket/link recipes</a>, <a href="https://heavyheals.com/poe-1-crafting-body-armours/" target="_blank" rel="noopener noreferrer">body-armor base and suffix-first method</a>. The trade-based base-buying step in the latter is replaced here by found SSF bases.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-rog">
+      <summary>4. Rog: build suppression armor without burning your essence stock <span class="badge">Expedition</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> Order Artifacts and Scrap Metal from Expedition. Rog improves items bought from <em>his own stock</em>; you cannot hand him your equipped chest. Use Expedition Threads/logbooks as available.</p>
+      <ol class="craft-steps">
+        <li>Inspect bases before refreshing. Favor dexterity-based chest/helmet/gloves/boots with a promising suppression or resistance suffix, or good life/defense prefixes. Check requirements, item level and the stats already present.</li>
+        <li>Decide which half is worth keeping. Suppression plus two useful resistances? Favor offers that improve or reroll <em>prefixes</em>. Already excellent life/defenses? Favor suffix work instead. Read the exact offer; a whole-item reroll can erase both halves.</li>
+        <li>Take tier upgrades when they improve useful affixes. “Reroll values” changes numbers within a modifier's tier; it is not the same as upgrading that tier. Do not preserve a high-tier stat the build does not use.</li>
+        <li>Skip a destructive offer if allowed, or take the item when it is already useful. Consecutive skips are restricted. Do not assume a future offer will rescue an item you deliberately break.</li>
+        <li>Finish the resulting rare at your bench. A useful open prefix or suffix can be better than a random sixth mod. Link the finished base separately if necessary.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> keep a real life/suppression/resistance improvement, even without perfect tiers. Rog is an alternative resource pool, not a guaranteed source of all-T1 gear.</p>
+      <p class="guide-sources">Mechanics: <a href="https://www.poewiki.net/wiki/Rog" target="_blank" rel="noopener noreferrer">Rog's offers and skip restrictions</a>, <a href="https://dev.poe-vault.com/guides/early-endgame" target="_blank" rel="noopener noreferrer">early mapping upgrades</a>. Apply the 3.30 offer changes summarized above.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-harvest">
+      <summary>5. Harvest: distinguish a targeted repair from a full reroll <span class="badge">Lifeforce</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> Lifeforce and a rare spare item for reforges. Use the Horticrafting Station; check the current recipe wording and price before confirming.</p>
+      <ol class="craft-steps">
+        <li><strong>Repair a resistance on an otherwise good item:</strong> choose the conversion from its unwanted single-element resistance to the element you lack. For example, convert surplus fire to cold. Check eligibility and mod-family conflicts; a fractured modifier cannot be changed. This is different from “Reforge Cold,” which rerolls the item.</li>
+        <li><strong>Build a chest from a bad linked rare:</strong> Life reforge costs 75 Wild Lifeforce in the listed pool. It forces a life-tagged modifier, not a high flat-life roll, good suppression or useful resistances. Inspect after each attempt, then finish an open slot if the result works.</li>
+        <li><strong>Try a spare claw:</strong> Lightning or Cold reforges cost 50 matching Lifeforce; Speed costs 150 Vivid. These target a modifier tag while rerolling the remaining affixes. An elemental tag can land on resistance rather than flat attack damage. Use a small batch and keep only complete improvements.</li>
+        <li><strong>Build a plain belt/ring toward chaos resistance:</strong> Chaos reforge costs 100 Vivid. Verify that item's chaos-tagged pool first, then look for useful life and remaining suffixes. An influenced base can add unwanted tagged possibilities. This is not an upgrade button for an already good life/resistance item.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> convert the resistance when that is the only problem. Reforge only a spare whose existing affixes you are prepared to lose. Expensive add/remove crafts are a separate project; old “reforge keeping all prefixes/suffixes” tutorials are not this recipe.</p>
+      <p class="guide-sources">Current recipe text and costs: <a href="https://poedb.tw/us/Harvest_league" target="_blank" rel="noopener noreferrer">Horticrafting Station list</a>. Tag behavior: <a href="https://www.poewiki.net/wiki/Harvest_crafting" target="_blank" rel="noopener noreferrer">Harvest mechanics</a>.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-fossils">
+      <summary>6. Fossils: useful when you already have Delve supplies <span class="badge">Optional</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> fossils, matching Chaotic Resonators, and a spare eligible rare base. These resonators reforge rare items; do not try to apply them to a normal or magic base. Fossils bias modifier weights; they do not guarantee the affix or tier you want.</p>
+      <ol class="craft-steps">
+        <li><strong>Life-first chest:</strong> put a Pristine Fossil in a one-socket Chaotic Resonator and apply it to the spare linked rare. It favors life and blocks defense-tagged explicit rolls. The armor's base defenses remain, but this is not the method for rolling large local increased armor/evasion prefixes.</li>
+        <li><strong>Defense-first chest:</strong> a Dense Fossil favors defense modifiers but blocks life-tagged rolls. That can serve a deliberately different plan; it does not roll the high-life chest recommended here. Do not combine Dense and Pristine expecting both benefits.</li>
+        <li><strong>Two-element claw:</strong> Frigid + Metallic in a two-socket Chaotic Resonator favors cold/lightning while blocking fire/physical tagged rolls. Look for good cold/lightning damage and speed, then bench the missing legal stat. You are not rolling a tri-elemental fire/cold/lightning weapon with this combination.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> use supplies you have, inspect each result, and stop at a workable item. Do not divert the whole early Atlas into farming resonators if essences, Rog or Harvest already solve the slot.</p>
+      <p class="guide-sources">Fossil effects: <a href="https://poedb.tw/us/Pristine_Fossil" target="_blank" rel="noopener noreferrer">Pristine</a>, <a href="https://poedb.tw/us/Dense_Fossil" target="_blank" rel="noopener noreferrer">Dense</a>, <a href="https://poedb.tw/us/Frigid_Fossil" target="_blank" rel="noopener noreferrer">Frigid</a>, <a href="https://poedb.tw/us/Metallic_Fossil" target="_blank" rel="noopener noreferrer">Metallic</a>.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-fractured">
+      <summary>7. A useful found fracture changes the recipe <span class="badge">When found</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> a suitable fractured base you actually found. Do not budget around buying one in SSF. The locked modifier must be useful on that base and strong enough to justify the project.</p>
+      <ol class="craft-steps">
+        <li><strong>Claw with fractured attack speed:</strong> use a flat-element essence, seek another useful element and an open prefix, then finish with a legal flat-damage craft. The fracture keeps the speed through ordinary essence reforges.</li>
+        <li><strong>Claw with fractured flat cold/lightning:</strong> choose an essence of a different element. You now retain one damage roll while forcing another; look for natural speed or an open suffix to craft it. Do not choose an essence whose modifier conflicts with the fracture.</li>
+        <li><strong>Chest with fractured suppression:</strong> use Greed for life or a resistance essence, then seek complementary suffixes. The fracture reduces the number of stats you must hit together; it does not guarantee the rest.</li>
+        <li><strong>Check rarity before applying the essence.</strong> A fractured <em>magic</em> base may need a Regal to become rare for a Screaming+ reforge. Do not assume an essence accepts magic items, or Scour without understanding that the fractured mod remains.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> spend better essences only on a useful fracture, not a bad locked mod on a prestigious base. Avoid trying to manufacture an expensive fracture as an early-map prerequisite.</p>
+      <p class="guide-sources">References: <a href="https://www.poewiki.net/wiki/Fractured_item" target="_blank" rel="noopener noreferrer">fractured item behavior</a>, <a href="https://poedb.tw/us/Essence" target="_blank" rel="noopener noreferrer">essence targeting rules</a>.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-eldritch">
+      <summary>8. Keep chest suffixes; reroll prefixes for life <span class="badge">Later maps</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> an eligible rare body armor with worthwhile suffixes, a Searing Exarch Ember, and a few Eldritch Chaos Orbs. This is a later finishing method, not a first-map requirement.</p>
+      <ol class="craft-steps">
+        <li>Secure suffixes worth preserving first, such as suppression plus needed elemental/chaos resistances. If an open prefix and bench life already make it good, finish there before spending rarer currency.</li>
+        <li>Use an eligible non-corrupted armor item, without Shaper/Elder/Conqueror or synthesised incompatibilities. Eldritch implicits belong on body armor, helmet, gloves or boots; this recipe does not apply to your claw or shield.</li>
+        <li><strong>Make Searing Exarch dominant.</strong> An Exarch implicit with no Eater implicit is sufficient; if both exist, Exarch must have the higher implicit tier. Equal tiers are not dominance. Read the item's actual state before using the orb.</li>
+        <li>Use one Eldritch Chaos Orb. Under Exarch dominance it rerolls <strong>prefixes</strong> and retains suffixes. Check for useful life/defenses and an open prefix for the final craft. It can fill the prefix side; an open slot is not promised.</li>
+        <li>Repeat only within your preset budget, then craft the missing prefix if possible. Improve the implicits later. Adding/upgrading an Eater implicit can change dominance, so verify it again before any further Eldritch crafting.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Critical distinction:</strong> Eater dominance rerolls <em>suffixes</em>, which would destroy the half you intended to keep. An ordinary Chaos, essence or unprotected Harvest reforge is not a substitute for this operation. This route needs no Divine-cost full-suffix lock.</p>
+      <p class="guide-sources">Currency behavior: <a href="https://poedb.tw/us/Eldritch_Chaos_Orb" target="_blank" rel="noopener noreferrer">Eldritch Chaos Orb</a>. Applied armor method: <a href="https://heavyheals.com/poe-1-crafting-body-armours/" target="_blank" rel="noopener noreferrer">suffix-first body armor</a>.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-recombine">
+      <summary>9. Recombination: salvage donors, with a separate budget <span class="badge">Advanced alternative</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> spare compatible donors and the unlocked Kingsmarch Recombinator. Treat both inputs as expendable. This is a way to assemble good mods from drops, not a guaranteed upgrade to equipped gear.</p>
+      <ol class="craft-steps">
+        <li>Save complementary donors: one fast claw with a strong cold prefix, another with strong lightning, or armor carrying useful suppression/resistance modifiers. Prefer matching usable bases so either output base suits the character.</li>
+        <li>Check both item levels and legal mod pools. A donor is useful only if the intended result and base can support your follow-up crafts; do not use a low-level base expecting the output level to average upward.</li>
+        <li>Choose the available recombination mode deliberately. Predictable recombination lets you select desired modifiers and displays a success chance. Unpredictable recombination selects from the pooled mods; an old guide's percentages are not a promise for this version.</li>
+        <li>Attempt only on surplus donors, inspect the complete result, then finish an open affix normally. Keep successful intermediates. Do not add costly filler mods or strip everything to one-mod donors merely because an old formula recommended it.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>3.30 guardrails:</strong> sparse-prefix/suffix Unpredictable combinations were weakened; corrupted inputs are disallowed. Check the current UI and make a donor-loss budget before trying to combine multiple premium rolls.</p>
+      <p class="guide-sources">Reference: <a href="https://www.poewiki.net/wiki/Recombinator" target="_blank" rel="noopener noreferrer">recombination modes</a>, <a href="https://www.pathofexile.com/forum/view-thread/4013680" target="_blank" rel="noopener noreferrer">3.30 recombination changes</a>. No numerical success odds are assumed here.</p>
+    </details>
+
+    <details class="card craft-recipe" id="craft-metamods">
+      <summary>10. Later claw finishing: protect excellent prefixes, then seek speed <span class="badge badge-gold">Expensive</span></summary>
+      <p class="craft-inputs"><strong>Bring:</strong> a spare rare claw with three excellent elemental prefixes, an open suffix, the full-prefix-lock recipe, its displayed materials, and Harvest resources. Compare the finished result in PoB before paying.</p>
+      <ol class="craft-steps">
+        <li>Confirm all three damage prefixes deserve preservation. Three mediocre elements do not justify this route. A missing cheap speed craft may already finish a perfectly usable claw.</li>
+        <li>Bench <strong>Prefixes Cannot Be Changed</strong>; it occupies a suffix. Use the full lock if the goal is to protect all three prefixes. A one-/two-prefix lock is not blanket protection for the whole prefix side.</li>
+        <li>Harvest-reforge Speed after confirming the ordinary base's speed pool. The full lock preserves the prefixes for this supported operation; suffixes reroll, including removal of the lock. Speed tier and the number of resulting suffixes remain random.</li>
+        <li>If speed is useful and a suffix remains open, craft crit or another appropriate missing stat. If the suffixes fill, stop and reassess: there is no free guaranteed annul. A further protected reforge requires space to reapply protection and another payment.</li>
+      </ol>
+      <p class="callout craft-stop"><strong>Stop rule:</strong> do not begin this for an early-map weapon. Never follow “lock → essence/fossil spam” as if those currencies were additive protected upgrades. Use the bench's current interaction rules and simulate the exact sequence on <a href="https://www.craftofexile.com/" target="_blank" rel="noopener noreferrer">Craft of Exile</a>, checking that its data matches the live patch.</p>
+      <p class="guide-sources">Interactions: <a href="https://poedb.tw/us/metamods" target="_blank" rel="noopener noreferrer">metamod behavior</a>; <a href="https://poedb.tw/us/Harvest_league" target="_blank" rel="noopener noreferrer">reforge Speed</a>. Full-lock cost and unlock changes are listed at the top of this tab.</p>
+    </details>
+
+    <div class="card"><h2>Quick reference: when to craft</h2><div class="table-scroll"><table><thead><tr><th>Stage / trigger</th><th>Action</th><th>Stop / save</th></tr></thead><tbody>
 <tr><td>Acts 1&#8211;2: normal monsters take too long</td><td>Find a fast one-handed base. Put one low-tier elemental essence on a normal claw, or Transmute a fresh normal base. A magic weapon with good damage can beat a rare. Keep a backup.</td><td>Do not spam Chaos, Alchemy or high essences. Recheck support links and accuracy before blaming the weapon.</td></tr>
 <tr><td>Acts 2&#8211;5: missing life or resistance</td><td>Use the hideout bench: life needs an open prefix, resistance an open suffix. Hold Alt to inspect mods. Check recipe unlock and price in the bench; pick the cheapest useful tier.</td><td>Usually one useful crafted modifier per item. Change a previous bench craft rather than expecting a second free craft.</td></tr>
 <tr><td>Act 5 / Act 10 Kitava</td><td>Save rings, shields and belts. Prepare 30 extra resistance points for each penalty; fix caps immediately afterward. Use sockets in gloves/helmet/body so changing the claw does not dismantle your attack links.</td><td>Life, capped elemental resistances and correct links come before rare-item color or a marginal damage increase.</td></tr>
@@ -821,7 +994,7 @@
 <tr><td>Later maps: Eldritch implicits</td><td>Use low-tier Embers/Ichors on eligible rare gloves/armor when resources permit; verify the mod pool and influence restrictions first. Extra strike targets on gloves can replace your strike mastery once actually equipped.</td><td>Do not assume gloves provide both strike targets and pierce. Confirm the exact modifier before refunding any tree point.</td></tr>
 <tr><td>Expensive endgame crafts</td><td>Plan in PoB and inspect current crafting rules before meta-crafting. For weapons, the 3.30 full-prefix lock costs 4 Divine Orbs plus 1 Sacred Orb and occupies a suffix; a reforge can fill all suffixes. There must be an available suffix to bench a final attack-speed/crit craft.</td><td>Check the exact lock and price in the current bench; there is no default cheap Harvest recipe for early SSF. Do not risk your equipped claw or assume a reforge guarantees an open suffix.</td></tr>
 </tbody></table></div><div class="callout"><strong>Compare elemental DPS:</strong> sum the average fire, cold and lightning damage on the weapon and multiply by attacks per second. Example: average 20 fire + 30 cold + 50 lightning at 1.6 attacks/sec = 160 elemental DPS. Local attack speed changes the weapon's displayed attacks/sec. Compare crit, accuracy and recovery too; damage added <em>to spells</em> does not count for LS.</div></div>
-<div class="grid-2"><div class="card"><h2>Vendor and map searches</h2><p>Paste in the vendor/stash search field. Search helps find candidates; read every modifier before running a map.</p><h3>Early linked sockets</h3><div class="regex-box"><span id="reg1">g-g-[grb]|g-[grb]-g|[grb]-g-g</span><button class="btn" onclick="copyText('reg1')">Copy</button></div><p>Check green-heavy 3-links for the early attack. This search does not identify movement-speed rolls; inspect boots separately.</p><h3>Claw bases and essences</h3><div class="regex-box"><span id="reg2">"imperial claw"|"gemini claw"|"noble claw"|hatred|anger|wrath|zeal</span><button class="btn" onclick="copyText('reg2')">Copy</button></div><h3>Highlight dangerous map text</h3><div class="regex-box"><span id="reg3">reflect|cannot leech|cannot be leeched|cannot regenerate|no regeneration|reduced recovery</span><button class="btn" onclick="copyText('reg3')">Copy</button></div><p>This is a <strong>positive danger search</strong>, not a guarantee that non-highlighted maps are safe. Skip elemental reflect without proven immunity, no-leech when relying on leech, and no-regen/reduced recovery when mana or tinctures are fragile. Crit, extra elemental damage, reduced maximum resistances and damage combinations can also be lethal.</p></div>
+<div class="grid-2"><div class="card"><h2>Vendor and map searches</h2><p>Paste in the vendor/stash search field. Search helps find candidates; read every modifier before running a map.</p><h3>Linked sockets, including white</h3><div class="regex-box"><span id="reg1">[rgbw]-[rgbw]-[rgbw]</span><button class="btn" onclick="copyText('reg1')">Copy</button></div><p>Highlights three-socket linked chains, including white sockets; inspect the total link count yourself. Use the new all-white bench option when color is the obstacle, rather than repeatedly recoloring. Spend its Scouring Orb through the bench; directly using a Scouring Orb on gear removes its affixes. Inspect movement speed separately.</p><h3>Claw bases and essences</h3><div class="regex-box"><span id="reg2">"imperial claw"|"gemini claw"|"noble claw"|hatred|anger|wrath|zeal</span><button class="btn" onclick="copyText('reg2')">Copy</button></div><h3>Highlight dangerous map text</h3><div class="regex-box"><span id="reg3">reflect|cannot leech|cannot be leeched|cannot regenerate|no regeneration|reduced recovery</span><button class="btn" onclick="copyText('reg3')">Copy</button></div><p>This is a <strong>positive danger search</strong>, not a guarantee that non-highlighted maps are safe. Skip elemental reflect without proven immunity, no-leech when relying on leech, and no-regen/reduced recovery when mana or tinctures are fragile. Crit, extra elemental damage, reduced maximum resistances and damage combinations can also be lethal.</p></div>
 <div class="card"><h2>Loot-filter colors and installation</h2><p>The <code>LS_Warden_330_SSF.filter</code> in this repository is the single filter to copy. Equipment text keeps its rarity color even when it has useful links or is a claw base.</p><div class="filter-legend"><div class="loot-sample loot-rare">RARE &mdash; yellow text</div><div class="loot-sample loot-magic">MAGIC &mdash; blue text</div><div class="loot-sample loot-normal">NORMAL &mdash; white text</div><div class="loot-sample loot-unique">UNIQUE &mdash; orange + star</div><div class="loot-sample loot-link">4-LINK &mdash; purple border</div><div class="loot-sample loot-currency">CURRENCY &mdash; bronze/gold</div></div><p><strong>Extra borders:</strong> cyan = claw candidate; purple = 4-link; pink = 5/6-link; green = compact RGB recipe. A yellow-text item with a special border is still rare. Sounds/beams are reserved mainly for valuable drops, not every ordinary rare.</p><ol class="step-list"><li>In PoE open <strong>Options &mdash; Game &mdash; Item Filter</strong> and use the folder button to open the actual filter directory (often Documents/My Games/Path of Exile; OneDrive may redirect it).</li><li>Copy the edited <strong>LS_Warden_330_SSF.filter</strong> from this repository into that directory. Replace the previous copy with the same name.</li><li>Select that filter in the dropdown and press <strong>Reload</strong> / save. The game must report a successful load; an old loaded filter will not update just because the repository changed.</li><li>In an Act 1 area, compare normal, magic and rare equipment on the ground. Normal is white, magic blue, rare yellow. All ordinary equipment stays visible through area level 32. Hold the game's show-all-items key if checking a hidden item later.</li></ol><p>The filter keeps all rares, uniques, currency, gems, maps and major progression drops visible. Later it hides lower-value normal/magic equipment after useful bases, links and recipes have been handled. It does not decide whether an unidentified rare has good affixes.</p><p class="guide-sources"><a href="https://www.pathofexile.com/item-filter/about" target="_blank" rel="noopener noreferrer">GGG filter syntax and first-match behavior</a>. Actual loading and visuals must be checked in the game client.</p></div></div></section>
 
   <!-- TAB 6: ATLAS & ENDGAME -->
@@ -1559,6 +1732,11 @@ function selectGearStage(value) {
   document.querySelectorAll(".gear-stage").forEach(panel => {
     panel.hidden = value !== "all" && panel.dataset.gearStage !== value;
   });
+}
+
+function openCraftRecipe(id) {
+  const recipe = document.getElementById(id);
+  if (recipe && recipe.matches("#tab-crafting .craft-recipe")) recipe.open = true;
 }
 
 function switchTab(tabId, btn) {
