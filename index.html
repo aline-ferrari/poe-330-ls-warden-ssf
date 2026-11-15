@@ -487,6 +487,42 @@
     .gear-table { min-width: 580px; }
     .gear-table th:first-child { width: 25%; }
     .gear-stage { scroll-margin-top: calc(var(--site-top-height, 200px) + 12px); }
+    .gear-inventory { display: grid; grid-template-columns: minmax(280px, 420px) minmax(260px, 1fr); gap: 24px; align-items: start; margin: 20px 0 26px; }
+    .equipment-board { padding: 18px; border: 1px solid #756344; background: radial-gradient(ellipse at 50% 40%, #33302670, transparent 65%), repeating-linear-gradient(0deg, transparent 0 35px, #b49c6210 36px), repeating-linear-gradient(90deg, transparent 0 35px, #b49c6210 36px), #0b0b0c; box-shadow: inset 0 0 30px #000; }
+    .equipment-heading { text-align: center; color: #cab58a; font: small-caps 1.1rem Georgia, serif; letter-spacing: 3px; margin-bottom: 16px; }
+    .equipment-slots { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, 38px); gap: 7px; }
+    .equipment-slot { --item-color: #c7b77d; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center; min-width: 0; padding: 4px 2px; background: radial-gradient(ellipse, #4a452e45, #111113 80%); color: var(--item-color); border: 1px solid #514833; box-shadow: inset 0 0 10px #000; cursor: pointer; font: inherit; transition: border-color .15s, background .15s; }
+    .equipment-slot:hover, .equipment-slot[aria-pressed="true"] { border-color: #d8b770; background-color: #4b3a2260; box-shadow: inset 0 0 15px #a0782825, 0 0 10px #d8b77020; }
+    .equipment-slot:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 3px; }
+    .equipment-slot.unique { --item-color: #cf814d; border-color: #85552e; }
+    .equipment-slot svg { width: 85%; height: calc(100% - 22px); max-height: 115px; min-height: 16px; filter: drop-shadow(0 2px 5px #000); }
+    .equipment-slot span { color: #c9c0ad; font-size: .65rem; line-height: 1.2; text-align: center; }
+    .equipment-slot[data-slot="claw"] { grid-area: 2 / 1 / 6 / 2; }
+    .equipment-slot[data-slot="helmet"] { grid-area: 1 / 3 / 3 / 4; }
+    .equipment-slot[data-slot="shield"] { grid-area: 2 / 5 / 6 / 6; }
+    .equipment-slot[data-slot="body"] { grid-area: 3 / 3 / 6 / 4; }
+    .equipment-slot[data-slot="gloves"] { grid-area: 7 / 1 / 9 / 2; }
+    .equipment-slot[data-slot="boots"] { grid-area: 7 / 5 / 9 / 6; }
+    .equipment-slot[data-slot="ring1"] { grid-area: 5 / 2 / 6 / 3; }
+    .equipment-slot[data-slot="ring2"] { grid-area: 5 / 4 / 6 / 5; }
+    .equipment-slot[data-slot="amulet"] { grid-area: 2 / 4 / 3 / 5; }
+    .equipment-slot[data-slot="belt"] { grid-area: 7 / 2 / 8 / 5; flex-direction: row; gap: 12px; }
+    .equipment-slot[data-slot="belt"] svg { width: 65px; height: 27px; }
+    .equipment-help { color: #9f9686; font-size: .76rem; text-align: center; margin-top: 14px; }
+    .item-preview { --rarity-color: #ffff77; min-width: 0; border: 1px solid #73603a; background: #080809; box-shadow: 0 8px 25px #0005; text-align: center; font-family: Georgia, "Times New Roman", serif; }
+    .item-preview.unique { --rarity-color: #af6025; border-color: #985d30; }
+    .item-preview-header { background: linear-gradient(90deg, #3d301600, #65532260, #3d301600); border-bottom: 1px solid #73603a; padding: 13px 12px; color: var(--rarity-color); }
+    .item-preview h3 { color: inherit; margin: 0 0 3px; font: 1.2rem Georgia, serif; }
+    .item-preview-base { font-size: 1rem; }
+    .item-preview-content { padding: 12px 20px 18px; }
+    .item-preview-group { padding: 10px 0; border-bottom: 1px solid #6f5d354d; }
+    .item-preview-group:last-of-type { border-bottom: 0; }
+    .item-preview-group small { display: block; color: #9d9686; font: .65rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 1.3px; text-transform: uppercase; margin-bottom: 5px; }
+    .item-preview-mod { color: #9696ff; font-size: .96rem; line-height: 1.55; }
+    .item-preview-note { border-top: 1px solid #6f5d354d; padding-top: 12px; color: #c0af8c; font: .82rem/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .item-example-label { color: #b5ab93; font: .7rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    @media(max-width: 900px) { .gear-inventory { grid-template-columns: 1fr; gap: 16px; } .equipment-board { width: 100%; max-width: 420px; justify-self: center; } }
+    @media(max-width: 420px) { .equipment-board { padding: 12px 8px; } .equipment-slots { gap: 5px; } .equipment-slot span { font-size: .6rem; } .gear-stage { padding: 16px 12px; } }
     .tab-btn:focus-visible, .guide-picker select:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: -2px; }
     @media(max-width: 760px) {
       .milestone-grid { grid-template-columns: 1fr; }
@@ -530,10 +566,10 @@
   <button class="tab-btn" onclick="switchTab('tab-tree', this)">1. Passive Tree &amp; Exact Routing</button>
   <button class="tab-btn active" onclick="switchTab('tab-campaign', this)">2. Start Here: Act-by-Act Guide</button>
   <button class="tab-btn" onclick="switchTab('tab-gems', this)">3. Gems &amp; Socket Links</button>
-  <button class="tab-btn" onclick="switchTab('tab-warden', this)">4. Warden Ascendancy &amp; Tinctures</button>
-  <button class="tab-btn" onclick="switchTab('tab-crafting', this)">5. SSF Crafting &amp; Vendor Regex</button>
-  <button class="tab-btn" onclick="switchTab('tab-atlas', this)">6. Atlas &amp; Endgame Roadmap</button>
-  <button class="tab-btn" onclick="switchTab('tab-gear', this)">7. Gear Guide</button>
+  <button class="tab-btn" onclick="switchTab('tab-gear', this)">4. Gear Guide</button>
+  <button class="tab-btn" onclick="switchTab('tab-warden', this)">5. Warden Ascendancy &amp; Tinctures</button>
+  <button class="tab-btn" onclick="switchTab('tab-crafting', this)">6. SSF Crafting &amp; Vendor Regex</button>
+  <button class="tab-btn" onclick="switchTab('tab-atlas', this)">7. Atlas &amp; Endgame Roadmap</button>
 </nav>
 </div>
 
@@ -779,6 +815,8 @@
         </select>
       </div>
       <div class="callout"><strong>How to read resistance totals:</strong> “50% combined elemental resistance” means the sum of fire, cold and lightning on that item; for example, +25% fire and +25% lightning. It does <em>not</em> mean +50% to each. A +10% to all elemental resistances modifier contributes 30 percentage points to this sum. Chaos resistance is separate. Your real goal is <strong>75% displayed fire, cold and lightning resistance on the character sheet after Kitava</strong>; balance the three individually instead of chasing a large total in the wrong element.</div>
+      <p><strong>Explore the equipment panel:</strong> hover, focus or tap a slot to inspect one possible item for that milestone. Rare item names are illustrative; their modifiers use real stat types with at most three prefixes and three suffixes. These are individual examples, not a fully resistance-balanced loadout or a list to copy exactly. The guidance below each panel explains what matters.</p>
+      <p class="guide-sources">Example references: <a href="https://poepage.com/poe1/modifiers/claw/" target="_blank" rel="noopener noreferrer">claw modifier ranges</a>, <a href="https://poedb.tw/us/Helmets_dex" target="_blank" rel="noopener noreferrer">evasion helmet modifiers</a>, <a href="https://poedb.tw/us/Boots_dex" target="_blank" rel="noopener noreferrer">evasion boot modifiers</a>, <a href="https://poedb.tw/us/Nimis" target="_blank" rel="noopener noreferrer">Nimis</a>, <a href="https://poedb.tw/us/Mageblood" target="_blank" rel="noopener noreferrer">Mageblood</a>.</p>
       <p><strong>Before replacing an item:</strong> check links and colors, life, all three resistance caps, attributes, hit chance and mana cost. Useful sockets can outweigh better affixes during the campaign. On rare armor and jewelry, an open prefix can allow bench-crafted life; an open suffix can allow a missing resistance or attribute. Most items accept only one bench craft.</p>
     </div>
 
@@ -1168,6 +1206,129 @@ if (typeof ResizeObserver !== "undefined") {
   window.addEventListener("resize", updateSiteTopHeight);
 }
 
+// Illustrative rares: regular affixes only, no more than three prefixes/suffixes.
+// Unique examples use their actual modifiers, independently of rare affix limits.
+const GEAR_EXAMPLE_STAGES = {
+  act5: { life: 45, resist: 25, chaos: 0, suppression: 0, speed: 20, links: 4, evasion: 35, attack: 7, attribute: 23, crit: 20,
+    bases: ["Fright Claw", "Wolf Pelt", "Fir Round Shield", "Full Leather", "Deerskin Gloves", "Deerskin Boots"],
+    cold: [18, 35], lightning: [4, 80], fire: null, clawSpeed: 15, clawCrit: 0 },
+  act10: { life: 65, resist: 32, chaos: 15, suppression: 8, speed: 25, links: 4, evasion: 65, attack: 9, attribute: 32, crit: 25,
+    bases: ["Noble Claw", "Sinner Tricorne", "Lacquered Buckler", "Destiny Leather", "Sharkskin Gloves", "Shagreen Boots"],
+    cold: [35, 65], lightning: [8, 160], fire: null, clawSpeed: 20, clawCrit: 20 },
+  yellow: { life: 85, resist: 38, chaos: 20, suppression: 10, speed: 30, links: 5, evasion: 85, attack: 11, attribute: 37, crit: 30,
+    bases: ["Imperial Claw", "Lion Pelt", "Imperial Buckler", "Zodiac Leather", "Slink Gloves", "Slink Boots"],
+    cold: [55, 110], lightning: [12, 220], fire: [35, 70], clawSpeed: 23, clawCrit: 25 },
+  red: { life: 95, resist: 42, chaos: 25, suppression: 12, speed: 30, links: 6, evasion: 100, attack: 13, attribute: 42, crit: 35,
+    bases: ["Imperial Claw", "Lion Pelt", "Imperial Buckler", "Zodiac Leather", "Slink Gloves", "Slink Boots"],
+    cold: [70, 140], lightning: [16, 280], fire: [65, 120], clawSpeed: 25, clawCrit: 30 },
+  perfect: { life: 105, resist: 46, chaos: 35, suppression: 14, speed: 35, links: 6, evasion: 120, attack: 16, attribute: 48, crit: 38,
+    bases: ["Imperial Claw", "Lion Pelt", "Imperial Buckler", "Zodiac Leather", "Slink Gloves", "Slink Boots"],
+    cold: [111, 189], lightning: [21, 344], fire: [100, 185], clawSpeed: 27, clawCrit: 38 }
+};
+
+const EQUIPMENT_ICONS = {
+  claw: '<path d="M25 51 36 62 43 52 35 43Z"/><path d="m30 47-8-17 6-19 1 21 8 11m0 3-1-21 9-17-3 24 2 12m0 6 6-19 10-10-7 21-6 14"/><path d="m27 53-9 12 8 5 10-12Z"/>',
+  helmet: '<path d="M14 49V32C14 6 50 6 50 32v17l-12 7V37H26v19Z"/><path d="m15 33 17-7 17 7M32 13v13M19 39l7 2m12 0 7-2"/><path d="m26 12 6-7 6 7"/>',
+  shield: '<path d="m10 16 22-9 22 9-4 28-18 22-18-22Z"/><path d="m16 21 16-7 16 7-4 20-12 15-12-15Z"/><path d="m32 20 7 14-7 15-7-15Z"/>',
+  body: '<path d="m20 10 12 7 12-7 14 14-9 12-6-5 4 32H17l4-32-6 5-9-12Z"/><path d="m20 10 5 16h14l5-16M24 33l8 7 8-7M22 48h20M20 57h24M32 26v37"/>',
+  gloves: '<path d="m11 45 1-19 5-2 3 12 1-25 5-1 2 23 3-20 5 1-2 23 6-12 5 2-8 24-3 11-20-2Z"/><path d="m13 50 23 3-2 10-21-3ZM18 40l13 4"/>',
+  boots: '<path d="m13 11 17 2-3 25 4 13-1 9H8l-2-6 11-11Z"/><path d="m37 11 17 2-3 25 5 13-1 9H34l-3-6 10-11Z"/><path d="m13 20 16 2m8-2 16 2M10 51h20m5 0h20"/>',
+  ring: '<ellipse cx="32" cy="42" rx="18" ry="21"/><ellipse cx="32" cy="43" rx="11" ry="14"/><path d="m22 17 10-9 10 9-3 13H25Z"/><path d="m25 18 7 8 7-8M32 8v18"/>',
+  amulet: '<path d="M13 10c0 36 38 36 38 0M26 39l6 5 6-5"/><path d="m32 42 13 13-13 14-13-14Z"/><path d="m32 48 6 7-6 8-6-8Z"/>',
+  belt: '<path d="M3 22h58v22H3Z"/><path d="M23 17h20v32H23Z"/><path d="M28 24h10v18H28Zm4 9h17M10 28v10m6-10v10m38-10v10"/>'
+};
+
+function gearExamplesFor(stage) {
+  const c = GEAR_EXAMPLE_STAGES[stage];
+  const life = n => `+${n} to maximum Life`;
+  const res = (element, n = c.resist) => `+${n}% to ${element} Resistance`;
+  const suppress = n => `+${n}% chance to Suppress Spell Damage`;
+  const rare = (name, base, prefixes, suffixes, note, implicit = []) => ({ name, base, prefixes, suffixes, implicit, note, rarity: "rare" });
+  const armorSuffixes = c.suppression ? [suppress(c.suppression), res("Fire"), res("Cold")] : [res("Fire"), res("Cold")];
+  const clawSuffixes = [`${c.clawSpeed}% increased Attack Speed`];
+  if (c.clawCrit) clawSuffixes.push(`${c.clawCrit}% increased Critical Strike Chance`);
+  if (stage === "perfect") clawSuffixes.push("+35% to Global Critical Strike Multiplier");
+  const clawPrefixes = [`Adds ${c.cold[0]} to ${c.cold[1]} Cold Damage`, `Adds ${c.lightning[0]} to ${c.lightning[1]} Lightning Damage`];
+  if (c.fire) clawPrefixes.push(`Adds ${c.fire[0]} to ${c.fire[1]} Fire Damage`);
+  const jewelryLife = Math.min(c.life, 79);
+  const items = {
+    claw: rare("Storm Bite", c.bases[0], clawPrefixes, clawSuffixes,
+      "Flat weapon damage and local attack speed drive this attack. Cold supports freeze; verify Trinity resonance in combat. This is one possible roll combination, not a minimum DPS requirement.",
+      [`Grants ${stage === "act5" ? 20 : stage === "act10" ? 40 : 46} Life per Enemy Hit`]),
+    helmet: rare("Gale Visage", c.bases[1], [life(c.life), `${c.evasion}% increased Evasion Rating`], armorSuffixes,
+      "Life first, then the resistances or suppression your character actually lacks. The evasion base keeps the conditional Evasion Mastery available."),
+    shield: rare("Havoc Ward", c.bases[2], [life(c.life + 10), `${c.evasion}% increased ${stage === "act5" ? "Armour and Evasion" : "Evasion Rating"}`],
+      [res("Cold"), res("Lightning"), ...(c.chaos ? [res("Chaos", c.chaos)] : [])],
+      "A defensive shield is an efficient place to repair resistance caps. This example chooses resistances rather than also claiming a fourth defensive suffix."),
+    body: rare("Dusk Shroud", c.bases[3], [life(c.life + (stage === "act5" ? 0 : 20)), `${c.evasion}% increased Evasion Rating`], armorSuffixes,
+      `${c.links} linked sockets with usable colors for your main attack. Links are separate from affixes. Start with a working link setup; seek a stronger defensive base as you progress.`),
+    gloves: rare("Vengeance Touch", c.bases[4], [life(Math.min(c.life, 105))],
+      [`${c.attack}% increased Attack Speed`, res("Lightning"), ...(c.chaos ? [res("Chaos", c.chaos)] : [res("Cold")])],
+      "Attack speed is a suffix, so it competes with resistance and suppression. Later, an eligible rare can add Eldritch strike coverage; it is not included in these basic example affixes."),
+    boots: rare("Gale Road", c.bases[5], [life(Math.min(c.life, 105)), `${c.speed}% increased Movement Speed`], armorSuffixes,
+      "Movement speed and life are prefixes; suppression and resistances are suffixes. Ailment avoidance is another possible suffix choice, which requires replacing one of those suffixes."),
+    ring1: rare("Storm Loop", "Two-Stone Ring (Fire and Lightning)", [life(jewelryLife)],
+      [res("Fire"), res("Lightning"), ...(c.chaos ? [res("Chaos", c.chaos)] : [])],
+      "The implicit adds 15% fire and 15% lightning before the explicit rolls. This is a resistance-focused ring, leaving offensive upgrades for other slots.",
+      ["+15% to Fire and Lightning Resistances"]),
+    ring2: rare("Dusk Coil", "Two-Stone Ring (Cold and Lightning)", [life(jewelryLife)],
+      [res("Cold"), `+${c.attribute} to Intelligence`, ...(c.chaos ? [res("Chaos", c.chaos)] : [res("Lightning")])],
+      "This ring covers Intelligence as well as resistances. The attribute uses one suffix; it cannot be added on top of three existing resistance suffixes.",
+      ["+15% to Cold and Lightning Resistances"]),
+    amulet: rare("Dragon Torc", "Agate Amulet", [life(jewelryLife)],
+      [`+${c.attribute} to Intelligence`, `+${c.crit}% to Global Critical Strike Multiplier`, res("Lightning")],
+      "The base supplies Strength and Intelligence; one explicit Intelligence roll can cover a remaining gem requirement. Crit multiplier is an upgrade after life, accuracy and attributes work.",
+      ["+24 to Strength and Intelligence"]),
+    belt: rare("Havoc Bind", "Leather Belt", [life(Math.min(c.life + 10, 99))],
+      [res("Fire"), res("Cold"), ...(c.chaos ? [res("Chaos", c.chaos)] : [])],
+      "The Leather Belt implicit and explicit life roll stack. Two elemental resistance rolls are useful early; chaos resistance becomes a valuable third suffix later.",
+      ["+35 to maximum Life"])
+  };
+  if (stage === "perfect") {
+    items.ring1 = { name: "Nimis", base: "Topaz Ring", rarity: "unique", implicit: ["+30% to Lightning Resistance"], modifiers: ["+50 to Dexterity", "35% increased Projectile Damage", "Projectiles Return to you", "Projectiles are fired in random directions"], note: "Actual unique modifiers with example rolls. Replace Returning Projectiles Support and test the changed firing pattern. This ring supplies no life or chaos resistance; compensate elsewhere." };
+    items.belt = { name: "Mageblood", base: "Heavy Belt", rarity: "unique", implicit: ["+35 to Strength"], modifiers: ["+50 to Dexterity", "+25% to Fire Resistance", "+25% to Cold Resistance", "Magic Utility Flasks cannot be Used", "Leftmost 4 Magic Utility Flasks constantly apply their Flask Effects to you", "Magic Utility Flask Effects cannot be removed"], note: "Actual unique modifiers with example rolls. Two tinctures plus a life flask leave room for only two magic utility flasks. Mageblood supports those two; it does not automate tinctures or provide four extra flask slots." };
+  }
+  return items;
+}
+
+function showGearExample(inventory, slot) {
+  const item = inventory.gearExamples[slot];
+  const preview = inventory.querySelector(".item-preview");
+  preview.className = `item-preview ${item.rarity}`;
+  inventory.querySelectorAll(".equipment-slot").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.slot === slot)));
+  // Every string comes from the fixed example data above, never from user input.
+  const group = (label, modifiers) => modifiers && modifiers.length ? `<div class="item-preview-group"><small>${label}</small>${modifiers.map(mod => `<div class="item-preview-mod">${mod}</div>`).join("")}</div>` : "";
+  preview.innerHTML = `<div class="item-preview-header"><div class="item-example-label">${item.rarity === "unique" ? "Unique item · possible rolls" : "Illustrative rare · one possibility"}</div><h3>${item.name}</h3><div class="item-preview-base">${item.base}</div></div><div class="item-preview-content">${group("Implicit", item.implicit)}${group("Prefixes", item.prefixes)}${group("Suffixes", item.suffixes)}${group("Unique modifiers", item.modifiers)}<p class="item-preview-note">${item.note}</p></div>`;
+}
+
+function initializeGearInventories() {
+  const labels = { claw: "Claw", helmet: "Helmet", shield: "Shield", body: "Body armor", gloves: "Gloves", boots: "Boots", ring1: "Ring 1", ring2: "Ring 2", amulet: "Amulet", belt: "Belt" };
+  document.querySelectorAll(".gear-stage").forEach(stage => {
+    const key = stage.dataset.gearStage;
+    const inventory = document.createElement("div");
+    inventory.className = "gear-inventory";
+    inventory.gearExamples = gearExamplesFor(key);
+    const previewId = `item-preview-${key}`;
+    inventory.innerHTML = `<div class="equipment-board"><div class="equipment-heading">Equipment</div><div class="equipment-slots" role="group" aria-label="Example equipment for ${stage.querySelector('h2').firstChild.textContent.trim()}"></div><p class="equipment-help">Hover a slot to inspect · focus or tap to select</p></div><div class="item-preview" id="${previewId}" role="region" aria-label="Suggested item details" aria-live="polite" aria-atomic="true"></div>`;
+    const slots = inventory.querySelector(".equipment-slots");
+    Object.entries(labels).forEach(([slot, label]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `equipment-slot ${inventory.gearExamples[slot].rarity}`;
+      button.dataset.slot = slot;
+      button.setAttribute("aria-label", `Inspect ${label}: ${inventory.gearExamples[slot].base}`);
+      button.setAttribute("aria-controls", previewId);
+      button.setAttribute("aria-pressed", "false");
+      const icon = EQUIPMENT_ICONS[slot.startsWith("ring") ? "ring" : slot];
+      button.innerHTML = `<svg viewBox="0 0 64 76" aria-hidden="true" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${icon}</svg><span>${label}</span>`;
+      ["pointerenter", "focus", "click"].forEach(event => button.addEventListener(event, () => showGearExample(inventory, slot)));
+      slots.append(button);
+    });
+    stage.querySelector(".table-scroll").before(inventory);
+    showGearExample(inventory, "claw");
+  });
+}
+
 function selectGearStage(value) {
   if (!["act5", "act10", "yellow", "red", "perfect", "all"].includes(value)) return;
   document.querySelectorAll(".gear-stage").forEach(panel => {
@@ -1259,6 +1420,7 @@ async function copyPobNodeList() {
 }
 
 // Initialize
+initializeGearInventories();
 updateViewBox();
 renderPassiveTree();
 inspectNode("54142", false);
