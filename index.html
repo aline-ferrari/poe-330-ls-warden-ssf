@@ -39,14 +39,17 @@
       line-height: 1.55;
       padding-bottom: 60px;
     }
+    .site-top {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--bg-0);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.45);
+    }
     header {
       background: linear-gradient(180deg, #161d2b 0%, #0f141e 100%);
       border-bottom: 1px solid var(--border);
       padding: 18px 24px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.45);
     }
     .header-inner {
       max-width: 1400px;
@@ -159,7 +162,7 @@
     }
     .tabs {
       max-width: 1400px;
-      margin: 18px auto 0;
+      margin: 0 auto;
       padding: 0 24px;
       display: flex;
       gap: 8px;
@@ -301,7 +304,7 @@
       border-radius: 10px;
       overflow: hidden;
       position: sticky;
-      top: 90px;
+      top: calc(var(--site-top-height, 200px) + 12px);
     }
     .tree-toolbar {
       background: var(--bg-1);
@@ -459,7 +462,7 @@
     .card p, .card li, .callout, .node-inspector { overflow-wrap: anywhere; }
     .guide-picker { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 14px 0; }
     .guide-picker select { background: var(--bg-2); color: var(--text-0); border: 1px solid var(--border); padding: 10px; border-radius: 6px; font: inherit; max-width: 100%; }
-    .act-guide { margin: 18px 0; scroll-margin-top: 180px; }
+    .act-guide { margin: 18px 0; scroll-margin-top: calc(var(--site-top-height, 200px) + 12px); }
     .act-guide[hidden] { display: none; }
     .act-guide summary { cursor: pointer; font-size: 1.05rem; font-weight: 700; color: var(--accent-gold); padding: 8px 0; }
     .act-meta { color: var(--text-1); margin: 8px 0 14px; }
@@ -480,11 +483,28 @@
     .loot-link { color: #e6e6e6; border-color: #c084fc; }
     .loot-currency { color: #fff0bd; border-color: #ca9955; background: #30200c; }
     .guide-sources { color: var(--text-1); font-size: .83rem; margin-top: 16px; }
-    @media(max-width: 760px) { .milestone-grid { grid-template-columns: 1fr; } .card { min-width: 0; } }
+    .gear-stage[hidden] { display: none; }
+    .gear-table { min-width: 580px; }
+    .gear-table th:first-child { width: 25%; }
+    .gear-stage { scroll-margin-top: calc(var(--site-top-height, 200px) + 12px); }
+    .tab-btn:focus-visible, .guide-picker select:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: -2px; }
+    @media(max-width: 760px) {
+      .milestone-grid { grid-template-columns: 1fr; }
+      .card { min-width: 0; }
+      header { padding: 10px 14px; }
+      .brand h1 { font-size: 1.05rem; gap: 6px; }
+      .header-inner { gap: 8px; }
+      .header-actions { gap: 6px; }
+      .header-actions .btn { padding: 6px 9px; font-size: .75rem; }
+      .tabs { padding: 0 14px; }
+      .tab-btn { padding: 9px 12px; }
+      .tree-canvas-card { position: static; }
+    }
   </style>
 </head>
 <body>
 
+<div class="site-top">
 <header>
   <div class="header-inner">
     <div class="brand">
@@ -506,14 +526,16 @@
   </div>
 </header>
 
-<nav class="tabs">
+<nav class="tabs" aria-label="Companion screens">
   <button class="tab-btn" onclick="switchTab('tab-tree', this)">1. Passive Tree &amp; Exact Routing</button>
   <button class="tab-btn active" onclick="switchTab('tab-campaign', this)">2. Start Here: Act-by-Act Guide</button>
   <button class="tab-btn" onclick="switchTab('tab-gems', this)">3. Gems &amp; Socket Links</button>
   <button class="tab-btn" onclick="switchTab('tab-warden', this)">4. Warden Ascendancy &amp; Tinctures</button>
   <button class="tab-btn" onclick="switchTab('tab-crafting', this)">5. SSF Crafting &amp; Vendor Regex</button>
   <button class="tab-btn" onclick="switchTab('tab-atlas', this)">6. Atlas &amp; Endgame Roadmap</button>
+  <button class="tab-btn" onclick="switchTab('tab-gear', this)">7. Gear Guide</button>
 </nav>
+</div>
 
 <main>
   <!-- TAB 1: PASSIVE TREE & INTERACTIVE MAP -->
@@ -740,6 +762,138 @@
 <tr><td>High red T14&#8211;16</td><td>Around 4,500&#8211;5,000+ life depending on defensive layers; 100% suppression, elemental caps with curse/exposure headroom, improved chaos resistance, reliable ailment handling and a proven claw. Six links are a goal, not a license to ignore defenses.</td><td>Progress Eater/Exarch invitations as the quest allows, carefully choosing altar downsides. Finish Atlas completion and improve bases/affixes. Save high-tier essences for suitable bases; plan costly crafts in PoB.</td></tr>
 <tr><td>Pinnacles / advanced invitations</td><td>Mechanic knowledge, sustained boss damage and recovery without kills, full ascendancy and verified defenses. Test single-target Frenzy/mark/tincture uptime; mapping buffs may disappear in boss arenas.</td><td>Attempt ordinary pinnacles first. Extra-difficult invitations and Uber bosses need a separate build-specific assessment; they are not a routine next step after a T16 clear.</td></tr>
 </tbody></table></div></div><div class="grid-2"><div class="card"><h2>Simple SSF Atlas plan</h2><label class="check-item"><input type="checkbox" data-id="atlas-guide-1"><span><strong>Establish map sustain:</strong> prioritize connected-map drops, completion and Kirac help while filling white/yellow maps. Spend Atlas points as earned. Check current Atlas tooltips before committing; the character's 3.29 passive reference does not validate an Atlas tree.</span></label><label class="check-item"><input type="checkbox" data-id="atlas-guide-2"><span><strong>Choose one or two upgrade sources:</strong> Essence for weapon/armor attempts, Expedition for Rog items/Tujen currency, Harvest for useful reforges and resistance swaps. Avoid expedition remnants that make monsters immune to your damage or unable to be leeched from.</span></label><label class="check-item"><input type="checkbox" data-id="atlas-guide-3"><span><strong>Progress a coherent boss influence:</strong> follow Eater or Exarch quest progression first. Maven witnessing and its Atlas setup are separate choices; do not plan Maven's Destructive Play and Eater/Exarch influence as simultaneous map strategies.</span></label><p>The 3.30 Atlas and map-device inputs have changed. Use the current Atlas tooltips; do not copy an old named-keystone layout. Threads replace Scarabs. Choose modest encounter difficulty while building the character, then increase investment only when clear and survival are reliable. <a href="https://www.pathofexile.com/forum/view-thread/4013680" target="_blank" rel="noopener noreferrer">GGG 3.30 changes</a>.</p></div><div class="card"><h2>Upgrades you can earn without a required unique</h2><ul class="step-list"><li><strong>First:</strong> a better fast claw, life/resistance rares, a useful 5/6-link, accuracy, suppression and reliable flasks. Keep a spare weapon for crafting.</li><li><strong>Then:</strong> suitable Eldritch implicits, strong jewels in efficient nearby sockets, and damage/crit upgrades that preserve defenses. Confirm exact implicits before refunding strike or pierce passives.</li><li><strong>The Taming:</strong> a possible later upgrade if you find Berek's Grip, Berek's Pass and Berek's Respite for its vendor recipe. Do not expect it from an ordinary resistance-ring craft or a guaranteed Harvest unique swap.</li><li><strong>Timeless/cluster jewels:</strong> optional later projects. Check the actual seed/effects and total passive cost in PoB; a named jewel is not automatically an upgrade.</li></ul><h3>If you are stuck</h3><p><strong>Dying:</strong> remove dangerous map mods, restore caps and life, upgrade recovery, then assess suppression/ailments. <strong>Low damage:</strong> check links, accuracy, weapon attack damage, Trinity resonance and Elusive before spending more currency. <strong>No mana:</strong> reduce reservation, keep a mana flask, disable tinctures, then test leech and trigger costs against a boss.</p><p class="guide-sources"><a href="https://www.poewiki.net/wiki/Atlas_of_Worlds" target="_blank" rel="noopener noreferrer">Atlas bonus objectives</a> and <a href="https://www.poewiki.net/wiki/Map" target="_blank" rel="noopener noreferrer">map tiers</a>. Numerical readiness targets are recommendations from this guide, not official thresholds.</p></div></div></section>
+  <!-- TAB 7: GEAR BY PROGRESSION MILESTONE -->
+  <section id="tab-gear" class="tab-panel" aria-label="Gear guidance by milestone">
+    <div class="card">
+      <h2>What good gear looks like at each stage</h2>
+      <p>Follow the same foundation throughout: <strong>a fast elemental claw, a shield, and life-based armor with evasion.</strong> Pure evasion or armor/evasion bases keep the four-slot Evasion Mastery working. Choose items that solve your current weakness; these are approximate shopping directions for SSF, not mandatory rolls on every slot.</p>
+      <div class="guide-picker">
+        <label for="gearStage"><strong>Your milestone</strong></label>
+        <select id="gearStage" onchange="selectGearStage(this.value)">
+          <option value="act5">Finishing Act 5</option>
+          <option value="act10">Finishing Act 10 / first maps</option>
+          <option value="yellow">Entering yellow maps (T6+)</option>
+          <option value="red">Entering red maps (T11+)</option>
+          <option value="perfect">Perfect endgame / dream gear</option>
+          <option value="all">Compare all five milestones</option>
+        </select>
+      </div>
+      <div class="callout"><strong>How to read resistance totals:</strong> “50% combined elemental resistance” means the sum of fire, cold and lightning on that item; for example, +25% fire and +25% lightning. It does <em>not</em> mean +50% to each. A +10% to all elemental resistances modifier contributes 30 percentage points to this sum. Chaos resistance is separate. Your real goal is <strong>75% displayed fire, cold and lightning resistance on the character sheet after Kitava</strong>; balance the three individually instead of chasing a large total in the wrong element.</div>
+      <p><strong>Before replacing an item:</strong> check links and colors, life, all three resistance caps, attributes, hit chance and mana cost. Useful sockets can outweigh better affixes during the campaign. On rare armor and jewelry, an open prefix can allow bench-crafted life; an open suffix can allow a missing resistance or attribute. Most items accept only one bench craft.</p>
+    </div>
+
+    <article class="card gear-stage" data-gear-stage="act5">
+      <h2>Finishing Act 5 <span class="badge">Campaign basics</span></h2>
+      <div class="milestone-grid">
+        <div class="milestone"><h3>Survival</h3>Roughly 1,500–2,000 life is a useful softcore goal. Rebuild toward 75% in each elemental resistance after Kitava's first −30% penalty.</div>
+        <div class="milestone"><h3>Damage</h3>A working 4-link, a fast weapon and enough accuracy matter more than having rare gear in every slot.</div>
+        <div class="milestone"><h3>Next upgrade</h3>Patch the weakest elemental resistance first, then replace a low-damage claw or a slot with no life.</div>
+      </div>
+      <div class="table-scroll"><table class="gear-table"><caption>Act 5 gear direction by slot</caption><thead><tr><th scope="col">Slot / item type</th><th scope="col">What to look for</th></tr></thead><tbody>
+        <tr><td>Weapon · fast one-handed claw</td><td>One or two useful flat elemental damage rolls and a quick attack rate. Some cold damage supports Oath of Winter. A good magic claw is fine; avoid slow weapons with impressive-looking damage per hit. Do not wait for an Imperial Claw.</td></tr>
+        <tr><td>Shield · evasion or armor/evasion</td><td>Life plus one or two missing resistances. A shield with around 40+ life and roughly 40–60% combined elemental resistance is already useful; a bench craft can finish it.</td></tr>
+        <tr><td>Body armor · evasion-based</td><td>A correctly colored 4-link first, then life and resistances. Keep the main attack here or in a helmet/gloves so replacing the weapon does not break the links.</td></tr>
+        <tr><td>Helmet &amp; gloves · evasion-based</td><td>Look for roughly 30–50+ life and two resistance rolls totaling around 40–60% per item. Accept less when the sockets or one badly needed resistance solve a bigger problem. Attack speed on gloves is a bonus.</td></tr>
+        <tr><td>Boots · evasion-based</td><td>About 20% movement speed, then life and any missing resistance. Movement speed plus one useful defense is enough for now.</td></tr>
+        <tr><td>Rings · resistance bases</td><td>Two-Stone or single-resistance rings make caps easier. Look for life and two useful resistances totaling around 50%, including the implicit. Flat damage to attacks is a bonus.</td></tr>
+        <tr><td>Amulet · attribute base</td><td>Enough Strength/Intelligence to equip your gems and claw, then life and resistance. Do not choose spell damage for this attack build.</td></tr>
+        <tr><td>Belt · Leather or Heavy</td><td>Life and resistances; Heavy Belt can solve Strength. Roughly 50+ total flat life including the implicit is a useful find.</td></tr>
+        <tr><td>Flasks, tinctures &amp; jewels</td><td>Current-level life flask, mana flask and Quicksilver; add useful defense or one tincture if sustainable. Get bleed removal when available. Equip only useful found jewels; do not spend travel points for a weak jewel.</td></tr>
+      </tbody></table></div>
+      <p class="act-meta"><strong>Keep progressing:</strong> suppression and chaos resistance are welcome bonuses here. Do not delay the campaign to perfect them or to find a unique.</p>
+    </article>
+
+    <article class="card gear-stage" data-gear-stage="act10" hidden>
+      <h2>Finishing Act 10 <span class="badge">First maps</span></h2>
+      <div class="milestone-grid">
+        <div class="milestone"><h3>Survival</h3>About 3,000–3,500 life and 75% fire/cold/lightning after the second penalty. Kitava's penalties now total −60% to all resistances.</div>
+        <div class="milestone"><h3>Damage</h3>A reliable 4-link can start easy white maps; a 5-link is an upgrade. Verify Trinity resonance, Elusive and roughly 95–100% hit chance.</div>
+        <div class="milestone"><h3>Next upgrade</h3>Bench-craft resistance gaps, upgrade old flasks, then improve the claw. Finish Merciless Lab when comfortable.</div>
+      </div>
+      <div class="table-scroll"><table class="gear-table"><caption>Act 10 gear direction by slot</caption><thead><tr><th scope="col">Slot / item type</th><th scope="col">What to look for</th></tr></thead><tbody>
+        <tr><td>Weapon · fast elemental claw</td><td>Two substantial flat elemental damage rolls, ideally local attack speed too. Compare elemental DPS rather than rarity; keep enough cold damage for your freeze setup. Local crit becomes useful as Nightblade comes online.</td></tr>
+        <tr><td>Shield · defensive rare</td><td>Roughly 60+ life and two resistances totaling around 60–80%. Suppression or stronger armor/evasion is an excellent extra, but a resistance repair comes first.</td></tr>
+        <tr><td>Body armor · linked evasion base</td><td>A usable 4/5-link with life, then resistances. Prefer an armor/evasion base if its requirements and colors work. A found 6-link needs to be wearable and leave you with safe defenses.</td></tr>
+        <tr><td>Helmet &amp; gloves · evasion-based rares</td><td>Around 50–70+ life with two useful resistances totaling about 60–80% per piece is a good direction. Start collecting suppression; gloves can also supply attack speed or accuracy.</td></tr>
+        <tr><td>Boots · movement rare</td><td>25–30% movement speed if available, life and one or two useful resistances. Suppression is a bonus. Keep an evasion component while relying on the mastery.</td></tr>
+        <tr><td>Rings · resistance/life rares</td><td>Life and roughly 60–90% combined elemental resistance per ring, counting implicits, make other slots easier. Fill only the elements you need; accuracy and attributes can be more valuable than surplus resistance.</td></tr>
+        <tr><td>Amulet · attributes and life</td><td>Cover Strength/Intelligence, then life and resistance or accuracy. Flat elemental damage to attacks and critical multiplier are upgrades once the basics work.</td></tr>
+        <tr><td>Belt · life/resistance rare</td><td>Around 70+ total flat life and two useful resistances. Leather/Heavy Belt is fine; a Stygian Vise is useful only if you also have a worthwhile Abyss jewel.</td></tr>
+        <tr><td>Flasks, tinctures &amp; jewels</td><td>Reliable bleed-removal life flask, useful defensive utility and one sustainable tincture. Keep a mana flask if bosses drain you. Life plus attack speed, claw crit or useful flat attack damage makes a found jewel worth considering.</td></tr>
+      </tbody></table></div>
+      <p class="act-meta"><strong>Resistance budget:</strong> each Kitava kill removes another 30 percentage points from each resistance. Check the sheet after the kill. Chaos resistance often remains negative at this stage; improve it as gear allows.</p>
+    </article>
+
+    <article class="card gear-stage" data-gear-stage="yellow" hidden>
+      <h2>Entering yellow maps <span class="badge">T6–T10</span></h2>
+      <div class="milestone-grid">
+        <div class="milestone"><h3>Survival</h3>Around 4,000 life, capped elemental resistances and progress toward reliable 100% suppression. Start moving chaos resistance toward zero or better.</div>
+        <div class="milestone"><h3>Damage</h3>A comfortable 5-link and a proven elemental claw. Test mana sustain against a boss with your auras and tinctures active.</div>
+        <div class="milestone"><h3>Next upgrade</h3>Replace the weakest life roll, fill the suppression gap, and improve the claw before adding difficult map mods.</div>
+      </div>
+      <div class="table-scroll"><table class="gear-table"><caption>Yellow-map gear direction by slot</caption><thead><tr><th scope="col">Slot / item type</th><th scope="col">What to look for</th></tr></thead><tbody>
+        <tr><td>Weapon · crafted elemental claw</td><td>Strong flat elemental prefixes, attack speed and useful local crit. Two good elements plus attack speed can beat three weak elements. Use essences on a spare fast base; compare with your equipped claw before switching.</td></tr>
+        <tr><td>Shield · life and defenses</td><td>About 80+ life, useful armor/evasion, and suppression or resistances that fix your setup. Do not replace a good shield with a damage stat stick that costs your resistance caps.</td></tr>
+        <tr><td>Body armor · evasion or hybrid 5-link</td><td>A substantial life roll and useful defenses; suppression/resistance suffixes as needed. Work toward a 6-link without giving up a sound defensive base.</td></tr>
+        <tr><td>Helmet · life/suppression rare</td><td>Roughly 70–90+ life, suppression if needed, then elemental/chaos resistance. About 70–100% combined elemental resistance is useful on a resistance-focused piece, but leave room for suppression and attributes.</td></tr>
+        <tr><td>Gloves · attack utility rare</td><td>Life, attack speed or accuracy, and suppression/resistance gaps. An Eldritch additional-strike implicit is a useful longer-term clear upgrade; it is not required alongside every other desirable modifier.</td></tr>
+        <tr><td>Boots · fast defensive rare</td><td>30% movement speed, life and suppression or resistances. Begin a consistent freeze/shock solution through gear, flasks or other allocated defenses.</td></tr>
+        <tr><td>Rings · balanced rares</td><td>Life, needed elemental/chaos resistances and attributes/accuracy. Add elemental damage with attacks or flat damage after caps are stable. An open prefix for a mana-cost craft can help if the recipe is unlocked.</td></tr>
+        <tr><td>Amulet · damage after attributes</td><td>Life plus required attributes; critical multiplier or elemental damage with attacks is the next step. Choose an affordable useful anoint that is not already allocated on your tree.</td></tr>
+        <tr><td>Belt · strong rare / Stygian Vise</td><td>Good life, elemental/chaos resistance and helpful flask modifiers. A Stygian plus a life/attack-speed or flat attack-damage jewel is a practical upgrade when found.</td></tr>
+        <tr><td>Flasks, tinctures &amp; jewels</td><td>Life flask plus two useful utility flasks and up to two tinctures after Experienced Herbalist, if sustainable. Match utility suffixes to defensive gaps. Rare jewels want life plus two useful damage stats; avoid duplicate flask suffix effects that do not stack.</td></tr>
+      </tbody></table></div>
+      <p class="act-meta"><strong>Suppression budget:</strong> the completed core has 80% unconditional suppression; the Evasion Mastery adds 15% only with evasion on helmet, body, gloves and boots. That leaves 5% from gear in that specific setup, or 20% without the mastery. If your tree is unfinished, you may need more. Verify away from full life.</p>
+    </article>
+
+    <article class="card gear-stage" data-gear-stage="red" hidden>
+      <h2>Entering red maps <span class="badge">T11+</span></h2>
+      <div class="milestone-grid">
+        <div class="milestone"><h3>Survival</h3>Around 4,500 life, 75% elemental caps and reliable 100% suppression. Aim for positive chaos resistance and consistent ailment handling.</div>
+        <div class="milestone"><h3>Damage</h3>A strong 5-link or usable 6-link, accurate crit attacks, and boss recovery without on-kill buffs. Finish Eternal Lab when ready.</div>
+        <div class="milestone"><h3>Next upgrade</h3>Improve physical-hit defenses, finish ailment protection and obtain a good 6-link. Recheck corrupted map mods before entering.</div>
+      </div>
+      <div class="table-scroll"><table class="gear-table"><caption>Red-map gear direction by slot</caption><thead><tr><th scope="col">Slot / item type</th><th scope="col">What to look for</th></tr></thead><tbody>
+        <tr><td>Weapon · high-quality rare claw</td><td>High elemental DPS on a fast base, local attack speed and crit. Imperial Claw is a strong life-on-hit base; Gemini can help mana on hit if needed. A good existing base beats a poorly rolled ideal base.</td></tr>
+        <tr><td>Shield · strong defensive rare</td><td>High life, substantial armor/evasion and the suppression/resistances your build needs. Extra maximum resistance or another useful defensive modifier is a luxury after the basics.</td></tr>
+        <tr><td>Body armor · defensive 5/6-link</td><td>A high life roll and meaningful armor/evasion, with efficient suffixes. Keep evasion for the mastery. Add useful Eldritch implicits on an eligible rare after the base item is worth keeping.</td></tr>
+        <tr><td>Helmet · efficient defensive rare</td><td>High life, suppression if needed and well-placed elemental/chaos resistance. Reservation efficiency is useful only when it enables a sustainable aura setup; do not trade away recovery to fit another aura.</td></tr>
+        <tr><td>Gloves · life, speed and strike coverage</td><td>Life, attack speed, needed accuracy/suppression/resistances. Work toward an Eldritch additional-strike implicit and useful projectile pierce coverage; account for the strike mastery and pierce already on the tree.</td></tr>
+        <tr><td>Boots · movement and ailment plan</td><td>30%+ movement speed, high life, needed suppression and resistances. Ailment avoidance can help finish a full avoidance setup; partial avoidance is not immunity.</td></tr>
+        <tr><td>Rings · defense plus damage</td><td>Strong life, chaos/elemental resistance where needed, then elemental damage with attacks or flat damage. Keep enough accuracy and attributes. Mana-cost reduction can free sustained attacks from flask dependence.</td></tr>
+        <tr><td>Amulet · efficient offensive rare</td><td>Life, critical multiplier, elemental damage with attacks and required attributes. A useful anoint is part of the item; compare the entire setup rather than one damage roll.</td></tr>
+        <tr><td>Belt · endgame rare</td><td>High life, chaos/elemental resistances and useful flask stats. Prefer a Stygian with a good Abyss jewel when it improves the full package.</td></tr>
+        <tr><td>Flasks, tinctures &amp; jewels</td><td>Reliable life/bleed recovery, rolled defensive utility and sustainable damage tinctures. Jewels should combine life with useful crit multiplier, attack speed or missing defenses. Have answers for freeze, shock and corrupted blood; bleed removal alone does not prove permanent corrupted-blood immunity.</td></tr>
+      </tbody></table></div>
+      <p class="act-meta"><strong>Do not force every suffix:</strong> a piece with suppression, chaos resistance and an attribute may have little room for elemental resistances. Put larger elemental totals on rings, belt or shield. Evasion and suppression still need help against large physical attack hits and damage over time.</p>
+    </article>
+
+    <article class="card gear-stage" data-gear-stage="perfect" hidden>
+      <h2>Perfect endgame <span class="badge badge-gold">Dream gear</span></h2>
+      <p>This is an aspirational version of the same life-based claw-and-shield Warden. Near-perfect rares and chase uniques can take an entire SSF league or longer. The best combination depends on your drops and intended bosses; validate major swaps in Path of Building with your actual tree, mana costs and realistic buff uptime.</p>
+      <div class="milestone-grid">
+        <div class="milestone"><h3>Complete defenses</h3>About 5,000+ life where practical, reliable 100% suppression, capped elemental resistances with curse/exposure headroom, and chaos resistance moving toward its 75% cap.</div>
+        <div class="milestone"><h3>Finish the details</h3>Full elemental ailment protection, corrupted-blood protection, strong physical-hit mitigation and recovery that works during bosses. Each needs a real source.</div>
+        <div class="milestone"><h3>Optimize together</h3>A great claw, 6-link, leveled quality gems, useful implicits and anoint. Balance accuracy, crit, Trinity, reservation and tincture uptime as one setup.</div>
+      </div>
+      <div class="table-scroll"><table class="gear-table"><caption>Aspirational endgame gear direction by slot</caption><thead><tr><th scope="col">Slot / item type</th><th scope="col">Ideal direction and tradeoffs</th></tr></thead><tbody>
+        <tr><td>Weapon · exceptional rare Imperial Claw</td><td>Top-tier flat elemental prefixes, high local attack speed and local critical chance; a useful remaining suffix or craft. Strong cold/lightning with useful fire is one direction, but test Trinity resonance rather than assuming three elements guarantee it. Quality, a strong fracture and a suitable enchant are finishing touches when available.</td></tr>
+        <tr><td>Shield · near-perfect defensive rare</td><td>High life, very strong armor/evasion, useful maximum resistance and whatever suppression/chaos resistance the final setup lacks. Avoid paying for suppression already above the cap unless it lets you reclaim tree points or supports another mechanic.</td></tr>
+        <tr><td>Body armor · premium armor/evasion 6-link</td><td>Top life and defenses, efficient suppression/resistance suffixes, and useful aura/defensive Eldritch implicits. Keep the evasion component if the mastery is part of your cap. A strong rare preserves flexibility for unique rings and belt.</td></tr>
+        <tr><td>Helmet · crafted evasion/hybrid rare</td><td>Top life, needed suppression/chaos resistance/attributes, and reservation efficiency where it unlocks a meaningful aura. Choose implicits for the final defensive or damage plan.</td></tr>
+        <tr><td>Gloves · crafted strike gloves</td><td>High life, attack speed, accuracy or defensive suffixes, with strong additional-strike coverage and a complementary Eldritch implicit. Optimize pierce across gear and tree rather than collecting redundant sources.</td></tr>
+        <tr><td>Boots · premium movement rare</td><td>High movement speed, top life and a complete ailment-avoidance package if that is your chosen solution. <strong>Ancestral Vision</strong> can turn suppression investment into part of that avoidance; finish the remaining chance on boots, gear or tree and verify 100% for each relevant ailment.</td></tr>
+        <tr><td>Ring 1 · Nimis or exceptional rare</td><td><strong>Nimis</strong> is a chase return-projectile option. It also randomizes firing directions, changing clear and positioning. Replace Returning Projectiles Support with a useful damage support; compare actual boss hits and play feel. A superb life/damage rare remains a valid alternative.</td></tr>
+        <tr><td>Ring 2 · premium rare or The Taming</td><td>A rare can supply life, chaos resistance, attack damage and mana-cost reduction. <strong>The Taming</strong> is an offensive/resistance alternative when you reliably inflict the relevant ailments; it costs a rare ring's life and flexibility. With Nimis plus The Taming, other slots must carry attributes, life and chaos resistance.</td></tr>
+        <tr><td>Amulet · premium rare with anoint</td><td>High life, critical multiplier, elemental damage with attacks and required attributes; add a suitable anoint and catalyst quality. Generic +spell levels is not the goal for an elemental weapon attack.</td></tr>
+        <tr><td>Belt · Mageblood or exceptional Stygian</td><td><strong>Mageblood</strong> is a luxury for permanent, strongly scaled magic utility flask effects. A near-perfect Stygian with life, chaos resistance, useful flask modifiers and an excellent Abyss jewel is the practical rare alternative.</td></tr>
+        <tr><td>Jewels · strong rares and selected uniques</td><td>Rare jewels with life and multiple relevant crit-multiplier/attack-speed stats; a useful corrupted-blood immunity implicit. Consider a <strong>Watcher's Eye</strong> whose modifiers match auras you actually run, or <strong>Ancestral Vision</strong> for the avoidance plan. Only add a cluster/timeless jewel after checking the points and nodes it replaces.</td></tr>
+        <tr><td>Flasks &amp; tinctures · matched to the belt</td><td>For the dual-tincture route, <strong>two tinctures + life flask + two utility flasks</strong> fills all five slots. Mageblood can permanently apply those two magic utility flasks; it does not automate tinctures. Scale those utility flasks with effect rolls and appropriate enchants. Four utility flasks requires changing this flask/tincture plan and reconsidering its ascendancy investment.</td></tr>
+      </tbody></table></div>
+      <p class="act-meta"><strong>Perfect means coherent:</strong> keep the rare belt or ring if a chase unique breaks recovery or a defensive cap. Add expensive corruptions only after the core set works, and keep a usable backup before risking an item.</p>
+    </article>
+    <p class="guide-sources">Milestone ranges are practical guidance for this companion, not item-tier requirements. Mechanics and unique references: <a href="https://www.poewiki.net/wiki/Resistance" target="_blank" rel="noopener noreferrer">resistances</a>, <a href="https://www.poewiki.net/wiki/Nimis" target="_blank" rel="noopener noreferrer">Nimis</a>, <a href="https://www.poewiki.net/wiki/Mageblood" target="_blank" rel="noopener noreferrer">Mageblood</a>, <a href="https://www.poewiki.net/wiki/Ancestral_Vision" target="_blank" rel="noopener noreferrer">Ancestral Vision</a>, <a href="https://poedb.tw/us/The_Taming" target="_blank" rel="noopener noreferrer">The Taming</a>. Recheck current item text before a major craft.</p>
+  </section>
 </main>
 
 <div class="toast" id="toastMsg">Copied to clipboard!</div>
@@ -1003,11 +1157,30 @@ function selectAct(value) {
 }
 
 // Tabs
+const siteTop = document.querySelector(".site-top");
+function updateSiteTopHeight() {
+  document.documentElement.style.setProperty("--site-top-height", `${siteTop.getBoundingClientRect().height}px`);
+}
+updateSiteTopHeight();
+if (typeof ResizeObserver !== "undefined") {
+  new ResizeObserver(updateSiteTopHeight).observe(siteTop);
+} else {
+  window.addEventListener("resize", updateSiteTopHeight);
+}
+
+function selectGearStage(value) {
+  if (!["act5", "act10", "yellow", "red", "perfect", "all"].includes(value)) return;
+  document.querySelectorAll(".gear-stage").forEach(panel => {
+    panel.hidden = value !== "all" && panel.dataset.gearStage !== value;
+  });
+}
+
 function switchTab(tabId, btn) {
   document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById(tabId).classList.add("active");
   if (btn) btn.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 // Checkboxes & LocalStorage
