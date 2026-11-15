@@ -295,6 +295,7 @@
       gap: 18px;
       align-items: start;
     }
+    .tree-layout > * { min-width: 0; }
     @media (max-width: 1024px) {
       .tree-layout { grid-template-columns: 1fr; }
     }
@@ -303,8 +304,8 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
-      position: sticky;
-      top: calc(var(--site-top-height, 200px) + 12px);
+      position: relative;
+      scroll-margin-top: calc(var(--site-top-height, 200px) + 12px);
     }
     .tree-toolbar {
       background: var(--bg-1);
@@ -321,6 +322,15 @@
       flex-wrap: wrap;
       gap: 6px;
     }
+    .tree-view-controls { display: flex; flex-wrap: wrap; gap: 6px; flex-basis: 100%; }
+    .tree-view-btn { background: var(--bg-2); color: var(--text-1); border: 1px solid var(--border); padding: 6px 10px; border-radius: 5px; font: inherit; font-size: .8rem; cursor: pointer; }
+    .tree-view-btn[aria-pressed="true"] { color: #101018; background: var(--accent-gold); border-color: var(--accent-gold); }
+    .tree-phase-picker { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: .78rem; max-width: 100%; }
+    .tree-phase-picker select { font: inherit; padding: 5px; color: var(--text-0); background: var(--bg-2); border: 1px solid var(--border); border-radius: 5px; max-width: 100%; }
+    .tree-phase-picker[hidden] { display: none; }
+    .tree-zoom-controls { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tree-map-help { color: var(--text-2); font-size: .73rem; flex-basis: 100%; }
+    .tree-view-btn:focus-visible, .tree-phase-picker select:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: 2px; }
     .phase-btn {
       background: var(--bg-2);
       color: var(--text-1);
@@ -338,7 +348,7 @@
     }
     .svg-container {
       width: 100%;
-      height: 640px;
+      height: var(--tree-map-height, clamp(160px, 36dvh, 520px));
       position: relative;
       cursor: grab;
       user-select: none;
@@ -354,7 +364,7 @@
       background: var(--bg-1);
       border-top: 1px solid var(--border);
       padding: 12px 16px;
-      min-height: 88px;
+      min-height: 76px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -364,6 +374,7 @@
       color: var(--accent-gold);
       font-size: 0.95rem;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       gap: 8px;
     }
@@ -372,6 +383,11 @@
       color: var(--text-1);
       margin-top: 4px;
     }
+    .node-inspector-stats ul { padding-left: 18px; margin: 0; }
+    .node-inspector-stats li { margin: 2px 0; }
+    .ascendancy-route { border-left: 3px solid var(--accent-purple); }
+    .ascendancy-route ol { padding-left: 20px; }
+    .ascendancy-route li { margin: 12px 0; font-size: .88rem; }
     .phase-card {
       border-left: 4px solid var(--border);
       padding-left: 14px;
@@ -627,35 +643,54 @@
       <!-- Left Column: Interactive Pan/Zoom SVG Tree -->
       <div class="tree-canvas-card">
         <div class="tree-toolbar">
-          <div class="phase-filters">
-            <button class="phase-btn active" onclick="filterTreePhase(0, this)">Full target (112 spent points)</button>
-            <button class="phase-btn" onclick="filterTreePhase(1, this)" style="border-color:var(--p1)">P1: Opening (17 pts)</button>
-            <button class="phase-btn" onclick="filterTreePhase(2, this)" style="border-color:var(--p2)">P2: Strike, pierce, leech</button>
-            <button class="phase-btn" onclick="filterTreePhase(3, this)" style="border-color:var(--p3)">P3: Claws, life, auras</button>
-            <button class="phase-btn" onclick="filterTreePhase(4, this)" style="border-color:var(--p4)">P4: Defense + tinctures</button>
-            <button class="phase-btn" onclick="filterTreePhase(5, this)" style="border-color:var(--p5)">P5: Maps to level 90</button>
+          <div class="tree-view-controls" role="group" aria-label="Passive tree view">
+            <button type="button" class="tree-view-btn" data-tree-view="passive" aria-pressed="true" onclick="setTreeView('passive')">Character tree · 112 points</button>
+            <button type="button" class="tree-view-btn" data-tree-view="warden" aria-pressed="false" onclick="setTreeView('warden')">Warden · 8 ascendancy points</button>
           </div>
-          <div style="display:flex;gap:6px;">
+          <label class="tree-phase-picker" id="treePhasePicker">Progression
+            <select id="treePhase" onchange="filterTreePhase(Number(this.value))">
+              <option value="0">Full target · 112 spent points</option>
+              <option value="1">P1: Opening · 17 points</option>
+              <option value="2">P2: Strike, pierce, leech</option>
+              <option value="3">P3: Claws, life, auras</option>
+              <option value="4">P4: Defense and tinctures</option>
+              <option value="5">P5: Maps to level 90</option>
+            </select>
+          </label>
+          <div class="tree-zoom-controls">
             <button class="btn" style="padding:4px 9px;font-size:0.76rem;" onclick="zoomTree(1.25)">＋ Zoom In</button>
             <button class="btn" style="padding:4px 9px;font-size:0.76rem;" onclick="zoomTree(0.8)">－ Zoom Out</button>
             <button class="btn" style="padding:4px 9px;font-size:0.76rem;" onclick="resetTreeView()">🎯 Focus Start</button>
             <button class="btn" style="padding:4px 9px;font-size:0.76rem;" onclick="fitFullTree()">🗺 Full Tree</button>
           </div>
+          <p class="tree-map-help" id="treeMapHelp">Drag to pan · Zoom buttons or Ctrl/⌘ + wheel · Scroll normally to move the page.</p>
         </div>
 
         <div class="svg-container" id="svgContainer">
-          <svg id="passiveTreeSvg" viewBox="2500 -2300 6600 10200"></svg>
+          <svg id="passiveTreeSvg" viewBox="2500 -2300 6600 10200" role="img" aria-label="Character passive tree"></svg>
         </div>
 
         <div class="node-inspector" id="nodeInspector">
           <div class="node-inspector-title">👆 Click or hover any node on the map (or click any node pill on the right) to inspect &amp; center it</div>
-          <div class="node-inspector-stats">Scroll wheel to zoom • Drag to pan • Grey nodes show unallocated neighbours for visual orientation.</div>
+          <div class="node-inspector-stats">Buttons or Ctrl/⌘ + wheel to zoom · Drag to pan · Normal scrolling moves the page.</div>
         </div>
       </div>
 
 
 
-<div>
+<div class="tree-routing">
+<div class="card ascendancy-route">
+  <h2>Warden ascendancy: spend these eight points separately</h2>
+  <p>Each Lab grants two ascendancy points. These <strong>8 points are separate from the 112 character-tree points</strong>. The free Warden start costs no point. Take each connecting small passive before its notable.</p>
+  <ol>
+    <li><strong>Normal Lab · around Act 3 · points 1–2:</strong><br><button type="button" class="small-pill" onclick="focusNode('53421')">1. Evasion, Chance to Freeze</button> → <button type="button" class="node-pill" onclick="focusNode('16848')">2. Oath of Winter</button><br>Cold damage and Hoarfrost support freeze control; freezing every boss is not automatic.</li>
+    <li><strong>Cruel Lab · around Act 7 · points 3–4:</strong><br><button type="button" class="small-pill" onclick="focusNode('2060')">3. Evasion, Tincture Effect</button> → <button type="button" class="node-pill" onclick="focusNode('40104')">4. Enduring Suffusion</button><br>Start a new branch from the Warden start. Slower Mana Burn and lingering effects help a sustainable first tincture.</li>
+    <li><strong>Merciless Lab · late campaign · points 5–6:</strong><br><button type="button" class="small-pill" onclick="focusNode('58650')">5. Evasion, Tincture Effect</button> → <button type="button" class="node-pill" onclick="focusNode('29662')">6. Experienced Herbalist</button><br>Continue from Enduring Suffusion. A second active tincture is available; use it only if recovery and flask slots allow.</li>
+    <li><strong>Eternal Lab · maps, when ready · points 7–8:</strong><br><button type="button" class="small-pill" onclick="focusNode('61761')">7. Evasion, Ailment Duration</button> → <button type="button" class="node-pill" onclick="focusNode('55509')">8. Avatar of the Wilds</button><br>Return to the Oath of Winter branch. Build Unbound Fury, then press Unbound Avatar for a damage window.</li>
+  </ol>
+  <button type="button" class="btn" onclick="setTreeView('warden', true)">Show the eight-point Warden route</button>
+  <p class="guide-sources">The Warden view is a route schematic, not the in-game layout. Node IDs/connections: <a href="https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/dev/src/TreeData/3_29/tree.lua" target="_blank" rel="noopener noreferrer">PoB 3.29 reference</a>. Updated effects: <a href="https://poedb.tw/us/Warden" target="_blank" rel="noopener noreferrer">Warden passives</a> and <a href="https://www.pathofexile.com/forum/view-thread/4013680" target="_blank" rel="noopener noreferrer">GGG 3.30 notes</a>. Hover or click a point to read its effect.</p>
+</div>
 <div class="card phase-card phase-1"><h2><span>Phase 1: Acts 1-2: movement and life</span><span class="badge">17 points / 17 total</span></h2><ul class="step-list"><li><strong>Steps 1&ndash;8: Finesse, then Heart of Oak</strong><br><button type="button" class="small-pill" onclick="focusNode('39821')">Evasion and Life (39821)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('2094')">Evasion and Life (2094)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('720')">Accuracy and Attack Damage (720)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('29870')">Attack Speed (29870)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('56149')">Accuracy and Attack Damage (56149)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('54142')">Finesse (54142)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('32117')">Life and Stun Avoidance (32117)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('65210')">Heart of Oak (65210)</button><p>Take the lower attack-speed arc from the Ranger start. Early life and attack speed work for both Frost Blades and Lightning Strike. Heart of Oak is a side branch; return to Finesse afterward.</p></li><li><strong>Steps 9&ndash;12: Use only the Quickstep arc to Intuition</strong><br><button type="button" class="small-pill" onclick="focusNode('3187')">Movement Speed and Spell Suppression (3187)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('2715')">Quickstep (2715)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('903')">Movement Speed and Spell Suppression (903)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('37504')">Intuition (37504)</button><p>This arc gives 12% movement speed and 16% suppression before Intuition. Do not also buy the parallel One With Nature arc now: it costs another three points and is no longer needed for travel. Patch resistance gaps with gear, Alira and cheap bench crafts.</p></li><li><strong>Steps 13&ndash;17: Herbalism and +30 maximum life</strong><br><button type="button" class="small-pill" onclick="focusNode('41866')">Dexterity (41866)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('9206')">Life (9206)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('19858')">Herbalism (19858)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('44316')">Life Mastery (44316)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('36221')">Life (36221)</button><p>Reach the life wheel, select the +30 maximum Life mastery and exit through the right-hand life node. This opening ends after 17 spent points; the old duplicate elemental arc is gone.</p></li></ul></div>
 <div class="card phase-card phase-2"><h2><span>Phase 2: Acts 2-3: make Lightning Strike work</span><span class="badge">19 points / 36 total</span></h2><ul class="step-list"><li><strong>Steps 18&ndash;20: Travel north on the outer highway</strong><br><button type="button" class="small-pill" onclick="focusNode('12412')">Dexterity (12412)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('20807')">Dexterity (20807)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('36287')">Dexterity (36287)</button><p>From (36221), allocate (12412), then (20807), then (36287). Keep a mana flask; we are prioritizing the additional-strike mastery before the later dual-leech branch.</p></li><li><strong>Steps 21&ndash;25: Get your additional strike at point 25</strong><br><button type="button" class="small-pill" onclick="focusNode('45202')">Attack Speed (45202)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('65427')">Attack Speed (65427)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('20953')">Attack Speed (20953)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('13375')">Multishot (13375)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('49391')">Attack Mastery (49391)</button><p>Choose Non-Vaal Strike Skills target 1 additional nearby Enemy. This is eight points sooner than the previous revision. Multishot supplies an extra projectile; the mastery supplies the extra strike. They do different jobs. Switch to LS when its links, weapon and clear feel ready; keep Ancestral Call until this mastery is actually selected.</p></li><li><strong>Steps 26&ndash;28: Add pierce before dropping Pierce Support</strong><br><button type="button" class="small-pill" onclick="focusNode('10843')">Projectile Damage (10843)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('31222')">Pierce (31222)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('21228')">Piercing Shots (21228)</button><p>From (36287), branch east. The small node and Piercing Shots together grant three additional pierced targets. Replace Pierce Support after these are allocated. Keep the branch until actual gear replaces its clear function.</p></li><li><strong>Steps 29&ndash;34: Go north for Clever Thief and real dual leech</strong><br><button type="button" class="small-pill" onclick="focusNode('1461')">Dexterity (1461)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('49900')">Dexterity (49900)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('46277')">Dexterity (46277)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('38995')">Life and Mana on Hit (38995)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('8001')">Clever Thief (8001)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('7488')">Leech Mastery (7488)</button><p>Continue via (1461), (49900) and (46277). The small node gives life and mana on hit; Clever Thief gives 1% attack damage leeched as life and as mana. Select 5% of Leech is Instant at its mastery. This route now has a genuine life-leech source. Keep the mana flask until recovery is sufficient against a single boss; leech cannot recover mana while you are not hitting.</p></li><li><strong>Steps 35&ndash;36: Take efficient nearby life</strong><br><button type="button" class="small-pill" onclick="focusNode('25260')">Life (25260)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('27788')">Blood Drinker (27788)</button><p>Blood Drinker adds maximum life and recovery on kill. Its on-kill recovery does not work during a boss fight without adds; that is why Clever Thief and life flasks matter.</p></li></ul></div>
 <div class="card phase-card phase-3"><h2><span>Phase 3: Acts 3-7: recovery, suppression and reservation</span><span class="badge">26 points / 62 total</span></h2><ul class="step-list"><li><strong>Steps 37&ndash;42: Claw attack speed and life on hit</strong><br><button type="button" class="small-pill" onclick="focusNode('5629')">Claw Damage (5629)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('17908')">Claw Damage and Attack Speed (17908)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('35384')">Claw Damage and Attack Speed (35384)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('25775')">Claw Damage and Attack Speed (25775)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('54791')">Claws of the Magpie (54791)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('19050')">Claw Mastery (19050)</button><p>Branch from (46277). Take the attack-speed side of the claw wheel before its crit side. The default mastery gives 25 life per enemy hit with a main-hand claw; the off-hand mana clause does nothing with a shield. Take these claw-only nodes once using a claw.</p></li><li><strong>Steps 43&ndash;47: Inveterate and lucky suppression</strong><br><button type="button" class="small-pill" onclick="focusNode('62744')">Spell Suppression (62744)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('29454')">Spell Suppression (29454)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('18770')">Spell Suppression (18770)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('63251')">Inveterate (63251)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('49820')">Spell Suppression Mastery (49820)</button><p>Return to (36287) for the suppression wheel. Lucky chance helps below the cap; it is not immunity to spells. At a reliable 100% chance away from full life, swap this mastery to additional prevention or refund it.</p></li><li><strong>Steps 48&ndash;55: Revenge of the Hunted and both life arcs</strong><br><button type="button" class="small-pill" onclick="focusNode('59606')">Dexterity (59606)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('39718')">Dexterity (39718)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('31315')">Evasion and Life (31315)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('25067')">Evasion and Life (25067)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('53114')">Revenge of the Hunted (53114)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('65528')">Evasion Mastery (65528)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('45593')">Evasion and Life (45593)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('12801')">Evasion and Life (12801)</button><p>From (1461), travel west via (59606) and (39718). Select the Evasion Mastery only while helmet, body, gloves and boots all have evasion. The full-life suppression on Revenge of the Hunted is temporary, so do not count it toward a permanent cap.</p></li><li><strong>Steps 56&ndash;62: Charisma before adding a second large aura</strong><br><button type="button" class="small-pill" onclick="focusNode('8938')">Dexterity (8938)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('49978')">Dexterity (49978)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('6538')">Intelligence (6538)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('64265')">Aura Area of Effect (64265)</button> &rarr; <button type="button" class="small-pill" onclick="focusNode('63194')">Reservation Efficiency (63194)</button> &rarr; <button type="button" class="node-pill" onclick="focusNode('6799')">Charisma (6799)</button> &rarr; <button type="button" class="mastery-pill" onclick="focusNode('53615')">Reservation Mastery (53615)</button><p>From (59606), take the westward attribute route. Charisma plus the small reservation node gives 24% mana reservation efficiency before gear. Two 50% auras reserve about 80.6% together, before Precision. The mastery increases aura effect, not efficiency. Check the real free-mana amount and tincture drain before enabling both.</p></li></ul></div>
@@ -1159,6 +1194,26 @@ const PHASE_COLORS = {
   5: "#f87171"
 };
 
+// A compact schematic of the selected ascendancy route, separate from the
+// character tree's coordinates and 112-point budget. Effects include 3.30 updates.
+const WARDEN_NODES = {
+  "58427": { id: "58427", n: "Warden", x: 250, y: 550, t: "start", p: 1, st: 0, asc: true, s: ["Free ascendancy start. The eight Lab points are separate from character passive points."], out: ["53421", "2060"] },
+  "53421": { id: "53421", n: "Evasion, Chance to Freeze", x: 700, y: 280, t: "small", p: 1, st: 1, asc: true, s: ["15% increased Evasion Rating", "10% chance to Freeze"], out: ["16848"] },
+  "16848": { id: "16848", n: "Oath of Winter", x: 1100, y: 280, t: "notable", p: 1, st: 2, asc: true, s: ["Enemies you freeze stay frozen for at least 2 seconds.", "Hits whose freeze duration is too short apply Hoarfrost, helping later hits freeze."], out: ["61761"] },
+  "2060": { id: "2060", n: "Evasion, Tincture Effect", x: 700, y: 820, t: "small", p: 2, st: 3, asc: true, s: ["15% increased Evasion Rating", "10% increased effect of your tinctures"], out: ["40104"] },
+  "40104": { id: "40104", n: "Enduring Suffusion", x: 1100, y: 820, t: "notable", p: 2, st: 4, asc: true, s: ["50% less Mana Burn rate from your tinctures (3.30).", "After deactivation, tincture effects linger 0.5 seconds per Mana Burn stack, capped at 6 seconds."], out: ["58650"] },
+  "58650": { id: "58650", n: "Evasion, Tincture Effect", x: 1700, y: 820, t: "small", p: 3, st: 5, asc: true, s: ["15% increased Evasion Rating", "10% increased effect of your tinctures"], out: ["29662"] },
+  "29662": { id: "29662", n: "Experienced Herbalist", x: 2250, y: 820, t: "notable", p: 3, st: 6, asc: true, s: ["You can have one additional tincture active, allowing two in this setup.", "The second tincture still occupies a flask slot and needs sustainable Mana Burn."], out: [] },
+  "61761": { id: "61761", n: "Evasion, Ailment Duration", x: 1700, y: 280, t: "small", p: 4, st: 7, asc: true, s: ["15% increased Evasion Rating", "10% increased duration of elemental ailments on enemies"], out: ["55509"] },
+  "55509": { id: "55509", n: "Avatar of the Wilds", x: 2250, y: 280, t: "notable", p: 4, st: 8, asc: true, s: ["Build 100 Unbound Fury with ailment hits, then activate Unbound Avatar.", "While Unbound: 100% more elemental damage; hits always freeze, shock and ignite.", "15-second base duration (3.30). Cannot gain Fury while Unbound."], out: [] }
+};
+const TREE_DEFAULT_VIEWS = {
+  passive: { x: 2600, y: 800, w: 3800, h: 3200 },
+  warden: { x: 0, y: 0, w: 2700, h: 1100 }
+};
+const savedTreeViews = { passive: { ...TREE_DEFAULT_VIEWS.passive }, warden: { ...TREE_DEFAULT_VIEWS.warden } };
+const selectedTreeNodes = { passive: "54142", warden: "16848" };
+let treeViewMode = "passive";
 let currentPhaseFilter = 0;
 let selectedNodeId = "54142";
 
@@ -1174,6 +1229,9 @@ function updateViewBox() {
 
 function renderPassiveTree() {
   const svg = document.getElementById("passiveTreeSvg");
+  const nodes = treeViewMode === "warden" ? WARDEN_NODES : TREE_NODES;
+  const phaseFilter = treeViewMode === "warden" ? 0 : currentPhaseFilter;
+  svg.setAttribute("aria-label", treeViewMode === "warden" ? "Warden ascendancy route: eight separate Lab points" : "Character passive tree");
   svg.innerHTML = "";
 
   const edgeGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -1182,9 +1240,9 @@ function renderPassiveTree() {
 
   // Draw edges
   const drawnEdges = new Set();
-  Object.values(TREE_NODES).forEach(n => {
+  Object.values(nodes).forEach(n => {
     (n.out || []).forEach(targetId => {
-      const t = TREE_NODES[targetId];
+      const t = nodes[targetId];
       if (!t) return;
       const edgeKey = [n.id, targetId].sort().join("-");
       if (drawnEdges.has(edgeKey)) return;
@@ -1192,7 +1250,7 @@ function renderPassiveTree() {
 
       const bothAllocated = n.p > 0 && t.p > 0;
       const maxPhase = Math.max(n.p, t.p);
-      const visibleInFilter = currentPhaseFilter === 0 || (bothAllocated && n.p <= currentPhaseFilter && t.p <= currentPhaseFilter);
+      const visibleInFilter = phaseFilter === 0 || (bothAllocated && n.p <= phaseFilter && t.p <= phaseFilter);
 
       const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
       line.setAttribute("x1", n.x);
@@ -1214,13 +1272,13 @@ function renderPassiveTree() {
   });
 
   // Draw nodes
-  Object.values(TREE_NODES).forEach(n => {
+  Object.values(nodes).forEach(n => {
     // Hide unallocated mastery centers so circles look clean
     if (n.t === "mastery" && n.p === 0) return;
 
     const isAlloc = n.p > 0;
-    const isHighlight = currentPhaseFilter === 0 ? isAlloc : (isAlloc && n.p === currentPhaseFilter);
-    const isDimmed = currentPhaseFilter !== 0 && (!isAlloc || n.p > currentPhaseFilter);
+    const isHighlight = phaseFilter === 0 ? isAlloc : (isAlloc && n.p === phaseFilter);
+    const isDimmed = phaseFilter !== 0 && (!isAlloc || n.p > phaseFilter);
 
     let radius = 34;
     if (n.t === "start") radius = 85;
@@ -1230,6 +1288,7 @@ function renderPassiveTree() {
     else if (n.t === "jewel") radius = 52;
 
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.dataset.nodeId = n.id;
     g.style.cursor = "pointer";
     g.onclick = (e) => {
       e.stopPropagation();
@@ -1311,44 +1370,69 @@ function renderPassiveTree() {
 }
 
 function inspectNode(nid, lockSelection = true) {
-  const n = TREE_NODES[nid];
+  const n = TREE_NODES[nid] || WARDEN_NODES[nid];
   if (!n) return;
   if (lockSelection) {
     selectedNodeId = nid;
+    selectedTreeNodes[treeViewMode] = nid;
     renderPassiveTree();
   }
   const box = document.getElementById("nodeInspector");
   const masteryLabel = n.m ? `<div class="node-inspector-stats">Selected mastery effect ID: ${n.m}</div>` : "";
-  const phaseBadge = n.p > 0
+  const labNames = ["", "Normal Lab", "Cruel Lab", "Merciless Lab", "Eternal Lab"];
+  const phaseBadge = n.asc
+    ? `<span class="badge">${n.st ? `${labNames[n.p]} · Ascendancy point ${n.st}/8` : "Free start · 0 points"}</span>`
+    : n.p > 0
     ? `<span class="badge" style="background:${PHASE_COLORS[n.p]}22;color:${PHASE_COLORS[n.p]};border-color:${PHASE_COLORS[n.p]};">Allocated — Phase ${n.p} (Step #${n.st})</span>`
     : `<span class="badge" style="background:#1e293b;color:#94a3b8;border-color:#475569;">Unallocated Landmark</span>`;
-  const statsHtml = (n.s && n.s.length) ? n.s.join(" • ") : (n.t === "mastery" ? "Allocate your chosen Mastery effect here" : "Travel / Start Node");
+  const statsHtml = (n.s && n.s.length) ? `<ul>${n.s.map(stat => `<li>${stat}</li>`).join("")}</ul>` : (n.t === "mastery" ? "Allocate your chosen Mastery effect here" : "Travel / Start Node");
   box.innerHTML = `
     <div class="node-inspector-title">
       <span>${n.n} <code style="color:var(--text-2);font-size:0.8rem;">(ID: ${n.id})</code></span>
       ${phaseBadge}
-      <span style="font-size:0.76rem;color:var(--text-2);margin-left:auto;">Coords: (${n.x}, ${n.y})</span>
     </div>
     <div class="node-inspector-stats">${statsHtml}</div>${masteryLabel}
   `;
+  updateTreeViewport();
 }
 
 function focusNode(nid) {
-  const n = TREE_NODES[nid];
+  const n = TREE_NODES[nid] || WARDEN_NODES[nid];
   if (!n) return;
+  const mode = n.asc ? "warden" : "passive";
+  if (treeViewMode !== mode) setTreeView(mode);
   selectedNodeId = nid;
-  vb.w = 2400;
-  vb.h = 2000;
+  const mapRect = document.getElementById("svgContainer").getBoundingClientRect();
+  vb.w = Math.max(900, mapRect.width * 4);
+  vb.h = Math.max(750, mapRect.height * 4);
   vb.x = n.x - vb.w / 2;
   vb.y = n.y - vb.h / 2;
   updateViewBox();
   inspectNode(nid, true);
+  document.querySelector(".tree-canvas-card").scrollIntoView({ block: "start", behavior: "instant" });
 }
 
-function filterTreePhase(phase, btn) {
+function setTreeView(mode, reveal = false) {
+  if (!Object.hasOwn(TREE_DEFAULT_VIEWS, mode)) return;
+  if (treeViewMode !== mode) {
+    savedTreeViews[treeViewMode] = { ...vb };
+    treeViewMode = mode;
+    vb = { ...savedTreeViews[mode] };
+    selectedNodeId = selectedTreeNodes[mode];
+  }
+  document.querySelectorAll("[data-tree-view]").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.treeView === mode)));
+  document.getElementById("treePhasePicker").hidden = mode === "warden";
+  document.getElementById("treeMapHelp").textContent = "Drag to pan · Zoom buttons or Ctrl/⌘ + wheel · Scroll normally to move the page.";
+  updateViewBox();
+  renderPassiveTree();
+  inspectNode(selectedNodeId, false);
+  if (reveal) document.querySelector(".tree-canvas-card").scrollIntoView({ block: "start", behavior: "instant" });
+}
+
+function filterTreePhase(phase) {
+  if (!Number.isInteger(phase) || phase < 0 || phase > 5) return;
   currentPhaseFilter = phase;
-  document.querySelectorAll(".phase-btn").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
+  document.getElementById("treePhase").value = String(phase);
   renderPassiveTree();
 }
 
@@ -1363,12 +1447,12 @@ function zoomTree(factor) {
 }
 
 function resetTreeView() {
-  vb = { x: 2600, y: 1100, w: 3800, h: 2800 };
+  vb = treeViewMode === "warden" ? { ...TREE_DEFAULT_VIEWS.warden } : { x: 2600, y: 1100, w: 3800, h: 2800 };
   updateViewBox();
 }
 
 function fitFullTree() {
-  vb = { x: 2400, y: -2300, w: 6600, h: 10200 };
+  vb = treeViewMode === "warden" ? { ...TREE_DEFAULT_VIEWS.warden } : { x: 2400, y: -2300, w: 6600, h: 10200 };
   updateViewBox();
 }
 
@@ -1390,6 +1474,7 @@ window.addEventListener("mousemove", (e) => {
 });
 window.addEventListener("mouseup", () => { isPanning = false; });
 svgContainer.addEventListener("wheel", (e) => {
+  if (!e.ctrlKey && !e.metaKey) return;
   e.preventDefault();
   zoomTree(e.deltaY < 0 ? 1.15 : 0.87);
 }, { passive: false });
@@ -1406,15 +1491,32 @@ function selectAct(value) {
 
 // Tabs
 const siteTop = document.querySelector(".site-top");
+function updateTreeViewport() {
+  const card = document.querySelector(".tree-canvas-card");
+  if (!card.getClientRects().length) return;
+  const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  const available = viewportHeight - siteTop.getBoundingClientRect().height
+    - card.querySelector(".tree-toolbar").getBoundingClientRect().height
+    - document.getElementById("nodeInspector").getBoundingClientRect().height - 26;
+  const mapHeight = `${Math.floor(Math.max(100, Math.min(520, available)))}px`;
+  if (card.style.getPropertyValue("--tree-map-height") !== mapHeight) card.style.setProperty("--tree-map-height", mapHeight);
+}
+
 function updateSiteTopHeight() {
   document.documentElement.style.setProperty("--site-top-height", `${siteTop.getBoundingClientRect().height}px`);
+  updateTreeViewport();
 }
 updateSiteTopHeight();
 if (typeof ResizeObserver !== "undefined") {
   new ResizeObserver(updateSiteTopHeight).observe(siteTop);
+  const treeSizeObserver = new ResizeObserver(updateTreeViewport);
+  treeSizeObserver.observe(document.querySelector(".tree-toolbar"));
+  treeSizeObserver.observe(document.getElementById("nodeInspector"));
 } else {
   window.addEventListener("resize", updateSiteTopHeight);
 }
+window.addEventListener("resize", updateTreeViewport);
+if (window.visualViewport) window.visualViewport.addEventListener("resize", updateTreeViewport);
 
 // Illustrative rares: regular affixes only, no more than three prefixes/suffixes.
 // Unique examples use their actual modifiers, independently of rare affix limits.
@@ -1744,6 +1846,7 @@ function switchTab(tabId, btn) {
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
   document.getElementById(tabId).classList.add("active");
   if (btn) btn.classList.add("active");
+  if (tabId === "tab-tree") updateTreeViewport();
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
