@@ -1,7 +1,8 @@
 # LS_Warden_330_SSF.filter - rarity-first SSF campaign / mapping filter
-# Revision: progression-guide update, 2026-11-14. Normal PoE 1, not Ruthless.
+# Revision: Viscera league-drop highlighting, 2026-11-15. Normal PoE 1, not Ruthless.
 # NORMAL = WHITE | MAGIC = BLUE | RARE = YELLOW | UNIQUE = ORANGE
 # BORDERS: cyan claw, purple links, pink 5/6L, green compact RGB recipe.
+# VISCERA: bright pink label/border, dark background, pink beam/kite and alert.
 # First four palette rules Continue; equipment rules preserve their text colors.
 # All equipment remains visible through AREA level 32 (Acts 1-3).
 # All rares/uniques and unmatched non-equipment stay visible at every level.
@@ -44,6 +45,19 @@ Show
     SetBackgroundColor 48 19 6 250
     SetFontSize 42
     Continue
+
+# VISCERA: ALL WICKERMAN BODY PARTS, EVERY TIER AND AREA LEVEL
+# Match the item class, not equipment slots or individual body-part names.
+# Terminal rule: later equipment/rarity rules must not override this style.
+Show
+    Class == "Viscera"
+    SetTextColor 255 130 220 255
+    SetBorderColor 255 40 170 255
+    SetBackgroundColor 40 5 25 255
+    SetFontSize 45
+    PlayAlertSound 4 250
+    PlayEffect Pink
+    MinimapIcon 0 Pink Kite
 
 # QUEST AND LABYRINTH ITEMS
 Show
