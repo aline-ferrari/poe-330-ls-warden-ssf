@@ -509,8 +509,43 @@
     .equipment-slot[data-slot="belt"] { grid-area: 7 / 2 / 8 / 5; flex-direction: row; gap: 12px; }
     .equipment-slot[data-slot="belt"] svg { width: 65px; height: 27px; }
     .equipment-help { color: #9f9686; font-size: .76rem; text-align: center; margin-top: 14px; }
+    .equipment-section { margin-top: 18px; border-top: 1px solid #75634460; padding-top: 12px; }
+    .equipment-section h4 { color: #bcb19b; font-size: .69rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 9px; }
+    .equipment-flasks { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; }
+    .equipment-flasks .equipment-slot { height: 100px; }
+    .equipment-flasks .equipment-slot svg { height: 63px; }
+    .equipment-slot.magic { --item-color: #a0a0f4; border-color: #535378; }
+    .equipment-slot.normal { --item-color: #bbb6aa; }
+    .equipment-slot.tincture { background-image: radial-gradient(ellipse, #45643e55, #111113 80%); }
+    .equipment-jewels { display: grid; grid-template-columns: repeat(auto-fill, minmax(76px, 1fr)); gap: 8px; }
+    .equipment-jewels .equipment-slot { height: 98px; }
+    .equipment-jewels .equipment-slot svg { height: 40px; }
+    .equipment-slot.empty { border-style: dashed; --item-color: #8c877c; }
+    .equipment-section-note { color: #9f9686; font-size: .71rem; line-height: 1.5; margin-top: 8px; }
+    .equipment-slot .slot-status { color: #a49c89; font-size: .58rem; margin-top: 3px; }
+    .equipment-slot.has-sockets > .equipment-art { opacity: .38; }
+    .equipment-slot .socket-overlay { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; padding: 2px 4px; border-radius: 5px; background: #08090be8; pointer-events: none; }
+    .equipment-slot .socket-diagram { position: static; width: 36px; height: auto; min-height: 0; max-height: none; filter: none; }
+    .equipment-slot .socket-summary { color: #eee3c6; font-size: .58rem; line-height: 1.2; margin-top: 2px; }
+    .equipment-slot .socket-none { position: absolute; top: 3px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: #bcb4a4; font-size: .54rem; background: #08090be8; padding: 1px 3px; border-radius: 3px; pointer-events: none; }
+    .equipment-socket-legend { color: #b9ae98; font-size: .71rem; text-align: center; margin: -7px 0 14px; line-height: 1.6; }
+    .gem-dot { display: inline-flex; align-items: center; justify-content: center; width: 15px; height: 15px; border: 1px solid currentColor; border-radius: 50%; color: #080b10; font: bold .57rem/1 sans-serif; flex: 0 0 auto; vertical-align: middle; }
+    .gem-dot.gem-red { background: #ed7777; }
+    .gem-dot.gem-green { background: #6bd9a3; }
+    .gem-dot.gem-blue { background: #76b9f4; }
+    .item-gem-plan { padding: 12px 0; border-bottom: 1px solid #6f5d354d; text-align: left; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .item-gem-plan h4 { color: #e5cf96; font-size: .85rem; margin-bottom: 9px; }
+    .item-gem-plan .gem-group { background: #ffffff05; border: 1px solid #6f5d353d; border-radius: 4px; padding: 8px; margin: 6px 0; }
+    .gem-group-label { display: block; color: #a99e87; font-size: .67rem; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+    .gem-placement { display: flex; align-items: flex-start; gap: 8px; color: #d9deeb; font-size: .79rem; line-height: 1.6; margin: 3px 0; }
+    .gem-placement .gem-dot { margin-top: 3px; }
+    .gem-plan-note { color: #bdb09a; font-size: .77rem; line-height: 1.6; margin-top: 9px; }
+    .gear-inventory .item-preview { position: sticky; top: calc(var(--site-top-height, 200px) + 12px); }
+    @media(min-width: 901px) { .gear-inventory .item-preview { max-height: calc(100dvh - var(--site-top-height, 200px) - 24px); overflow-y: auto; } }
     .item-preview { --rarity-color: #ffff77; min-width: 0; border: 1px solid #73603a; background: #080809; box-shadow: 0 8px 25px #0005; text-align: center; font-family: Georgia, "Times New Roman", serif; }
     .item-preview.unique { --rarity-color: #af6025; border-color: #985d30; }
+    .item-preview.magic { --rarity-color: #a0a0ff; border-color: #626282; }
+    .item-preview.normal { --rarity-color: #c8c8c8; }
     .item-preview-header { background: linear-gradient(90deg, #3d301600, #65532260, #3d301600); border-bottom: 1px solid #73603a; padding: 13px 12px; color: var(--rarity-color); }
     .item-preview h3 { color: inherit; margin: 0 0 3px; font: 1.2rem Georgia, serif; }
     .item-preview-base { font-size: 1rem; }
@@ -521,7 +556,7 @@
     .item-preview-mod { color: #9696ff; font-size: .96rem; line-height: 1.55; }
     .item-preview-note { border-top: 1px solid #6f5d354d; padding-top: 12px; color: #c0af8c; font: .82rem/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     .item-example-label { color: #b5ab93; font: .7rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-    @media(max-width: 900px) { .gear-inventory { grid-template-columns: 1fr; gap: 16px; } .equipment-board { width: 100%; max-width: 420px; justify-self: center; } }
+    @media(max-width: 900px) { .gear-inventory { grid-template-columns: 1fr; gap: 16px; } .equipment-board { width: 100%; max-width: 420px; justify-self: center; } .gear-inventory .item-preview { position: static; scroll-margin-top: calc(var(--site-top-height, 200px) + 12px); } }
     @media(max-width: 420px) { .equipment-board { padding: 12px 8px; } .equipment-slots { gap: 5px; } .equipment-slot span { font-size: .6rem; } .gear-stage { padding: 16px 12px; } }
     .tab-btn:focus-visible, .guide-picker select:focus-visible { outline: 2px solid var(--accent-cyan); outline-offset: -2px; }
     @media(max-width: 760px) {
@@ -816,7 +851,9 @@
       </div>
       <div class="callout"><strong>How to read resistance totals:</strong> “50% combined elemental resistance” means the sum of fire, cold and lightning on that item; for example, +25% fire and +25% lightning. It does <em>not</em> mean +50% to each. A +10% to all elemental resistances modifier contributes 30 percentage points to this sum. Chaos resistance is separate. Your real goal is <strong>75% displayed fire, cold and lightning resistance on the character sheet after Kitava</strong>; balance the three individually instead of chasing a large total in the wrong element.</div>
       <p><strong>Explore the equipment panel:</strong> hover, focus or tap a slot to inspect one possible item for that milestone. Rare item names are illustrative; their modifiers use real stat types with at most three prefixes and three suffixes. These are individual examples, not a fully resistance-balanced loadout or a list to copy exactly. The guidance below each panel explains what matters.</p>
-      <p class="guide-sources">Example references: <a href="https://poepage.com/poe1/modifiers/claw/" target="_blank" rel="noopener noreferrer">claw modifier ranges</a>, <a href="https://poedb.tw/us/Helmets_dex" target="_blank" rel="noopener noreferrer">evasion helmet modifiers</a>, <a href="https://poedb.tw/us/Boots_dex" target="_blank" rel="noopener noreferrer">evasion boot modifiers</a>, <a href="https://poedb.tw/us/Nimis" target="_blank" rel="noopener noreferrer">Nimis</a>, <a href="https://poedb.tw/us/Mageblood" target="_blank" rel="noopener noreferrer">Mageblood</a>.</p>
+      <p><strong>Flasks, tinctures and jewels:</strong> tinctures occupy flask slots, so each example belt has exactly five slots in total. Magic flasks and tinctures allow one prefix and one suffix; regular, Abyss and cluster jewels allow two of each. Jewel panels show candidates for available sockets, with optional future upgrades labeled separately.</p>
+      <p><strong>Gem placement:</strong> colored sockets and gold links appear over the equipment. Inspect a slot for the full gem names and setup notes. A line joins gems that need to be linked; separate dots are independent skills or spare gems being leveled. You can move a whole group to another item with enough matching sockets and links. Gem order within a linked group does not affect the supports.</p>
+      <p class="guide-sources">Example references: <a href="https://poepage.com/poe1/modifiers/claw/" target="_blank" rel="noopener noreferrer">claw modifier ranges</a>, <a href="https://poedb.tw/us/Helmets_dex" target="_blank" rel="noopener noreferrer">evasion helmet modifiers</a>, <a href="https://poedb.tw/us/Boots_dex" target="_blank" rel="noopener noreferrer">evasion boot modifiers</a>, <a href="https://poedb.tw/us/Nimis" target="_blank" rel="noopener noreferrer">Nimis</a>, <a href="https://poedb.tw/us/Mageblood" target="_blank" rel="noopener noreferrer">Mageblood</a>, <a href="https://poedb.tw/us/Flasks" target="_blank" rel="noopener noreferrer">flasks</a>, <a href="https://poedb.tw/us/Tinctures" target="_blank" rel="noopener noreferrer">tinctures</a>, <a href="https://poedb.tw/us/Viridian_Jewel" target="_blank" rel="noopener noreferrer">jewels</a>, <a href="https://poedb.tw/us/Large_Cluster_Jewel" target="_blank" rel="noopener noreferrer">cluster jewels</a>, <a href="https://poedb.tw/us/Watchers_Eye" target="_blank" rel="noopener noreferrer">Watcher's Eye</a>.</p>
       <p><strong>Before replacing an item:</strong> check links and colors, life, all three resistance caps, attributes, hit chance and mana cost. Useful sockets can outweigh better affixes during the campaign. On rare armor and jewelry, an open prefix can allow bench-crafted life; an open suffix can allow a missing resistance or attribute. Most items accept only one bench craft.</p>
     </div>
 
@@ -1226,6 +1263,107 @@ const GEAR_EXAMPLE_STAGES = {
     cold: [111, 189], lightning: [21, 344], fire: [100, 185], clawSpeed: 27, clawCrit: 38 }
 };
 
+const GEAR_GEMS = {
+  ls: { name: "Lightning Strike", color: "G" },
+  elemental: { name: "Elemental Damage with Attacks Support", color: "R" },
+  cold: { name: "Added Cold Damage Support", color: "G" },
+  faster: { name: "Faster Attacks Support", color: "G" },
+  trinity: { name: "Trinity Support", color: "B" },
+  nightblade: { name: "Nightblade Support", color: "G" },
+  returning: { name: "Returning Projectiles Support", color: "G" },
+  inspiration: { name: "Inspiration Support", color: "R" },
+  multistrike: { name: "Multistrike Support", color: "R" },
+  whirling: { name: "Whirling Blades", color: "G" },
+  lifetap: { name: "Lifetap Support", color: "R" },
+  frostblink: { name: "Frostblink", color: "B" },
+  precision: { name: "Precision", color: "G" },
+  herald: { name: "Herald of Ice", color: "G" },
+  grace: { name: "Grace", color: "G" },
+  wrath: { name: "Wrath", color: "B" },
+  enlighten: { name: "Enlighten Support", color: "B" },
+  mark: { name: "Sniper's Mark", color: "G" },
+  markHit: { name: "Mark On Hit Support", color: "G" },
+  blood: { name: "Blood Rage", color: "G" },
+  guard: { name: "Steelskin", color: "R" },
+  automation: { name: "Automation", color: "B" }
+};
+
+function gearSocketPlans(stage) {
+  const act5 = stage === "act5";
+  const act10 = stage === "act10";
+  const campaign = act5 || act10;
+  const dream = stage === "perfect";
+  const group = (gems, label) => ({ gems, label });
+  const main = act5 ? ["ls", "elemental", "cold", "faster"] : ["ls", "trinity", "nightblade", "elemental"];
+  if (!campaign) main.push(dream ? "multistrike" : "returning");
+  if (stage === "red" || dream) main.push("inspiration");
+  const noSockets = note => ({ groups: [], title: "No skill-gem sockets", note });
+  return {
+    body: { title: "Main attack", groups: [group(main, `${main.length}-link · all gems linked together`)],
+      note: act5 ? "A straightforward campaign 4-link. Faster Attacks is a usable clear/sustain choice; swap it for Pierce if your tree does not yet provide enough projectile pierce. Use normal LS; a Vaal version is optional if found. The entire 4-link can move to helmet, gloves or boots if those have your best sockets." :
+        `${dream ? "This version assumes the example Nimis ring: Multistrike replaces Returning Projectiles. It changes attack commitment, so compare boss damage and feel. If using a rare ring instead of Nimis, use Returning Projectiles in that slot." : stage === "yellow" ? "The fifth linked socket adds Returning Projectiles. If still on a 4-link, leave that support out until you can link it." : stage === "red" ? "The sixth linked socket adds Inspiration. A strong 5-link remains usable; leave Inspiration out if that sixth link is not ready." : "This 4-link assumes working Trinity resonance and frequent claw crits for Nightblade's Elusive. A found 5-link can add Returning Projectiles."} Check all three Trinity resonance bars and real Nightblade uptime; use Added Cold or Faster Attacks when those conditions fail. ${stage === "red" || dream ? "Inspiration requires spending mana: do not link Lifetap to this main attack. " : ""}Keep pierce and additional-strike coverage from your tree or gear.` },
+    helmet: { title: campaign ? "Independent auras" : dream ? "Aura group with reservation support" : "Independent auras",
+      groups: act5 ? [group(["herald"], "Independent · no link needed"), group(["precision"], "Independent · no link needed")] : act10 ?
+        [group(["grace"], "Independent · no link needed"), group(["precision"], "Independent · no link needed")] : dream ?
+        [group(["grace", "wrath", "precision", "enlighten"], "4-link · Enlighten supports the three auras")] :
+        [group(["grace"], "Independent · no link needed"), group(["wrath"], "Independent · no link needed"), group(["precision"], "Independent · no link needed")],
+      note: act5 ? "Herald of Ice plus low-level Precision is a modest campaign setup. Level Precision only as needed for accuracy and available mana. These two skills do not need links." : act10 ?
+        "Grace plus low-level Precision is a defensive starting point. Swap Grace for a damage aura only after comparing survival and damage; do not add two 50% auras without reservation efficiency. Links between these independent auras are harmless, but not required." :
+        `${dream ? "A level 3–4 Enlighten is a luxury, not a requirement. It must share the linked group to reduce these auras' reservation; level 1 has no useful reservation reduction. The Watcher's Eye example matches these three auras." : "Grace plus Wrath requires reservation efficiency such as Charisma. These three auras need no links; linking them to one another is harmless without an extra cost-multiplying support."} Keep Precision at the lowest level that solves accuracy. Test free mana, mark costs and tincture drain together; leave Wrath disabled if sustain fails or change the damage aura if Trinity resonance needs it.` },
+    boots: { title: "Travel skills", groups: [group(campaign ? ["whirling", "faster"] : ["whirling", "faster", "lifetap"], campaign ? "2-link · movement" : "3-link · movement"), group(["frostblink"], "Independent · gap crossing")],
+      note: `${campaign ? "Keep Whirling Blades and Faster Attacks linked. Pay its mana cost until recovery is comfortable." : "Lifetap makes the linked movement attack spend life; use it only with reliable life recovery. Remove it if repeated movement becomes unsafe."} Frostblink is separate and crosses gaps. Do not link Frostblink to Lifetap unless you deliberately want it to spend life too. Keep its Intelligence requirement manageable.` },
+    gloves: { title: act5 ? "Manual mark and optional buff" : "Mark trigger and optional buff",
+      groups: [group(act5 ? ["mark"] : campaign ? ["mark", "markHit"] : ["mark", "markHit", "lifetap"], act5 ? "Independent · cast on tough enemies" : campaign ? "2-link · automated mark" : "3-link · automated mark"), group(["blood"], "Independent · optional buff")],
+      note: `${act5 ? "Manually cast Sniper's Mark on bosses. Mark On Hit is a later convenience if you can afford its cost." : "Mark On Hit links to Sniper's Mark here; it does not need to be linked to Lightning Strike. It triggers from your attack hits on rare/unique enemies, at an extra cost."} ${campaign ? "" : "The shown Lifetap also makes mark triggers cost life. Omit it and use a 2-link if mana is reliable or the life cost is unsafe. "}Blood Rage is optional and separate: its degeneration must be covered by recovery, and on-kill Frenzy generation does not guarantee boss charges.` },
+    shield: { title: act5 ? "Manual guard" : "Guard automation", groups: [group(act5 ? ["guard"] : ["guard", "automation"], act5 ? "Independent · press manually" : "2-link · automatic guard")],
+      note: act5 ? "Keep Steelskin at a level your Strength supports, and press it for dangerous damage windows. Spare shield sockets can level extra gems; a 3-link is not required for this single skill." : "Link Steelskin to Automation, then toggle Automation on. The guard triggers when its cooldown is ready; it will not always align with a boss hit. Check the repeated mana cost and keep Steelskin within your Strength requirement. You can instead remove Automation and cast the guard manually. Do not attach Automation to the separate Blood Rage setup." },
+    claw: { title: "Spare-gem leveling", groups: [group(["ls"], "Spare copy · not the main attack"), group(["trinity"], "Spare support · leveling only"), group(["nightblade"], "Spare support · leveling only")],
+      note: "Optional spare copies for leveling or future corruption attempts. No links are required. Your active main attack remains in the body armor; these spare supports do not support it across items. Keep important utility out of a weapon you replace often, and never corrupt your only usable main skill." },
+    ring1: noSockets("The ring base in this example has no skill-gem socket. Keep active gem groups in the weapon, shield or armor."),
+    ring2: noSockets("The ring base in this example has no skill-gem socket. A special socketed ring would need a separate plan."),
+    amulet: noSockets("This amulet has no skill-gem sockets. Its attributes help you meet gem requirements elsewhere."),
+    belt: noSockets("This belt has no skill-gem sockets. An Abyssal socket on a Stygian Vise accepts an Abyss jewel, not a skill or support gem.")
+  };
+}
+
+function gearSocketSummary(plan) {
+  if (!plan.groups.length) return "No gems";
+  if (plan.groups.every(group => group.gems.length === 1)) return `${plan.groups.length}×1`;
+  return plan.groups.map(group => group.gems.length === 1 ? "1" : `${group.gems.length}L`).join("+");
+}
+
+function gearSocketDiagram(plan) {
+  if (!plan.groups.length) return '<span class="socket-none" aria-hidden="true">No gems</span>';
+  const positions = [[9, 9], [27, 9], [27, 27], [9, 27], [9, 45], [27, 45]];
+  const colors = { R: "#ed7777", G: "#6bd9a3", B: "#76b9f4" };
+  let index = 0;
+  let lines = "";
+  let sockets = "";
+  plan.groups.forEach(group => {
+    group.gems.forEach((id, localIndex) => {
+      const [x, y] = positions[index];
+      const gem = GEAR_GEMS[id];
+      if (localIndex) {
+        const [px, py] = positions[index - 1];
+        lines += `<line x1="${px}" y1="${py}" x2="${x}" y2="${y}" stroke="#d6b46a" stroke-width="4"/>`;
+      }
+      sockets += `<circle cx="${x}" cy="${y}" r="7" fill="${colors[gem.color]}" stroke="#ece3c2" stroke-width="1"/><text x="${x}" y="${y + 2.5}" text-anchor="middle" fill="#080b10" font-family="sans-serif" font-weight="bold" font-size="7">${gem.color}</text>`;
+      index++;
+    });
+  });
+  const height = positions[index - 1][1] + 9;
+  return `<span class="socket-overlay" aria-hidden="true"><svg class="socket-diagram" viewBox="0 0 36 ${height}">${lines}${sockets}</svg><span class="socket-summary">${gearSocketSummary(plan)}</span></span>`;
+}
+
+function gearGemPlanMarkup(plan) {
+  if (!plan) return "";
+  const colorNames = { R: "red", G: "green", B: "blue" };
+  return `<section class="item-gem-plan"><h4>${plan.title}${plan.groups.length ? ` · ${gearSocketSummary(plan)}` : ""}</h4>${plan.groups.map(group => `<div class="gem-group"><span class="gem-group-label">${group.label}</span>${group.gems.map(id => {
+    const gem = GEAR_GEMS[id];
+    return `<div class="gem-placement"><span class="gem-dot gem-${colorNames[gem.color]}" aria-label="${colorNames[gem.color]} socket">${gem.color}</span><span>${gem.name}</span></div>`;
+  }).join("")}</div>`).join("")}<p class="gem-plan-note">${plan.note}</p></section>`;
+}
+
 const EQUIPMENT_ICONS = {
   claw: '<path d="M25 51 36 62 43 52 35 43Z"/><path d="m30 47-8-17 6-19 1 21 8 11m0 3-1-21 9-17-3 24 2 12m0 6 6-19 10-10-7 21-6 14"/><path d="m27 53-9 12 8 5 10-12Z"/>',
   helmet: '<path d="M14 49V32C14 6 50 6 50 32v17l-12 7V37H26v19Z"/><path d="m15 33 17-7 17 7M32 13v13M19 39l7 2m12 0 7-2"/><path d="m26 12 6-7 6 7"/>',
@@ -1235,7 +1373,12 @@ const EQUIPMENT_ICONS = {
   boots: '<path d="m13 11 17 2-3 25 4 13-1 9H8l-2-6 11-11Z"/><path d="m37 11 17 2-3 25 5 13-1 9H34l-3-6 10-11Z"/><path d="m13 20 16 2m8-2 16 2M10 51h20m5 0h20"/>',
   ring: '<ellipse cx="32" cy="42" rx="18" ry="21"/><ellipse cx="32" cy="43" rx="11" ry="14"/><path d="m22 17 10-9 10 9-3 13H25Z"/><path d="m25 18 7 8 7-8M32 8v18"/>',
   amulet: '<path d="M13 10c0 36 38 36 38 0M26 39l6 5 6-5"/><path d="m32 42 13 13-13 14-13-14Z"/><path d="m32 48 6 7-6 8-6-8Z"/>',
-  belt: '<path d="M3 22h58v22H3Z"/><path d="M23 17h20v32H23Z"/><path d="M28 24h10v18H28Zm4 9h17M10 28v10m6-10v10m38-10v10"/>'
+  belt: '<path d="M3 22h58v22H3Z"/><path d="M23 17h20v32H23Z"/><path d="M28 24h10v18H28Zm4 9h17M10 28v10m6-10v10m38-10v10"/>',
+  flask: '<path d="M25 7h14v9l-3 3v9c15 8 14 30 7 39H21c-7-9-8-31 7-39v-9l-3-3Z"/><path d="M24 7h16v8H24Zm-4 34h24M24 50l7 7 10-10M23 62h18"/>',
+  tincture: '<path d="M23 8h18v8H23Zm4 8v13L16 41v24h32V41L37 29V16M21 42h22M21 59h22"/><path d="M32 54c-12-4-8-15 0-17 8 2 12 13 0 17Zm0-10v18"/>',
+  jewel: '<path d="m32 9 20 17-5 30-15 12-15-12-5-30Z"/><path d="m12 26 20 9 20-9M17 56l15-21 15 21M32 9v26m0 0v33M20 19l12 16 12-16"/>',
+  abyss: '<ellipse cx="32" cy="38" rx="25" ry="20"/><path d="M8 38c12-18 36-18 48 0-12 18-36 18-48 0Z"/><ellipse cx="32" cy="38" rx="8" ry="13"/><path d="m14 18-4-8m15 7-2-10m20 12 6-10M14 58l-4 9m17-8-1 10m18-11 6 9"/>',
+  cluster: '<circle cx="32" cy="37" r="10"/><circle cx="32" cy="10" r="5"/><circle cx="55" cy="25" r="5"/><circle cx="52" cy="57" r="5"/><circle cx="12" cy="57" r="5"/><circle cx="9" cy="25" r="5"/><path d="M32 27V15m9 17 10-5m-12 17 10 9m-24-9-10 9m8-21-10-5"/>'
 };
 
 function gearExamplesFor(stage) {
@@ -1288,6 +1431,66 @@ function gearExamplesFor(stage) {
     items.ring1 = { name: "Nimis", base: "Topaz Ring", rarity: "unique", implicit: ["+30% to Lightning Resistance"], modifiers: ["+50 to Dexterity", "35% increased Projectile Damage", "Projectiles Return to you", "Projectiles are fired in random directions"], note: "Actual unique modifiers with example rolls. Replace Returning Projectiles Support and test the changed firing pattern. This ring supplies no life or chaos resistance; compensate elsewhere." };
     items.belt = { name: "Mageblood", base: "Heavy Belt", rarity: "unique", implicit: ["+35 to Strength"], modifiers: ["+50 to Dexterity", "+25% to Fire Resistance", "+25% to Cold Resistance", "Magic Utility Flasks cannot be Used", "Leftmost 4 Magic Utility Flasks constantly apply their Flask Effects to you", "Magic Utility Flask Effects cannot be removed"], note: "Actual unique modifiers with example rolls. Two tinctures plus a life flask leave room for only two magic utility flasks. Mageblood supports those two; it does not automate tinctures or provide four extra flask slots." };
   }
+  const socketPlans = gearSocketPlans(stage);
+  Object.entries(items).forEach(([slot, item]) => { item.socketPlan = socketPlans[slot]; });
+  return Object.assign(items, gearAccessoryExamples(stage));
+}
+
+function gearAccessoryExamples(stage) {
+  const early = stage === "act5" || stage === "act10";
+  const dream = stage === "perfect";
+  const advanced = stage === "red" || dream;
+  const example = (base, icon, prefixes, suffixes, note, extra = {}) => ({ name: base, base, icon, rarity: prefixes.length || suffixes.length ? "magic" : "normal", prefixes, suffixes, note, affixLimit: 1, ...extra });
+  const life = example(stage === "act5" ? "Sacred Life Flask" : "Divine Life Flask", "flask",
+    early ? [] : ["66% reduced Amount Recovered<br>Instant Recovery"],
+    ["Immunity to Bleeding for 6 seconds if used while Bleeding<br>Immunity to Corrupted Blood for 6 seconds if used while affected by Corrupted Blood"],
+    early ? "Keep an up-to-date life flask with bleed/corrupted-blood removal. A useful recovery prefix is a bonus; do not wait for a perfect flask before progressing. Upgrade the base as you level." : "One possible instant-recovery flask. The reduced amount and instant recovery are a single prefix. Bleed/corrupted-blood immunity is conditional on using it while affected; it is not permanent protection.",
+    { properties: [stage === "act5" ? "Unmodified base: 1200 Life over 3 seconds" : "Unmodified base: 2400 Life over 3.5 seconds"], shortLabel: "Life" });
+  const jade = example("Jade Flask", "flask",
+    dream ? ["25% reduced Duration<br>25% increased effect"] : ["25% increased Duration"],
+    [`${early ? 35 : dream ? 60 : 50}% increased Evasion Rating during Effect`],
+    dream ? "Mageblood continuously applies this magic utility flask. The enchant and prefix increase its effect; the base value shown is before those increases. Its reduced duration and charge-gain restriction do not interrupt Mageblood's constant effect." : "A useful evasion layer while the flask is active. Charges and uptime matter during bosses. This suffix improves evasion; it does not provide physical damage reduction against hits that connect.",
+    { properties: ["Unmodified base effect: +1500 to Evasion Rating", "Base duration: 6 seconds"], enchantments: dream ? ["70% increased effect<br>Gains no Charges during Effect"] : [], shortLabel: "Jade" });
+  const quicksilver = example("Quicksilver Flask", "flask", ["25% increased Duration"], [],
+    "Movement speed helps you avoid mechanics and cross zones. Later, Whirling Blades can cover travel well enough to replace this flask with another defensive utility flask.",
+    { properties: ["Base effect: 40% increased Movement Speed", "Base duration: 6 seconds"], shortLabel: "Quicksilver" });
+  const granite = example("Granite Flask", "flask",
+    dream ? ["25% reduced Duration<br>25% increased effect"] : ["25% increased Duration"],
+    [`${dream ? 60 : 50}% increased Armour during Effect`],
+    dream ? "The second permanent magic utility flask in this Mageblood example. Two utility flasks, one life flask and two tinctures fill all five belt slots. These base stats are shown before flask-effect scaling." : "Armour helps with physical hits alongside your other defenses. Do not read the character sheet's estimated physical reduction as a guarantee against a large boss hit.",
+    { properties: ["Unmodified base effect: +1500 to Armour", "Base duration: 6 seconds"], enchantments: dream ? ["70% increased effect<br>Gains no Charges during Effect"] : [], shortLabel: "Granite" });
+  const mana = example("Colossal Mana Flask", "flask", [], [],
+    "A plain mana flask is a valid campaign fallback. Upgrade its base when possible and keep it until attacks, marks, movement and a tincture sustain together against a boss. Replace it later only when it is no longer needed.",
+    { properties: ["Recovers 350 Mana over 5 seconds", "Consumes 8 of 38 Charges on use"], shortLabel: "Mana" });
+  const prismatic = example("Prismatic Tincture", "tincture",
+    early ? ["20% reduced Mana Burn rate"] : [`${dream ? 22 : 19}% increased effect`],
+    [`Melee Weapon Damage Penetrates ${early ? 10 : dream ? 16 : 13}% Elemental Resistances`],
+    early ? "An optional first tincture, not a campaign requirement. Test mana sustain and keep your recovery flasks. If it drains your mana, replace this slot with another useful flask until the setup works." : "Activate this damage tincture manually. The implicit below is its unscaled base roll; quality, its effect prefix and passives scale it further. Watch Mana Burn and reactivation instead of assuming permanent uptime.",
+    { implicit: [`${early ? 90 : 100}% increased Elemental Damage with Melee Weapons`], implicitLabel: "Base implicit (before effect scaling)", properties: ["Base Mana Burn interval: 0.70 seconds", "Base cooldown when deactivated: 8 seconds"], shortLabel: "Prismatic", status: early ? "Optional" : "Tincture" });
+  const rosethorn = example("Rosethorn Tincture", "tincture", ["20% reduced Mana Burn rate"],
+    [`${dream ? 29 : 24}% increased Melee Weapon Attack Speed`],
+    "A possible second tincture after Experienced Herbalist, which permits two active tinctures. This supplies increased critical chance, not flat base crit. Keep only one tincture if the extra Mana Burn or lost flask makes the character worse; Mageblood does not activate this item.",
+    { implicit: ["150% increased Critical Strike Chance with Melee Weapons"], implicitLabel: "Base implicit (before effect scaling)", properties: ["Base Mana Burn interval: 0.70 seconds", "Base cooldown when deactivated: 8 seconds"], shortLabel: "Rosethorn", status: "Second tincture" });
+  const regularJewel = example("Viridian Jewel", "jewel",
+    [`${early ? 5 : 7}% increased maximum Life`, `${early ? 4 : 6}% increased Attack Speed while holding a Shield`],
+    early ? [] : ["+12% to Global Critical Strike Multiplier", "+15% to Cold Resistance"],
+    early ? "A possible found jewel for an already allocated passive socket. Life and one useful damage stat are enough early. Do not travel several points just to equip this example." : "A four-mod rare with two prefixes and two suffixes. Choose resistances to patch your own gear; crit multiplier and shield attack speed both benefit this claw-and-shield setup. An allocated socket still costs passive points.",
+    { name: "Gale Spark", rarity: "rare", affixLimit: 2, shortLabel: "Rare jewel", status: "Tree socket", corruption: dream ? ["Corrupted Blood cannot be inflicted on you"] : [] });
+  const abyss = example("Murderous Eye Jewel", "abyss", [`+${early ? 30 : advanced ? 40 : 35} to maximum Life`],
+    [`${early ? 3 : 5}% increased Attack Speed`, ...(advanced ? ["+12% to Global Critical Strike Multiplier"] : [])],
+    "Abyss jewels fit an Abyssal socket or an allocated passive jewel socket. This example favors life and attack speed, then crit multiplier. A Leather Belt or Mageblood has no Abyssal socket; use a tree socket or swap to a suitable Stygian Vise. This is an alternative, not an extra free slot.",
+    { name: "Storm Eye", rarity: "rare", affixLimit: 2, shortLabel: "Abyss jewel", status: "Socket needed" });
+  const cluster = advanced ? example("Large Cluster Jewel", "cluster", ["1 Added Passive Skill is Fuel the Fight", "1 Added Passive Skill is Feed the Fury"], ["1 Added Passive Skill is Martial Prowess"],
+    "Optional tree redesign, not part of the companion's fixed core. An eight-passive attack cluster with these notables is a possible upgrade only after comparing all points and nodes replaced in PoB. The added jewel sockets are part of its eight passives, not bonus free passives. Leech already supplied by Clever Thief may make some benefits redundant.",
+    { name: "Havoc Prism", rarity: "rare", affixLimit: 2, implicit: ["Adds 8 Passive Skills", "2 Added Passive Skills are Jewel Sockets", "Added Small Passive Skills grant: 10% increased Attack Damage"], shortLabel: "Attack cluster", status: "Optional redesign" }) :
+    { name: "Keep the core passive tree", base: "No cluster jewel allocated", icon: "cluster", rarity: "normal", empty: true, properties: ["Cluster jewels require a suitable outer passive socket", "Their added passives each cost passive points"], note: "Keep the campaign and early-map core intact. The red-map and dream panels show a possible eight-passive attack cluster for a later PoB comparison; it is not required to reach this milestone.", shortLabel: "Cluster jewel", status: "Later upgrade" };
+  const belt = early ? [life, mana, quicksilver, jade, prismatic] : [life, jade, advanced ? granite : quicksilver, prismatic, rosethorn];
+  const items = { jewel: regularJewel, abyss, cluster };
+  belt.forEach((item, index) => { items[`flask${index + 1}`] = item; });
+  if (dream) {
+    items.vision = { name: "Ancestral Vision", base: "Viridian Jewel", icon: "jewel", rarity: "unique", modifiers: ["+10 to Dexterity", "Modifiers to Chance to Suppress Spell Damage also apply to Chance to Avoid Elemental Ailments at 50% of their Value"], note: "An optional ailment-avoidance route. 100% unconditional suppression modifiers provide 50% avoidance; finish the remaining avoidance on gear or tree. Conditional suppression gives conditional avoidance. This does not provide corrupted-blood immunity.", shortLabel: "Ancestral Vision", status: "Tree socket" };
+    items.watcher = { name: "Watcher's Eye", base: "Prismatic Jewel", icon: "jewel", rarity: "unique", modifiers: ["6% increased maximum Energy Shield", "6% increased maximum Life", "6% increased maximum Mana", "+8% chance to Evade Attack Hits while affected by Grace", "Damage Penetrates 15% Lightning Resistance while affected by Wrath", "+30% to Critical Strike Multiplier while affected by Precision"], note: "A possible rare three-aura-mod jewel. Each modifier works only while its named aura is active; this example assumes Grace, Wrath and Precision. Do not add another aura without checking reservation and tincture sustain. Compare it with a strong rare jewel and available tree sockets.", shortLabel: "Watcher's Eye", status: "Aura-dependent" };
+  }
   return items;
 }
 
@@ -1298,7 +1501,9 @@ function showGearExample(inventory, slot) {
   inventory.querySelectorAll(".equipment-slot").forEach(button => button.setAttribute("aria-pressed", String(button.dataset.slot === slot)));
   // Every string comes from the fixed example data above, never from user input.
   const group = (label, modifiers) => modifiers && modifiers.length ? `<div class="item-preview-group"><small>${label}</small>${modifiers.map(mod => `<div class="item-preview-mod">${mod}</div>`).join("")}</div>` : "";
-  preview.innerHTML = `<div class="item-preview-header"><div class="item-example-label">${item.rarity === "unique" ? "Unique item · possible rolls" : "Illustrative rare · one possibility"}</div><h3>${item.name}</h3><div class="item-preview-base">${item.base}</div></div><div class="item-preview-content">${group("Implicit", item.implicit)}${group("Prefixes", item.prefixes)}${group("Suffixes", item.suffixes)}${group("Unique modifiers", item.modifiers)}<p class="item-preview-note">${item.note}</p></div>`;
+  const label = item.empty ? "Future option · no item allocated" : item.rarity === "unique" ? "Unique item · possible rolls" : `Illustrative ${item.rarity} · one possibility`;
+  preview.innerHTML = `<div class="item-preview-header"><div class="item-example-label">${label}</div><h3>${item.name}</h3><div class="item-preview-base">${item.base}</div></div><div class="item-preview-content">${gearGemPlanMarkup(item.socketPlan)}${group("Base properties", item.properties)}${group("Enchantment", item.enchantments)}${group(item.implicitLabel || "Implicit", item.implicit)}${group("Prefixes", item.prefixes)}${group("Suffixes", item.suffixes)}${group("Unique modifiers", item.modifiers)}${group("Corruption implicit", item.corruption)}<p class="item-preview-note">${item.note}</p></div>`;
+  preview.scrollTop = 0;
 }
 
 function initializeGearInventories() {
@@ -1309,23 +1514,43 @@ function initializeGearInventories() {
     inventory.className = "gear-inventory";
     inventory.gearExamples = gearExamplesFor(key);
     const previewId = `item-preview-${key}`;
-    inventory.innerHTML = `<div class="equipment-board"><div class="equipment-heading">Equipment</div><div class="equipment-slots" role="group" aria-label="Example equipment for ${stage.querySelector('h2').firstChild.textContent.trim()}"></div><p class="equipment-help">Hover a slot to inspect · focus or tap to select</p></div><div class="item-preview" id="${previewId}" role="region" aria-label="Suggested item details" aria-live="polite" aria-atomic="true"></div>`;
+    inventory.innerHTML = `<div class="equipment-board"><div class="equipment-heading">Equipment</div><div class="equipment-slots" role="group" aria-label="Example equipment for ${stage.querySelector('h2').firstChild.textContent.trim()}"></div><section class="equipment-section"><h4>Flasks &amp; tinctures · 5 belt slots</h4><div class="equipment-flasks" role="group" aria-label="Five shared flask and tincture slots"></div><p class="equipment-section-note">${key === "act5" || key === "act10" ? "One optional tincture; keep mana recovery until you can sustain attacks." : "Two tinctures require Experienced Herbalist. Keep a life flask and two utility flasks."}</p></section><section class="equipment-section"><h4>Passive jewels · socket candidates</h4><div class="equipment-jewels passive-jewels" role="group" aria-label="Passive jewel candidates"></div></section><section class="equipment-section"><h4>Abyss jewels</h4><div class="equipment-jewels abyss-jewels" role="group" aria-label="Abyss jewel candidates"></div><p class="equipment-section-note">Use an Abyssal socket or an allocated tree socket; these are not free extra slots.</p></section><section class="equipment-section"><h4>Cluster jewels · optional</h4><div class="equipment-jewels cluster-jewels" role="group" aria-label="Optional cluster jewel guidance"></div></section><p class="equipment-help">Hover a slot to inspect · focus or tap to select</p></div><div class="item-preview" id="${previewId}" role="region" aria-label="Suggested item details" aria-live="polite" aria-atomic="true"></div>`;
     const slots = inventory.querySelector(".equipment-slots");
-    Object.entries(labels).forEach(([slot, label]) => {
+    const socketLegend = document.createElement("p");
+    socketLegend.className = "equipment-socket-legend";
+    socketLegend.innerHTML = '<span class="gem-dot gem-red">R</span> <span class="gem-dot gem-green">G</span> <span class="gem-dot gem-blue">B</span> Socket colors · gold lines = links<br>4L = four linked · 3×1 = independent gems';
+    slots.before(socketLegend);
+    const addSlot = (slot, label, parent) => {
+      const item = inventory.gearExamples[slot];
       const button = document.createElement("button");
       button.type = "button";
-      button.className = `equipment-slot ${inventory.gearExamples[slot].rarity}`;
+      button.className = `equipment-slot ${item.rarity}${item.icon === "tincture" ? " tincture" : ""}${item.empty ? " empty" : ""}${item.socketPlan && item.socketPlan.groups.length ? " has-sockets" : ""}`;
       button.dataset.slot = slot;
       button.setAttribute("aria-label", `Inspect ${label}: ${inventory.gearExamples[slot].base}`);
+      if (item.socketPlan) {
+        const gemDescription = item.socketPlan.groups.length ? item.socketPlan.groups.map(group => group.gems.map(id => GEAR_GEMS[id].name).join(" + ")).join("; separate group: ") : "No skill-gem sockets";
+        button.setAttribute("aria-label", `${button.getAttribute("aria-label")}. ${gearSocketSummary(item.socketPlan)}. ${gemDescription}`);
+        button.title = `${item.socketPlan.title}: ${gemDescription}`;
+      }
       button.setAttribute("aria-controls", previewId);
       button.setAttribute("aria-pressed", "false");
-      const icon = EQUIPMENT_ICONS[slot.startsWith("ring") ? "ring" : slot];
-      button.innerHTML = `<svg viewBox="0 0 64 76" aria-hidden="true" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${icon}</svg><span>${label}</span>`;
+      const icon = EQUIPMENT_ICONS[item.icon || (slot.startsWith("ring") ? "ring" : slot)];
+      button.innerHTML = `<svg class="equipment-art" viewBox="0 0 64 76" aria-hidden="true" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round">${icon}</svg>${item.socketPlan ? gearSocketDiagram(item.socketPlan) : ""}<span>${item.shortLabel || label}</span>${item.status ? `<span class="slot-status">${item.status}</span>` : ""}`;
       ["pointerenter", "focus", "click"].forEach(event => button.addEventListener(event, () => showGearExample(inventory, slot)));
-      slots.append(button);
-    });
+      button.addEventListener("click", () => {
+        if (window.matchMedia("(max-width: 900px)").matches) {
+          inventory.querySelector(".item-preview").scrollIntoView({ block: "nearest", behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+        }
+      });
+      parent.append(button);
+    };
+    Object.entries(labels).forEach(([slot, label]) => addSlot(slot, label, slots));
+    for (let index = 1; index <= 5; index++) addSlot(`flask${index}`, `Belt slot ${index}`, inventory.querySelector(".equipment-flasks"));
+    ["jewel", "vision", "watcher"].filter(slot => inventory.gearExamples[slot]).forEach(slot => addSlot(slot, inventory.gearExamples[slot].shortLabel, inventory.querySelector(".passive-jewels")));
+    addSlot("abyss", "Abyss jewel", inventory.querySelector(".abyss-jewels"));
+    addSlot("cluster", "Cluster jewel", inventory.querySelector(".cluster-jewels"));
     stage.querySelector(".table-scroll").before(inventory);
-    showGearExample(inventory, "claw");
+    showGearExample(inventory, "body");
   });
 }
 
