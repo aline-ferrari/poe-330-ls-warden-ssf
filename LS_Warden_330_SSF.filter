@@ -207,7 +207,16 @@ Show
 # GEMS INTRODUCED IN 3.30
 Show
     Class == "Skill Gems"
-    BaseType == "Arcane Link" "Fireball of Radiation"
+    BaseType == "Arcane Link"
+    SetTextColor 25 220 185 255
+    SetBorderColor 25 220 185 255
+    SetBackgroundColor 5 32 28 250
+    SetFontSize 42
+    MinimapIcon 1 Green Triangle
+
+Show
+    Class == "Skill Gems"
+    TransfiguredGem == "Fireball of Radiation"
     SetTextColor 25 220 185 255
     SetBorderColor 25 220 185 255
     SetBackgroundColor 5 32 28 250
